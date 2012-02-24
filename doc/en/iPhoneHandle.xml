@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
     "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<!-- $Id: iPhoneHandle.xml,v 1.6 2010-07-16 17:42:14 cr Exp $ -->
+<!-- $Id: iPhoneHandle.xml,v 1.7 2012-02-24 21:43:03 cr Exp $ -->
 
 <book lang='en'>
 
@@ -26,8 +26,17 @@
 
 <preface id="preface" >
     <title>Preface</title>
-    <para>Description of Package</para>
-    <para>If you have questions regarding this package, please contact your support team (support@otrs.com) for more information.</para>
+    <para>
+        This package adds the necessary framework enable the communication between the OTRS iPhone
+        App and the OTRS system.
+    </para>
+    <para>
+        It is necessary to first install the iPhoneHandle package before setup the iPhone App.
+    </para>
+    <para>
+        If you have questions regarding this package, please contact your support team
+        (support@otrs.com) for more information.
+    </para>
 </preface>
 
 <chapter>
@@ -86,38 +95,39 @@
             <para>Change an existing ticket from one queue to another.</para>
         </sect2>
     </sect1>
-
 </chapter>
 
 <chapter>
-    <title>Requirement</title>
+    <title>System Requirements</title>
     <sect1>
         <title>Framework</title>
-        <para>The following OTRS framework is required:</para>
+        <para>The following OTRS Framework is required:</para>
         <para>
-        $Framework
+            $Framework
         </para>
     </sect1>
     <sect1>
         <title>Packages</title>
-        <para>The following package are required:</para>
+        <para>The following packages are required:</para>
         <para>
-        $PackageRequired
+            $PackageRequired
         </para>
     </sect1>
     <sect1>
         <title>Operating System</title>
-        <para>Special operating system requirements:</para>
+        <para>The package can be used with the following operating systems:</para>
         <para>
-        $OS
+            $OS
         </para>
     </sect1>
     <sect1>
         <title>Third Party Software</title>
-        <para>This third party software is required to use this package:</para>
+        <para>The following software is required for the operation of the package:</para>
         <para>
             <itemizedlist>
-                <listitem><para>None.</para></listitem>
+                <listitem>
+                    <para>None</para>
+                </listitem>
             </itemizedlist>
         </para>
     </sect1>
@@ -125,27 +135,31 @@
 
 <chapter>
     <title>Installation</title>
-    <para>The following instructions explain how to install the package.</para>
+    <para>
+        The following instructions show how to install the package. There are basically two
+        options: either through the admin interface or via the command line.
+    </para>
     <sect1>
         <title>Admin Interface</title>
         <para>
-Please use the following URL to install the package utilizing the admin
-interface (please note that you need to be in the admin group).
-        </para>
-        <para>
-<ulink url="http://localhost/otrs/index.pl?Action=AdminPackageManager">http://localhost/otrs/index.pl?Action=AdminPackageManager</ulink>
+            The package can be installed, updated or uninstalled using the
+            following URL through the admin interface (make sure that the user is in the admin
+            group):
+            <ulink url="http://localhost/otrs/index.pl?Action=AdminPackageManager">
+                http://localhost/otrs/index.pl?Action=AdminPackageManager
+            </ulink>
         </para>
     </sect1>
     <sect1>
         <title>Command Line</title>
         <para>
-If you don't want to use the Admin Interface, you can use the following
-OPM command to install the package with "bin/opm.pl".
+            If it is not possible to use the admin interface, the following command line tool
+            ("/bin/otrs.PackageManager.pl") can be used.
         </para>
         <para>
-        <screen>
-shell> bin/opm.pl -a install -p /path/to/$Name-$Version.opm
-        </screen>
+            <screen>
+                shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
+            </screen>
         </para>
     </sect1>
 </chapter>
@@ -153,431 +167,556 @@ shell> bin/opm.pl -a install -p /path/to/$Name-$Version.opm
 <chapter>
     <title>First Steps</title>
     <sect1>
-        <title>In otrs web application</title>
-        <para>As soon as the iPhoneHandle Module has been installed, a new group of settings &quot;iPhone&quot; is automatically generated. access them via &quot;sysconfig&quot;. this group of settings controls the behavior of iPhone ticket action screens as well as some debug options of the package itself.</para>
-        <para>Is recommended to review all settings and change them if necessary to match the current otrs configuration.</para>
+        <title>In OTRS web application</title>
+        <para>
+            As soon as the iPhoneHandle Module has been installed, a new group of settings
+            &quot;iPhone&quot; is automatically generated. access them via &quot;sysconfig&quot;.
+            this group of settings controls the behavior of iPhone ticket action screens as well as
+            some debug options of the package itself.
+        </para>
+        <para>
+            Another group of settings &quot;Z_iPhone_Deprecated&quot; is also added, this settings
+            contain information about old configurations needed to upgrade from version 1.0.x
+            to 1.1.x.
+        </para>
+        <para>
+            Is recommended to review all this settings and change them if necessary to match the
+            current OTRS configuration.
+        </para>
     </sect1>
     <sect1>
         <title>In the iPhone application</title>
-        <para>Download and install MyOTRS from Apple AppStore in your iPhone or iPod Touch.</para>
-        <para>Add a new otrs account in the Account Manager. the URL must be http(s)://&lt;FQDN&gt;/&lt;ScriptAlias&gt;/json.pl.</para>
-        <para>Example:</para>
-        <para>http://localhost/otrs/json.pl.</para>
-        <para>You should use same User and Password in otrs web application</para>
+        <para>
+            Download and install OTRS App from iTunes Store or App Store application in your iPhone or iPod Touch.
+        </para>
+        <para>
+            Add a new OTRS account in the OTRS App Account Manager. The URL must be
+            http(s)://&lt;FQDN&gt;/&lt;ScriptAlias&gt;/json.pl.
+        </para>
+        <note>
+            <para>
+                Plase change FQDN and ScriptAlias to match your current environment.
+            </para>
+        </note>
+        <example>
+            <title>URL example: FQDN = localhost, ScriptAlias = otrs</title>
+            <para>
+                http://localhost/otrs/json.pl.
+            </para>
+        </example>
+        <para>
+            You should use same User and Password in OTRS web application
+        </para>
+        <para>
+            iPhone, iPod Touch and iTunes are trademarks of Apple Inc., registered in the U.S. and
+            other countries.
+        </para>
     </sect1>
 </chapter>
 
 <chapter>
     <title>Configuration</title>
-    <para>The following config options can or need to be changed via SysConfig.</para>
+    <para>The following configuration options can or need to be changed via SysConfig.</para>
     <sect1>
         <title>iPhone::DebugLog</title>
-        <para>Allows to enable a special log for all communication between iPhone and otrs.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Core::Log".</para>
+        <para>Group: iPhone, Subgroup: Core::Log.</para>
+        <para>Allows to enable a special log for all communication between iPhone and OTRS.</para>
     </sect1>
     <sect1>
         <title>iPhone::LogFile</title>
+        <para>Group: iPhone, Subgroup: Core::Log.</para>
         <para>Defines the path and file name for the degug log file. This file will be automatically created by the system, if it doesn't exist.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Core::Log".</para>
     </sect1>
     <sect1>
-        <title>iPhone::Frontend::AgentTicketPhone</title>
-        <para>Settings for iPhone new phone ticket fields and screen configuration.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Frontend::Agent::Ticket::ViewPhone".</para>
-        <sect2>
-            <title>TicketType</title>
-            <para>Sets the ticket type of new phone tickets in the iPhone interface (Ticket::Type needs to be activated).</para>
-        </sect2>
-        <sect2>
-            <title>Service</title>
-            <para>Sets the service of new phone tickets in the iPhone interface (Ticket::Service needs to be activated).</para>
-        </sect2>
-        <sect2>
-            <title>Owner</title>
-            <para>Sets the ticket owner in the new phone ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Responsible</title>
-            <para>Sets the responsible agent of the ticket in the new phone ticket screen of the iPhone interface..</para>
-        </sect2>
-        <sect2>
-            <title>CustomerID</title>
-            <para>Sets the customer id in the new phone ticket screen of the iPhone interface..</para>
-        </sect2>
-        <sect2>
-            <title>State</title>
-            <para>Allows to set a new ticket state in the new phone ticket ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateDefault</title>
-            <para>Sets the default next state for new phone tickets in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>PriorityDefault</title>
-            <para>Defines the default ticket priority in the new phone ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleTypeDefault</title>
-            <para>Defines the default type of the ticket in the new phone ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>SenderType</title>
-            <para>Sets the default sender type for new phone ticket in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TimeUnits</title>
-            <para>Sets the time units in the new phone ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeText</title>
-            <para>Ticket free text options shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeTime</title>
-            <para>Ticket free time options shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleFreeText</title>
-            <para>Article free text options shown in the new phone ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>HistoryType</title>
-            <para>Defines the history type for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>HistoryComment</title>
-            <para>Defines the history comment for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</para>
-        </sect2>
+        <title>iPhone::Frontend::AgentTicketPhone###TicketType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the ticket type of new phone tickets in the iPhone interface (Ticket::Type needs to be activated).</para>
     </sect1>
     <sect1>
-        <title>iPhone::Frontend::AgentTicketNote</title>
-        <para>Settings for iPhone note ticket fields and screen configuration.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Frontend::Agent::Ticket::ViewNote".</para>
-        <sect2>
-            <title>Permission</title>
-            <para>Required permissions to use the ticket note screen in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>RequiredLock</title>
-            <para>Defines if a ticket lock is required in the ticket note screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
-        </sect2>
-        <sect2>
-            <title>TicketType</title>
-            <para>Sets the ticket type in the ticket note screen of the iPhone interface (Ticket::Type needs to be activated).</para>
-        </sect2>
-        <sect2>
-            <title>Service</title>
-            <para>Sets the service in the ticket note screen of the iPhone interface (Ticket::Service needs to be activated).</para>
-        </sect2>
-        <sect2>
-            <title>Owner</title>
-            <para>Sets the ticket owner in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Responsible</title>
-            <para>Sets the responsible agent of the ticket in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>State</title>
-            <para>If a note is added by an agent, sets the state of a ticket in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateType</title>
-            <para>Defines the next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateDefault</title>
-            <para>Defines the default next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Note</title>
-            <para>Allows adding notes in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Subject</title>
-            <para>Sets the default subject for notes added in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Body</title>
-            <para>Sets the default body text for notes added in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleTypeDefault</title>
-            <para>Defines the default type of the note in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleTypes</title>
-            <para>Specify the different note types, that you want to use in your system.</para>
-        </sect2>
-        <sect2>
-            <title>Priority</title>
-            <para>Shows the ticket priority options in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>PriorityDefault</title>
-            <para>Defines the default ticket priority in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Title</title>
-            <para>Shows the title fields in the ticket note screen of the iphone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TimeUnits</title>
-            <para>Sets the time units in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeText</title>
-            <para>Ticket free text options shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeTime</title>
-            <para>Ticket free time options shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleFreeText</title>
-            <para>Article free text options shown in the ticket note screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>HistoryType</title>
-            <para>Defines the history type for the ticket note screen action, which gets used for ticket history in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>HistoryComment</title>
-            <para>Defines the history comment for the ticket note screen action, which gets used for ticket history in the iPhone interface.</para>
-        </sect2>
+        <title>iPhone::Frontend::AgentTicketPhone###Service</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the service of new phone tickets in the iPhone interface (Ticket::Service needs to be activated).</para>
     </sect1>
     <sect1>
-        <title>iPhone::Frontend::AgentTicketClose</title>
-        <para>Settings for iPhone colse ticket fields and screen configuration.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Frontend::Agent::Ticket::ViewClose".</para>
-        <sect2>
-            <title>Permission</title>
-            <para>Required permissions to use the close ticket screen in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>RequiredLock</title>
-            <para>Defines if a ticket lock is required in the close ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
-        </sect2>
-        <sect2>
-            <title>TicketType</title>
-            <para>Sets the ticket type in the close ticket screen of the iPhone interface (Ticket::Type needs to be activated).</para>
-        </sect2>
-        <sect2>
-            <title>Service</title>
-            <para>Sets the service in the close ticket screen of the iPhone interface (Ticket::Service needs to be activated).</para>
-        </sect2>
-        <sect2>
-            <title>Owner</title>
-            <para>Sets the ticket owner in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Responsible</title>
-            <para>Sets the responsible agent of the ticket in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>State</title>
-            <para>If a note is added by an agent, sets the state of a ticket in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateType</title>
-            <para>Defines the next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateDefault</title>
-            <para>Defines the default next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Note</title>
-            <para>Allows adding notes in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Subject</title>
-            <para>Sets the default subject for notes added in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Body</title>
-            <para>Sets the default body text for notes added in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleTypeDefault</title>
-            <para>Defines the default type of the note in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleTypes</title>
-            <para>Specifies the different note types that will be used in the system.</para>
-        </sect2>
-        <sect2>
-            <title>Priority</title>
-            <para>Shows the ticket priority options in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>PriorityDefault</title>
-            <para>Defines the default ticket priority in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Title</title>
-            <para>Shows the title fields in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TimeUnits</title>
-            <para>Sets the time units in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeText</title>
-            <para>Ticket free text options shown in the close ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeTime</title>
-            <para>Ticket free time options shown in the close ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleFreeText</title>
-            <para>Article free text options shown in the close ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>HistoryType</title>
-            <para>Defines the history type for the close ticket screen action, which gets used for ticket history in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>HistoryComment</title>
-            <para>Defines the history comment for the close ticket screen action, which gets used for ticket history in the iPhone interface.</para>
-        </sect2>
+        <title>iPhone::Frontend::AgentTicketPhone###Owner</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the ticket owner in the new phone ticket screen of the iPhone interface.</para>
     </sect1>
     <sect1>
-        <title>iPhone::Frontend::AgentTicketCompose</title>
-        <para>Settings for iPhone compose ticket fields and screen configuration.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Frontend::Agent::Ticket::ViewCompose".</para>
-        <sect2>
-            <title>Permission</title>
-            <para>Required permissions to use the ticket compose screen in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>RequiredLock</title>
-            <para>Defines if a ticket lock is required in the ticket compose screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
-        </sect2>
-        <sect2>
-            <title>State</title>
-            <para>If a note is added by an agent, sets the state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateDefault</title>
-            <para>Defines the default next state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateType</title>
-            <para>Defines the next possible states after composing / answering a ticket in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ComposeAddCustomerAddress</title>
-            <para>Adds customers email addresses to recipients in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ComposeReplaceSenderAddress</title>
-            <para>Replaces the original sender with current customer's email address on compose answer in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>ComposeExcludeCcRecipients</title>
-            <para>Uses Cc recipients in reply Cc list on compose an email answer in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TimeUnits</title>
-            <para>Sets the time units in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeText</title>
-            <para>Ticket free text options shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeTime</title>
-            <para>Ticket free time options shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleFreeText</title>
-            <para>Article free text options shown in the ticket compose screen of the iPhone interface.</para>
-        </sect2>
+        <title>iPhone::Frontend::AgentTicketPhone###Responsible</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the responsible agent of the ticket in the new phone ticket screen of the iPhone interface..</para>
     </sect1>
     <sect1>
-        <title>iPhone::Frontend::AgentTicketMove</title>
-        <para>Settings for iPhone move ticket fields and screen configuration.</para>
-        <para>The SysConfig setting can be found under group "iPhone" and sub group "Frontend::Agent::Ticket::ViewMove".</para>
-        <sect2>
-            <title>Permission</title>
-            <para>Required permissions to use the move ticket screen in the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>RequiredLock</title>
-            <para>Defines if a ticket lock is required in the move ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
-        </sect2>
-        <sect2>
-            <title>Owner</title>
-            <para>Sets the ticket owner in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>State</title>
-            <para>Allows to set a new ticket state in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateType</title>
-            <para>Defines the next state of a ticket after being moved to another queue, in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>StateDefault</title>
-            <para>Defines the default next state of a ticket after adding a note, in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>Priority</title>
-            <para>Shows the ticket priority options in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>PriorityDefault</title>
-            <para>Defines the default ticket priority in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TimeUnits</title>
-            <para>Sets the time units in the move ticket screen of the iPhone interface.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeText</title>
-            <para>Ticket free text options shown in the move ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>TicketFreeTime</title>
-            <para>Ticket free time options shown in the move ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-        </sect2>
-        <sect2>
-            <title>ArticleFreeText</title>
-            <para>Article free text options shown in the ticket move screen of the iPhone interface.</para>
-        </sect2>
+        <title>iPhone::Frontend::AgentTicketPhone###CustomerID</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the customer id in the new phone ticket screen of the iPhone interface..</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###State</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Allows to set a new ticket state in the new phone ticket ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###StateDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the default next state for new phone tickets in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###PriorityDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Defines the default ticket priority in the new phone ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###ArticleTypeDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Defines the default type of the ticket in the new phone ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###SenderType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the default sender type for new phone ticket in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###TimeUnits</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the time units in the new phone ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###TicketFreeText</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###TicketFreeTime</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###ArticleFreeText</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###HistoryType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Defines the history type for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###HistoryComment</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Defines the history comment for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketPhone###DynamicField</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Dynamic fields shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
+    </sect1>
+
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Permission</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Required permissions to use the ticket note screen in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###RequiredLock</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines if a ticket lock is required in the ticket note screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###TicketType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the ticket type in the ticket note screen of the iPhone interface (Ticket::Type needs to be activated).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Service</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the service in the ticket note screen of the iPhone interface (Ticket::Service needs to be activated).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Owner</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the ticket owner in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Responsible</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the responsible agent of the ticket in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###State</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>If a note is added by an agent, sets the state of a ticket in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###StateType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines the next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###StateDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines the default next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Note</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Allows adding notes in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Subject</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the default subject for notes added in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Body</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the default body text for notes added in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###ArticleTypeDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines the default type of the note in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###ArticleTypes</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Specify the different note types, that you want to use in your system.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Priority</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Shows the ticket priority options in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###PriorityDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines the default ticket priority in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###Title</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Shows the title fields in the ticket note screen of the iphone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###TimeUnits</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Sets the time units in the ticket note screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###TicketFreeText</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###TicketFreeTime</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###ArticleFreeText</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###HistoryType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines the history type for the ticket note screen action, which gets used for ticket history in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###HistoryComment</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Defines the history comment for the ticket note screen action, which gets used for ticket history in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketNote###DynamicField</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <para>Dynamic fields shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
+    </sect1>
+
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Permission</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Required permissions to use the close ticket screen in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###RequiredLock</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines if a ticket lock is required in the close ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###TicketType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the ticket type in the close ticket screen of the iPhone interface (Ticket::Type needs to be activated).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Service</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the service in the close ticket screen of the iPhone interface (Ticket::Service needs to be activated).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Owner</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the ticket owner in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Responsible</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the responsible agent of the ticket in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###State</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>If a note is added by an agent, sets the state of a ticket in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###StateType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines the next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###StateDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines the default next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Note</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Allows adding notes in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Subject</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the default subject for notes added in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Body</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the default body text for notes added in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###ArticleTypeDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines the default type of the note in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###ArticleTypes</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Specifies the different note types that will be used in the system.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Priority</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Shows the ticket priority options in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###PriorityDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines the default ticket priority in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###Title</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Shows the title fields in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###TimeUnits</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Sets the time units in the close ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###TicketFreeText</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###TicketFreeTime</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###ArticleFreeText</title>
+        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###HistoryType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines the history type for the close ticket screen action, which gets used for ticket history in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###HistoryComment</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Defines the history comment for the close ticket screen action, which gets used for ticket history in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketClose###DynamicField</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <para>Dynamic fields shown in the ticket close screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
+    </sect1>
+
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###Permission</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Required permissions to use the ticket compose screen in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###RequiredLock</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Defines if a ticket lock is required in the ticket compose screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###State</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>If a note is added by an agent, sets the state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###StateDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Defines the default next state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###StateType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Defines the next possible states after composing / answering a ticket in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###ComposeAddCustomerAddress</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Adds customers email addresses to recipients in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###ComposeReplaceSenderAddress</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Replaces the original sender with current customer's email address on compose answer in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###ComposeExcludeCcRecipients</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Uses Cc recipients in reply Cc list on compose an email answer in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###TimeUnits</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <para>Sets the time units in the ticket compose screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###TicketFreeText</title>
+        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###TicketFreeTime</title>
+        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###ArticleFreeText</title>
+        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketCompose###DynamicField</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
+        <para>Dynamic fields shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
+    </sect1>
+
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###Permission</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Required permissions to use the move ticket screen in the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###RequiredLock</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Defines if a ticket lock is required in the move ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###Owner</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Sets the ticket owner in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###State</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Allows to set a new ticket state in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###StateType</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Defines the next state of a ticket after being moved to another queue, in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###StateDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Defines the default next state of a ticket after adding a note, in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###Priority</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Shows the ticket priority options in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###PriorityDefault</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Defines the default ticket priority in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###TimeUnits</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <para>Sets the time units in the move ticket screen of the iPhone interface.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###TicketFreeText</title>
+        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###TicketFreeTime</title>
+        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###ArticleFreeText</title>
+        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
+        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
+    </sect1>
+    <sect1>
+        <title>iPhone::Frontend::AgentTicketMove###DynamicField</title>
+        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
+        <para>Dynamic fields shown in the ticket move screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
     </sect1>
 </chapter>
 
 <chapter>
     <title>Contacts</title>
-    <para>People who are involved in this implementation.</para>
+    <para>Persons involved in the the implementation of the package.</para>
     <sect1>
         <title>OTRS AG</title>
         <para>
-        Technical: Jens Bechtel &lt;dev-support@otrs.com&gt;, Phone +49 (0)6172 681988 0
+            Technical: Manuel Hecht &lt;dev-support@otrs.com&gt;, Phone +49 (0)6172 681988 0
         </para>
     </sect1>
 </chapter>
 
 <chapter>
     <title>Manifest</title>
-    <para>The manifest lists all included files and the referring permissions.</para>
+    <para>
+        This Manifest lists all files (with filename and file permissions) which are included in
+        the package.
+    </para>
     <sect1>
-        <title>File list</title>
+        <title>File List</title>
         <para>
-        $Filelist
+            $Filelist
         </para>
     </sect1>
 </chapter>
 
 <chapter>
-    <title>ChangeLog</title>
+    <title>List of Changes</title>
     <para>
-    $ChangeLog
+        $ChangeLog
     </para>
 </chapter>
-
 </book>

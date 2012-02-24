@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <otrs_config version="1.0" init="Application">
-    <CVS>$Id: iPhone.xml,v 1.13 2011-06-14 09:13:01 martin Exp $</CVS>
+    <CVS>$Id: iPhone.xml,v 1.14 2012-02-24 21:45:02 cr Exp $</CVS>
 
     <ConfigItem Name="iPhone::DebugLog" Required="1" Valid="1">
         <Description Translatable="1">Allows to enable a special log for all communication between iPhone and otrs.</Description>
@@ -131,58 +131,7 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###TicketFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free text options shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-                <Item Key="7">0</Item>
-                <Item Key="8">0</Item>
-                <Item Key="9">0</Item>
-                <Item Key="10">0</Item>
-                <Item Key="11">0</Item>
-                <Item Key="12">0</Item>
-                <Item Key="13">0</Item>
-                <Item Key="14">0</Item>
-                <Item Key="15">0</Item>
-                <Item Key="16">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###TicketFreeTime" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free time options shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###ArticleFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Article free text options shown in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
+
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###HistoryType" Required="1" Valid="1">
         <Description Translatable="1">Defines the history type for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</Description>
         <Group>iPhone</Group>
@@ -199,7 +148,6 @@
             <String Regex=""></String>
         </Setting>
     </ConfigItem>
-
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Permission" Required="1" Valid="1">
         <Description Translatable="1">Required permissions to use the ticket note screen in the iPhone interface.</Description>
         <Group>iPhone</Group>
@@ -208,6 +156,16 @@
             <String Regex="">note</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###RequiredLock" Required="0" Valid="1">
         <Description Translatable="1">Defines if a ticket lock is required in the ticket note screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
         <Group>iPhone</Group>
@@ -384,58 +342,6 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketNote###TicketFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free text options shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-                <Item Key="7">0</Item>
-                <Item Key="8">0</Item>
-                <Item Key="9">0</Item>
-                <Item Key="10">0</Item>
-                <Item Key="11">0</Item>
-                <Item Key="12">0</Item>
-                <Item Key="13">0</Item>
-                <Item Key="14">0</Item>
-                <Item Key="15">0</Item>
-                <Item Key="16">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketNote###TicketFreeTime" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free time options shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketNote###ArticleFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Article free text options shown in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###HistoryType" Required="0" Valid="1">
         <Description Translatable="1">Defines the history type for the ticket note screen action, which gets used for ticket history in the iPhone interface.</Description>
         <Group>iPhone</Group>
@@ -450,6 +356,15 @@
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">%%Note</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="iPhone::Frontend::AgentTicketNote###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
         </Setting>
     </ConfigItem>
 
@@ -633,58 +548,6 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketClose###TicketFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free text options shown in the close ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-                <Item Key="7">0</Item>
-                <Item Key="8">0</Item>
-                <Item Key="9">0</Item>
-                <Item Key="10">0</Item>
-                <Item Key="11">0</Item>
-                <Item Key="12">0</Item>
-                <Item Key="13">0</Item>
-                <Item Key="14">0</Item>
-                <Item Key="15">0</Item>
-                <Item Key="16">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketClose###TicketFreeTime" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free time options shown in the close ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketClose###ArticleFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Article free text options shown in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###HistoryType" Required="0" Valid="1">
         <Description Translatable="1">Defines the history type for the close ticket screen action, which gets used for ticket history in the iPhone interface.</Description>
         <Group>iPhone</Group>
@@ -699,6 +562,15 @@
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">%%Close</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="iPhone::Frontend::AgentTicketClose###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the ticket close screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
         </Setting>
     </ConfigItem>
 
@@ -797,72 +669,16 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###TicketFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free text options shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+    <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>iPhone</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-                <Item Key="7">0</Item>
-                <Item Key="8">0</Item>
-                <Item Key="9">0</Item>
-                <Item Key="10">0</Item>
-                <Item Key="11">0</Item>
-                <Item Key="12">0</Item>
-                <Item Key="13">0</Item>
-                <Item Key="14">0</Item>
-                <Item Key="15">0</Item>
-                <Item Key="16">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###TicketFreeTime" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free time options shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###ArticleFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Article free text options shown in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
 
-<!--
-    <ConfigItem Name="iPhone::Frontend::MoveType" Required="1" Valid="1">
-        <Description Translatable="1">Determines if the list of possible queues to move to ticket into should be displayed in a dropdown list or in a new window in the agent interface. If "New Window" is set you can add a move note to the ticket.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
-        <Setting>
-            <Option SelectedID="form">
-                <Item Key="link">New Window</Item>
-                <Item Key="form">Dropdown</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
--->?
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###Permission" Required="1" Valid="1">
         <Description Translatable="1">Required permissions to use the move ticket screen in the iPhone interface.</Description>
         <Group>iPhone</Group>
@@ -953,58 +769,16 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketMove###TicketFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free text options shown in the move ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+    <ConfigItem Name="iPhone::Frontend::AgentTicketMove###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the ticket move screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>iPhone</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-                <Item Key="7">0</Item>
-                <Item Key="8">0</Item>
-                <Item Key="9">0</Item>
-                <Item Key="10">0</Item>
-                <Item Key="11">0</Item>
-                <Item Key="12">0</Item>
-                <Item Key="13">0</Item>
-                <Item Key="14">0</Item>
-                <Item Key="15">0</Item>
-                <Item Key="16">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketMove###TicketFreeTime" Required="0" Valid="1">
-        <Description Translatable="1">Ticket free time options shown in the move ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-                <Item Key="4">0</Item>
-                <Item Key="5">0</Item>
-                <Item Key="6">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="iPhone::Frontend::AgentTicketMove###ArticleFreeText" Required="0" Valid="1">
-        <Description Translatable="1">Article free text options shown in the ticket move screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="1">0</Item>
-                <Item Key="2">0</Item>
-                <Item Key="3">0</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
+
     <ConfigItem Name="iPhone::API::Object###ConfigObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
         <Group>iPhone</Group>
@@ -1053,4 +827,93 @@
             <String Regex=""></String>
         </Setting>
     </ConfigItem>
+
+    <ConfigItem Name="DynamicFields::iPhone::Backend###Text" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Text</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::Text</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldText</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::iPhone::Backend###TextArea" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Textarea</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::TextArea</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldText</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::iPhone::Backend###Checkbox" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Checkbox</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::Checkbox</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldCheckbox</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::iPhone::Backend###Dropdown" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Dropdown</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::Dropdown</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldDropdown</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::iPhone::Backend###DateTime" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Date / Time</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::DateTime</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldDateTime</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::iPhone::Backend###Date" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Date</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::Date</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldDateTime</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="DynamicFields::iPhone::Backend###Multiselect" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Multiselect</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhone::Backend::Multiselect</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldMultiselect</Item>
+                <Item Key="ItemSeparator">, </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+
 </otrs_config>

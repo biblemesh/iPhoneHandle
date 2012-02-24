@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 # --
 # bin/cgi-bin/json.pl - json handle
-# Copyright (C) 2001-2011 OTRS AG, http://otrs.org/
+# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.16 2011-06-14 09:24:29 martin Exp $
+# $Id: json.pl,v 1.17 2012-02-24 21:41:55 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.16 $) [1];
+$VERSION = qw($Revision: 1.17 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -79,7 +79,7 @@ sub Dispatch {
     $Self->{ConfigObject} = Kernel::Config->new();
     $Self->{EncodeObject} = Kernel::System::Encode->new( %{$Self} );
     $Self->{LogObject}    = Kernel::System::Log->new(
-        LogPrefix => 'OTRS-RPC',
+        LogPrefix => 'OTRS-iPhoneHandle',
         %{$Self},
     );
     $Self->{MainObject}         = Kernel::System::Main->new( %{$Self} );

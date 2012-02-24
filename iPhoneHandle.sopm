@@ -11,12 +11,166 @@
     <Description Lang="de">Das iPhoneHandle Paket.</Description>
     <Filelist>
         <File Permission="755" Location="bin/cgi-bin/json.pl"/>
+        <File Permission="644" Location="Kernel/Config/Files/iPhone_Deprecated.xml"/>
         <File Permission="644" Location="Kernel/Config/Files/iPhone.xml"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Checkbox.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Date.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/DateTime.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Dropdown.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Multiselect.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Text.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/TextArea.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/iPhoneBackend.pm"/>
+        <File Permission="644" Location="var/packagesetup/iPhoneHandle.pm"/>
         <File Permission="644" Location="Kernel/System/iPhone.pm"/>
+        <!-- the following file is created by the package installer
+        <File Permission="644" Location="RELEASE.iPhoneHandle"/>
+        -->
     </Filelist>
-        <IntroInstall Type="pre" Title="Install Information" Lang="en"><![CDATA[
+    <CodeInstall Type="post">
+
+        # define function name
+        my $FunctionName = 'CodeInstall';
+
+        # create the package name
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
+
+        # load the module
+        if ( $Self->{MainObject}->Require($CodeModule) ) {
+
+            # create new instance
+            my $CodeObject = $CodeModule->new( %{$Self} );
+
+            if ($CodeObject) {
+
+                # start method
+                if ( !$CodeObject->$FunctionName(%{$Self}) ) {
+                    $Self->{LogObject}->Log(
+                        Priority => 'error',
+                        Message  => "Could not call method $FunctionName() on $CodeModule.pm."
+                    );
+                }
+            }
+
+            # error handling
+            else {
+                $Self->{LogObject}->Log(
+                    Priority => 'error',
+                    Message  => "Could not call method new() on $CodeModule.pm."
+                );
+            }
+        }
+
+    </CodeInstall>
+    <CodeUpgrade Type="post">
+
+        # define function name
+        my $FunctionName = 'CodeUpgrade';
+
+        # create the package name
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
+
+        # load the module
+        if ( $Self->{MainObject}->Require($CodeModule) ) {
+
+            # create new instance
+            my $CodeObject = $CodeModule->new( %{$Self} );
+
+            if ($CodeObject) {
+
+                # start method
+                if ( !$CodeObject->$FunctionName(%{$Self}) ) {
+                    $Self->{LogObject}->Log(
+                        Priority => 'error',
+                        Message  => "Could not call method $FunctionName() on $CodeModule.pm."
+                    );
+                }
+            }
+
+            # error handling
+            else {
+                $Self->{LogObject}->Log(
+                    Priority => 'error',
+                    Message  => "Could not call method new() on $CodeModule.pm."
+                );
+            }
+        }
+
+    </CodeUpgrade>
+    <CodeReinstall Type="post">
+
+        # define function name
+        my $FunctionName = 'CodeReinstall';
+
+        # create the package name
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
+
+        # load the module
+        if ( $Self->{MainObject}->Require($CodeModule) ) {
+
+            # create new instance
+            my $CodeObject = $CodeModule->new( %{$Self} );
+
+            if ($CodeObject) {
+
+                # start method
+                if ( !$CodeObject->$FunctionName(%{$Self}) ) {
+                    $Self->{LogObject}->Log(
+                        Priority => 'error',
+                        Message  => "Could not call method $FunctionName() on $CodeModule.pm."
+                    );
+                }
+            }
+
+            # error handling
+            else {
+                $Self->{LogObject}->Log(
+                    Priority => 'error',
+                    Message  => "Could not call method new() on $CodeModule.pm."
+                );
+            }
+        }
+
+    </CodeReinstall>
+    <CodeUninstall Type="pre">
+
+        # define function name
+        my $FunctionName = 'CodeUninstall';
+
+        # create the package name
+        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
+
+        # load the module
+        if ( $Self->{MainObject}->Require($CodeModule) ) {
+
+            # create new instance
+            my $CodeObject = $CodeModule->new( %{$Self} );
+
+            if ($CodeObject) {
+
+                # start method
+                if ( !$CodeObject->$FunctionName(%{$Self}) ) {
+                    $Self->{LogObject}->Log(
+                        Priority => 'error',
+                        Message  => "Could not call method $FunctionName() on $CodeModule.pm."
+                    );
+                }
+            }
+
+            # error handling
+            else {
+                $Self->{LogObject}->Log(
+                    Priority => 'error',
+                    Message  => "Could not call method new() on $CodeModule.pm."
+                );
+            }
+        }
+
+    </CodeUninstall>
+
+    <IntroInstall Type="pre" Title="Install Information" Lang="en"><![CDATA[
         <br/>
-        <b>WELCOME</b>
+        <strong>WELCOME</strong>
         <br/>
         <br/>
         You are about to install the OTRS package iPhoneHandle.<br/>
@@ -33,7 +187,7 @@
     ]]></IntroInstall>
     <IntroUpgrade Type="pre" Title="Upgrade Information" Lang="en"><![CDATA[
         <br/>
-        <b>WELCOME</b>
+        <strong>WELCOME</strong>
         <br/>
         <br/>
         You are about to upgrade the OTRS package iPhoneHandle.<br/>
@@ -44,11 +198,10 @@
     ]]></IntroUpgrade>
     <IntroUninstall Type="pre" Title="Uninstallation Information" Lang="en"><![CDATA[
         <br/>
-        <b>ATTENTION</b>
+        <strong>ATTENTION</strong>
         <br/>
         <br/>
-        If you uninstall this package, MyOTRS the iPhone app, will not be able to communicate with
-        your server!
+        If you uninstall this package, the iPhone app, will not be able to communicate with your server!
         <br/>
         <br/>
         ((enjoy))<br/>

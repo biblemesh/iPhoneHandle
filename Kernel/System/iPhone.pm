@@ -2,7 +2,7 @@
 # Kernel/System/iPhone.pm - all iPhone handle functions
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhone.pm,v 1.68 2012-02-01 18:51:07 md Exp $
+# $Id: iPhone.pm,v 1.69 2012-02-24 21:53:07 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -18,10 +18,13 @@ use Kernel::Language;
 use Kernel::System::CheckItem;
 use Kernel::System::Priority;
 use Kernel::System::SystemAddress;
-use Kernel::System::Package;
+use Kernel::System::DynamicField;
+use Kernel::System::DynamicField::Backend;
+use Kernel::System::DynamicField::iPhone::iPhoneBackend;
+use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.68 $) [1];
+$VERSION = qw($Revision: 1.69 $) [1];
 
 =head1 NAME
 
@@ -207,23 +210,12 @@ sub new {
         $Self->{$_} = $Param{$_} || die "Got no $_! object";
     }
 
-    $Self->{CheckItemObject} = Kernel::System::CheckItem->new(%Param);
-    $Self->{PriorityObject}  = Kernel::System::Priority->new(%Param);
-    $Self->{SystemAddress}   = Kernel::System::SystemAddress->new(%Param);
-    $Self->{PackageObject}   = Kernel::System::Package->new(%Param);
-
-    $Self->{SystemVersion} = $Self->{ConfigObject}->Get('Version');
-
-    # check for any version staring with 2.4
-    if ( $Self->{SystemVersion} =~ m{ \A 2 \. 4 \. (?: \d+ | x \s+ CVS) \z }xms ) {
-        $Self->{'API3X'} = 0;
-    }
-    else {
-        $Self->{'API3X'} = 0;
-        if ( $Self->{SystemVersion} =~ m{ \A 3 \. \d+ \. (?: \d+ | x \s+ CVS ) \z }xms ) {
-            $Self->{'API3X'} = 1;
-        }
-    }
+    $Self->{CheckItemObject}     = Kernel::System::CheckItem->new(%Param);
+    $Self->{PriorityObject}      = Kernel::System::Priority->new(%Param);
+    $Self->{SystemAddress}       = Kernel::System::SystemAddress->new(%Param);
+    $Self->{DynamicFieldObject}  = Kernel::System::DynamicField->new(%Param);
+    $Self->{BackendObject}       = Kernel::System::DynamicField::Backend->new(%Param);
+    $Self->{iPhoneBackendObject} = Kernel::System::DynamicField::iPhone::iPhoneBackend->new(%Param);
 
     return $Self;
 }
@@ -450,11 +442,7 @@ as well as on general settings.
                 Mandatory      => 1,
             },
             {
-                Name        => "TicketFreeText1",
-                FreeTextKey => {
-                    Device  => "Device",
-                    Product => "Product"
-                },
+                Name        => "DynamicField_NameX",
                 Title       => "Product",
                 Datatype    => "Text",
                 Viewtype    => "Picker",
@@ -465,31 +453,6 @@ as well as on general settings.
                     PC       => "PC",
                 },
                 Default     => "Notebook",
-                Mandatory   => 0,
-            },
-            {
-                Name      => "TicketFreeTime1",
-                Title     => "Termin1",
-                Datatype  => "DateTime",
-                Viewtype  => "Picker",
-                Default   => "2010-07-13 15:18:24",
-                Mandatory => 0,
-            },
-            {
-                Name        => "ArticleFreeText1",
-                FreeTextKey => {
-                    Work => "Work",
-                },
-                Title       => '',
-                Datatype    => "Text",
-                Viewtype    => "Picker",
-                Options     => {
-                               => "-",
-                    Bugfix     => "Bugfix",
-                    Consulting => "Consulting",
-                    Research   => "Research",
-                },
-                Default     => '',
                 Mandatory   => 0,
             },
             {
@@ -800,7 +763,6 @@ each ticket in escalation status within a filter, if the "Filter" argument is sp
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     # a result could be
@@ -835,7 +797,6 @@ each ticket in escalation status within a filter, if the "Filter" argument is sp
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -874,8 +835,6 @@ each ticket in escalation status within a filter, if the "Filter" argument is sp
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Escalation Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Escalation Test",
@@ -887,8 +846,7 @@ each ticket in escalation status within a filter, if the "Filter" argument is sp
             UpdateTimeDestinationTime        => 1277311875,
             UpdateTimeEscalation             => 1,
             UpdateTimeWorkingTime            => -1260,
-            Seen                             => 1, # only on otrs 3.x framework
-
+            Seen                             => 1,
         },
     );
 
@@ -1007,7 +965,6 @@ ticket in each status within an specified filter, if the "Filter" argument is sp
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1037,7 +994,6 @@ ticket in each status within an specified filter, if the "Filter" argument is sp
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1076,8 +1032,6 @@ ticket in each status within an specified filter, if the "Filter" argument is sp
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Open Ticket Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Open Ticket Test",
@@ -1089,8 +1043,7 @@ ticket in each status within an specified filter, if the "Filter" argument is sp
             UpdateTimeDestinationTime        => 1277311875,
             UpdateTimeEscalation             => 1,
             UpdateTimeWorkingTime            => -1260,
-            Seen                             => 1, # only on otrs 3.x framework
-
+            Seen                             => 1,
         },
     );
 
@@ -1184,7 +1137,6 @@ the "Filter" argument is specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1224,7 +1176,6 @@ the "Filter" argument is specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1263,8 +1214,6 @@ the "Filter" argument is specified.
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Open Ticket Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Open Ticket Test",
@@ -1412,7 +1361,6 @@ the "Filter" argument is specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1452,7 +1400,6 @@ the "Filter" argument is specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1491,8 +1438,6 @@ the "Filter" argument is specified.
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Open Ticket Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Open Ticket Test",
@@ -1645,7 +1590,6 @@ specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1685,7 +1629,6 @@ specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1724,8 +1667,6 @@ specified.
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Open Ticket Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Open Ticket Test",
@@ -1878,7 +1819,6 @@ specified.
         SortBy  => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1912,7 +1852,6 @@ specified.
         SortBy   => 'Age',   # Owner|Responsible|CustomerID|State|TicketNumber|Queue|Priority|Age
                             # Type|Lock|Title|Service|SLA|PendingTime|EscalationTime
                             # EscalationUpdateTime|EscalationResponseTime|EscalationSolutionTime
-                            # TicketFreeTime1-6|TicketFreeKey1-16|TicketFreeText1-16
     );
 
     #a result could be
@@ -1951,8 +1890,6 @@ specified.
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Open Ticket Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Open Ticket Test",
@@ -2100,8 +2037,6 @@ Get the last customer article information of a ticket
             SolutionTimeWorkingTime          => -1260,
             State                            => "open",
             Subject                          => "Open Ticket Test",
-            TicketFreeKey13                  => "CriticalityID",
-            TicketFreeKey14                  => "ImpactID",
             TicketID                         => 176,
             TicketNumber                     => 2010062310000015,
             Title                            => "Open Ticket Test",
@@ -2136,23 +2071,21 @@ sub TicketList {
     if (%Article) {
         $Article{PriorityColor} = $Color{ $Article{PriorityID} };
 
-        if ( $Self->{'API3X'} ) {
-            my %TicketFlag = $Self->{TicketObject}->TicketFlagGet(
-                TicketID => $Param{TicketID},
-                UserID   => $Param{UserID},
-            );
-            if ( $TicketFlag{seen} || $TicketFlag{Seen} ) {
-                $Article{Seen} = 1;
-            }
+        my %TicketFlag = $Self->{TicketObject}->TicketFlagGet(
+            TicketID => $Param{TicketID},
+            UserID   => $Param{UserID},
+        );
+        if ( $TicketFlag{seen} || $TicketFlag{Seen} ) {
+            $Article{Seen} = 1;
         }
 
         # strip out all data
-        my @Delete
-            = qw(ReplyTo MessageID InReplyTo References AgeTimeUnix CreateTimeUnix SenderTypeID
-            ArticleFreeKey1 ArticleFreeKey2 ArticleFreeKey3 ArticleFreeText1
-            ArticleFreeText2 ArticleFreeText3 IncomingTime RealTillTimeNotUsed ServiceID SLAID
-            StateType ArchiveFlag UnlockTimeout Changed
-        );
+        my @Delete = qw(
+            ReplyTo MessageID InReplyTo References AgeTimeUnix CreateTimeUnix SenderTypeID
+            IncomingTime RealTillTimeNotUsed ServiceID SLAID StateType ArchiveFlag UnlockTimeout
+            Changed
+            )
+            ;
 
         for my $Key (@Delete) {
             delete $Article{$Key};
@@ -2212,11 +2145,6 @@ Get information of a ticket
         State           => "open",
         TicketNumber    => "2010070610000215",
         Title           => "iPhone Test",
-        TicketFreeKey1  => "Product",
-        TicketFreeText1 => "PC",
-        TicketFreeKey13 => "CriticalityID",
-        TicketFreeKey14 => "ImpactID",
-        TicketFreeTime1 => "2010-07-10 09:58:00",
         TypeID          => 1,
         Type            => "default",
         UntilTime       => "0",
@@ -2228,21 +2156,11 @@ sub TicketGet {
     my ( $Self, %Param ) = @_;
 
     # permission check
-    my $Access;
-    if ( $Self->{'API3X'} ) {
-        $Access = $Self->{TicketObject}->TicketPermission(
-            Type     => 'ro',
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID}
-        );
-    }
-    else {
-        $Access = $Self->{TicketObject}->Permission(
-            Type     => 'ro',
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID}
-        );
-    }
+    my $Access = $Self->{TicketObject}->TicketPermission(
+        Type     => 'ro',
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID}
+    );
     if ( !$Access ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
@@ -2263,14 +2181,12 @@ sub TicketGet {
 
     $Ticket{PriorityColor} = $Color{ $Ticket{PriorityID} };
 
-    if ( $Self->{'API3X'} ) {
-        my %TicketFlag = $Self->{TicketObject}->TicketFlagGet(
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-        );
-        if ( $TicketFlag{seen} || $TicketFlag{Seen} ) {
-            $Ticket{Seen} = 1;
-        }
+    my %TicketFlag = $Self->{TicketObject}->TicketFlagGet(
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+    );
+    if ( $TicketFlag{seen} || $TicketFlag{Seen} ) {
+        $Ticket{Seen} = 1;
     }
     else {
 
@@ -2278,22 +2194,20 @@ sub TicketGet {
         my $ArticleAllSeen = 1;
         my @Index = $Self->{TicketObject}->ArticleIndex( TicketID => $Ticket{TicketID} );
         for my $ArticleID (@Index) {
-            if ( $Self->{'API3X'} ) {
-                my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
-                    ArticleID => $ArticleID,
-                    UserID    => $Param{UserID},
-                );
+            my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+                ArticleID => $ArticleID,
+                UserID    => $Param{UserID},
+            );
 
-                # last if article was not shown
-                if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
-                    $ArticleAllSeen = 0;
-                    last;
-                }
+            # last if article was not shown
+            if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
+                $ArticleAllSeen = 0;
+                last;
             }
         }
 
         # mark ticket as seen if all article are shown
-        if ( $ArticleAllSeen && $Self->{'API3X'} ) {
+        if ($ArticleAllSeen) {
             $Self->{TicketObject}->TicketFlagSet(
                 TicketID => $Ticket{TicketID},
                 Key      => 'Seen',
@@ -2310,12 +2224,12 @@ sub TicketGet {
     }
 
     # strip out all data
-    my @Delete
-        = qw(ReplyTo MessageID InReplyTo References AgeTimeUnix CreateTimeUnix SenderTypeID
-        ArticleFreeKey1 ArticleFreeKey2 ArticleFreeKey3 ArticleFreeText1
-        ArticleFreeText2 ArticleFreeText3 IncomingTime RealTillTimeNotUsed ServiceID SLAID
-        StateType ArchiveFlag UnlockTimeout Changed
-    );
+    my @Delete = qw(
+        ReplyTo MessageID InReplyTo References AgeTimeUnix CreateTimeUnix SenderTypeID
+        IncomingTime RealTillTimeNotUsed ServiceID SLAID StateType ArchiveFlag UnlockTimeout
+        Changed
+        )
+        ;
 
     for my $Key (@Delete) {
         delete $Ticket{$Key};
@@ -2384,9 +2298,6 @@ Get information from an article
         Subject                          => "iPhone Test",
         State                            => "open",
         TicketID                         => 247,
-        TicketFreeKey1                   => "Device",
-        TicketFreeTime1                  => "2010-07-12 14:13:00",
-        TicketFreeText1                  => "Notebook",
         TicketNumber                     => "2010071210000043",
         Title                            => "iPhone Test",
         To                               => "Junk",
@@ -2407,21 +2318,11 @@ sub ArticleGet {
 
     # permission check
     my %Article = $Self->{TicketObject}->ArticleGet(%Param);
-    my $Access;
-    if ( $Self->{'API3X'} ) {
-        $Access = $Self->{TicketObject}->TicketPermission(
-            Type     => 'ro',
-            TicketID => $Article{TicketID},
-            UserID   => $Param{UserID}
-        );
-    }
-    else {
-        $Access = $Self->{TicketObject}->Permission(
-            Type     => 'ro',
-            TicketID => $Article{TicketID},
-            UserID   => $Param{UserID}
-        );
-    }
+    my $Access  = $Self->{TicketObject}->TicketPermission(
+        Type     => 'ro',
+        TicketID => $Article{TicketID},
+        UserID   => $Param{UserID}
+    );
     if ( !$Access ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
@@ -2431,46 +2332,42 @@ sub ArticleGet {
     }
 
     if (%Article) {
-        if ( $Self->{'API3X'} ) {
 
-            # check if article is seen
-            my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
-                ArticleID => $Param{ArticleID},
-                UserID    => $Param{UserID},
-            );
-            if ( $ArticleFlag{seen} || $ArticleFlag{Seen} ) {
-                $Article{Seen} = 1;
-            }
-
-            # mark shown article as seen
-            $Self->{TicketObject}->ArticleFlagSet(
-                ArticleID => $Param{ArticleID},
-                Key       => 'Seen',
-                Value     => 1,
-                UserID    => $Param{UserID},
-            );
+        # check if article is seen
+        my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+            ArticleID => $Param{ArticleID},
+            UserID    => $Param{UserID},
+        );
+        if ( $ArticleFlag{seen} || $ArticleFlag{Seen} ) {
+            $Article{Seen} = 1;
         }
+
+        # mark shown article as seen
+        $Self->{TicketObject}->ArticleFlagSet(
+            ArticleID => $Param{ArticleID},
+            Key       => 'Seen',
+            Value     => 1,
+            UserID    => $Param{UserID},
+        );
 
         # check if ticket need to be marked as seen
         my $ArticleAllSeen = 1;
         my @Index = $Self->{TicketObject}->ArticleIndex( TicketID => $Article{TicketID} );
         for my $ArticleID (@Index) {
-            if ( $Self->{'API3X'} ) {
-                my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
-                    ArticleID => $ArticleID,
-                    UserID    => $Param{UserID},
-                );
+            my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+                ArticleID => $ArticleID,
+                UserID    => $Param{UserID},
+            );
 
-                # last if article was not shown
-                if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
-                    $ArticleAllSeen = 0;
-                    last;
-                }
+            # last if article was not shown
+            if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
+                $ArticleAllSeen = 0;
+                last;
             }
         }
 
         # mark ticket as seen if all article are shown
-        if ( $ArticleAllSeen && $Self->{'API3X'} ) {
+        if ($ArticleAllSeen) {
             $Self->{TicketObject}->TicketFlagSet(
                 TicketID => $Article{TicketID},
                 Key      => 'Seen',
@@ -2486,12 +2383,12 @@ sub ArticleGet {
         }
 
         # strip out all data
-        my @Delete
-            = qw(ReplyTo MessageID InReplyTo References AgeTimeUnix CreateTimeUnix SenderTypeID
-            ArticleFreeKey1 ArticleFreeKey2 ArticleFreeKey3 ArticleFreeText1
-            ArticleFreeText2 ArticleFreeText3 IncomingTime RealTillTimeNotUsed ServiceID SLAID
-            StateType ArchiveFlag UnlockTimeout Changed
-        );
+        my @Delete = qw(
+            ReplyTo MessageID InReplyTo References AgeTimeUnix CreateTimeUnix SenderTypeID
+            IncomingTime RealTillTimeNotUsed ServiceID SLAIDStateType ArchiveFlag UnlockTimeout
+            Changed
+            )
+            ;
 
         for my $Key (@Delete) {
             delete $Article{$Key};
@@ -2783,12 +2680,7 @@ The result is the TicketID for Action Phone or ArticleID for the other actions
         StateID             => 4,
         PendingDate         =>"2010-07-09 23:54:18",
         PriorityID          => 1,
-        TicketFreeTime1     =>"2010-07-09 23:54:18",
-        TicketFreeTime1Used => 1,
-        TicketFreeText1     =>"Notebook",
-        TicketFreeKey1      =>"Device",
-        ArticleFreeText1    =>"Bugfix",
-        ArticleFreeKey1     =>"Work",
+        DyanmicField_NameX  => 'some value',
         UserID              => 1,
     );
 
@@ -2886,25 +2778,51 @@ sub VersionGet {
         return -1;
     }
 
-    PACKAGE:
-    for my $Package ( $Self->{PackageObject}->RepositoryList() ) {
-        if ( $Package->{Name}->{Content} eq 'iPhoneHandle' ) {
-            my %iPhonePackage = (
-                Name      => $Package->{Name}->{Content},
-                Version   => $Package->{Version}->{Content},
-                Vendor    => $Package->{Vendor}->{Content},
-                URL       => $Package->{URL}->{Content},
-                Framework => $Self->{SystemVersion},
-            );
-            return \%iPhonePackage;
-            last PACKAGE;
-        }
+    # get home path
+    my $Home = $Self->{ConfigObject}->Get('Home');
+
+    # load RELEASE file
+    if ( -e !"$Home/RELEASE.iPhoneHandle" ) {
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "ERROR: $Home/RELEASE.iPhoneHandle does not exist! This file is"
+                . " needed by iPhoneHandle, the system will not work without this file.\n",
+        );
+        return -1;
     }
-    $Self->{LogObject}->Log(
-        Priority => 'error',
-        Message  => 'No iPhoneHandle Package found, is this a development enviroment?',
-    );
-    return -1;
+    my $PackageName;
+    my $PackageVersion;
+    if ( open( my $Product, '<', "$Home/RELEASE.iPhoneHandle" ) ) {
+        while (<$Product>) {
+
+            # filtering of comment lines
+            if ( $_ !~ /^#/ ) {
+                if ( $_ =~ /^PRODUCT\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
+                    $PackageName = $1;
+                }
+                elsif ( $_ =~ /^VERSION\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
+                    $PackageVersion = $1;
+                }
+            }
+        }
+        close($Product);
+    }
+    else {
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "ERROR: Can't read $Home/RELEASE.iPhoneHandle! This file is"
+                . " needed by iPhoneHandle, the system will not work without this file.\n",
+        );
+        return -1;
+    }
+
+    return {
+        Name      => $PackageName,
+        Version   => $PackageVersion,
+        Vendor    => 'OTRS AG',
+        URL       => 'http://otrs.org/',
+        Framework => $Self->{ConfigObject}->Get('Version'),
+    };
 }
 
 =item CustomerIDGet()
@@ -3582,194 +3500,58 @@ sub _GetScreenElements {
         push @ScreenElements, $PriorityElements;
     }
 
-    # ticket freetext fields
-    for my $Index ( 1 .. 16 ) {
-        if ( $Self->{Config}->{TicketFreeText}->{$Index} ) {
+    # dynamic fields
+    # get dynamic field config for the screen
+    $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
 
-            my $FreeTextElement;
+    # get the dynamic fields for ticket object
+    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => [ 'Ticket', 'Article' ],
+        FieldFilter => $Self->{DynamicFieldFilter} || {},
+    );
 
-            my $Name;
-            $Name = 'TicketFreeText' . $Index;
+    # get user preferences
+    my %UserPreferences = $Self->{UserObject}->GetPreferences( UserID => $Param{UserID} );
 
-            my $Title;
-            $Title = $Self->{ConfigObject}->Get( 'TicketFreeKey' . $Index . '::DefaultSelection' );
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-            my $ViewType;
-            if ( $Self->{ConfigObject}->Get( 'TicketFreeText' . $Index ) ) {
-                $ViewType = 'Picker';
-            }
-            else {
-                $ViewType = 'Input';
-            }
+        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            DynamicFieldConfig => $DynamicFieldConfig,
+        );
 
-            my @TicketFreeKeys;
-            @TicketFreeKeys = $Self->{ConfigObject}->Get( 'TicketFreeKey' . $Index );
+        # create $Value as undefined because a user default value could be ''
+        my $Value = undef;
 
-            my @Options;
-            @Options = $Self->{ConfigObject}->Get( 'TicketFreeText' . $Index );
-
-            my $Mandatory;
-            if ( $Self->{Config}->{TicketFreeText}->{$Index} == 2 ) {
-                $Mandatory = 1;
-            }
-            else {
-                $Mandatory = 0;
-            }
-
-            my $Default;
-            if ( $Self->{ConfigObject}->Get( 'TicketFreeText' . $Index ) ) {
-                $Default = $Self->{ConfigObject}->Get(
-                    'TicketFreeText' . $Index
-                        . '::DefaultSelection'
-                );
-            }
-            else {
-                $Default = '';
-            }
-
-            if ( $Self->{ConfigObject}->Get( 'TicketFreeText' . $Index ) ) {
-                $FreeTextElement = {
-                    Name        => $Name,
-                    Title       => $Title,
-                    FreeTextKey => @TicketFreeKeys,
-                    Datatype    => 'Text',
-                    Viewtype    => $ViewType,
-                    Options     => @Options,
-                    Mandatory   => $Mandatory,
-                    Default     => $Default || '',
-                };
-            }
-            else {
-                $FreeTextElement = {
-                    Name        => $Name,
-                    Title       => $Title,
-                    FreeTextKey => @TicketFreeKeys,
-                    Datatype    => 'Text',
-                    Viewtype    => $ViewType,
-                    Min         => 1,
-                    Max         => 200,
-                    Mandatory   => $Mandatory,
-                    Default     => $Default || '',
-                };
-            }
-
-            push @ScreenElements, $FreeTextElement;
+        # override the value from user preferences if is set
+        if ( $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} } ) {
+            $Value = $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} };
         }
-    }
 
-    # ticket freetime fields
-    for my $Index ( 1 .. 6 ) {
-        if ( $Self->{Config}->{TicketFreeTime}->{$Index} ) {
-
-            my $Name;
-            $Name = 'TicketFreeTime' . $Index;
-
-            my $Title;
-            $Title = $Self->{ConfigObject}->Get( 'TicketFreeTimeKey' . $Index );
-
-            my $Mandatory;
-            if ( $Self->{ConfigObject}->Get( 'TicketFreeTimeOptional' . $Index ) ) {
-                $Mandatory = 0;
-            }
-            else {
-                $Mandatory = 1;
-            }
-
-            my $DefaultTimeFormated;
-            my $TimeDiff = 0;
-            if ( $Self->{ConfigObject}->Get( 'TicketFreeTimeDiff' . $Index ) ) {
-                $TimeDiff = $Self->{ConfigObject}->Get( 'TicketFreeTimeDiff' . $Index );
-            }
-            my $DefaultTime = $Self->{TimeObject}->SystemTime() - $TimeDiff;
-
-            $DefaultTimeFormated = $Self->{TimeObject}->SystemTime2TimeStamp(
-                SystemTime => $DefaultTime,
+        if ( $Param{TicketID} && $DynamicFieldConfig->{ObjectType} eq 'Ticket' ) {
+            $Value = $Self->{BackendObject}->ValueGet(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ObjectID           => $Param{TicketID},
             );
-
-            my $FreeTimeElement = {
-                Name      => $Name,
-                Title     => $Title,
-                Datatype  => 'DateTime',
-                Viewtype  => 'Picker',
-                Mandatory => $Mandatory,
-                Default   => $DefaultTimeFormated || '',
-            };
-            push @ScreenElements, $FreeTimeElement;
         }
-    }
 
-    # article freetext fields
-    for my $Index ( 1 .. 3 ) {
-        if ( $Self->{Config}->{ArticleFreeText}->{$Index} ) {
+        my $FieldDefinition = $Self->{iPhoneBackendObject}->EditFieldRender(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $Value,
+            UseDefaultValue    => 1,
+            LanguageObject     => $Self->{LanguageObject},
+            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+        );
 
-            my $FreeTextElement;
-
-            my $Name;
-            $Name = 'ArticleFreeText' . $Index;
-
-            my $Title;
-            $Title = $Self->{ConfigObject}->Get( 'ArticleFreeKey' . $Index . '::DefaultSelection' );
-
-            my $ViewType;
-            if ( $Self->{ConfigObject}->Get( 'ArticleFreeText' . $Index ) ) {
-                $ViewType = 'Picker';
-            }
-            else {
-                $ViewType = 'Input';
-            }
-
-            my @ArticleFreeKeys;
-            @ArticleFreeKeys = $Self->{ConfigObject}->Get( 'ArticleFreeKey' . $Index );
-
-            my @Options;
-            @Options = $Self->{ConfigObject}->Get( 'ArticleFreeText' . $Index );
-
-            my $Mandatory;
-            if ( $Self->{Config}->{ArticleFreeText}->{$Index} == 2 ) {
-                $Mandatory = 1;
-            }
-            else {
-                $Mandatory = 0;
-            }
-
-            my $Default;
-            if ( $Self->{ConfigObject}->Get( 'ArticleFreeText' . $Index ) ) {
-                $Default = $Self->{ConfigObject}->Get(
-                    'ArticleFreeText' . $Index
-                        . '::DefaultSelection'
-                );
-            }
-            else {
-                $Default = '';
-            }
-
-            if ( $Self->{ConfigObject}->Get( 'ArticleFreeText' . $Index ) ) {
-                $FreeTextElement = {
-                    Name        => $Name,
-                    Title       => $Title,
-                    FreeTextKey => @ArticleFreeKeys,
-                    Datatype    => 'Text',
-                    Viewtype    => $ViewType,
-                    Options     => @Options,
-                    Mandatory   => $Mandatory,
-                    Default     => $Default || '',
-                };
-            }
-            else {
-                $FreeTextElement = {
-                    Name        => $Name,
-                    Title       => $Title,
-                    FreeTextKey => @ArticleFreeKeys,
-                    Datatype    => 'Text',
-                    Viewtype    => $ViewType,
-                    Min         => 1,
-                    Max         => 200,
-                    Mandatory   => $Mandatory,
-                    Default     => $Default || '',
-                };
-            }
-
-            push @ScreenElements, $FreeTextElement;
+        # check if the FieldDefinition is defined and cotain data, otherwise an undef variable in
+        # this point will cause a NULL element in the ARRAY and will cause iPhone App to crash
+        if ( IsHashRefWithData($FieldDefinition) ) {
+            push @ScreenElements, $FieldDefinition;
         }
     }
 
@@ -3811,19 +3593,73 @@ sub _TicketPhoneNew {
     }
 
     # transform pending time, time stamp based on user time zone
-    if ( defined $Param{PendingDate} ) {
+    if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
             TimeStamp => $Param{PendingDate},
         );
     }
 
-    # transform free time, time stamp based on user time zone
-    for my $Count ( 1 .. 6 ) {
-        my $Prefix = 'TicketFreeTime' . $Count;
-        next if !defined $Param{$Prefix};
-        $Param{$Prefix} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{$Prefix},
+    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+
+    # get dynamic field config for the screen
+    $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
+
+    # get the dynamic fields for ticket object
+    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => [ 'Ticket', 'Article' ],
+        FieldFilter => $Self->{DynamicFieldFilter} || {},
+    );
+
+    my %DynamicFieldValues;
+
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+
+        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            DynamicFieldConfig => $DynamicFieldConfig,
         );
+
+        # extract the dynamic field value form parameters
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
+            $Self->{iPhoneBackendObject}->EditFieldValueGet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            TransformDates     => 1,
+            UserTimeZone       => $UserTimeZone || 0,
+            %Param,
+            );
+
+        # perform validation of the data
+        my $ValidationResult = $Self->{iPhoneBackendObject}->EditFieldValueValidate(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+        );
+
+        if ( !IsHashRefWithData($ValidationResult) ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
+            );
+            return;
+        }
+
+        # propagate validation error
+        if ( $ValidationResult->{ServerError} ) {
+
+            my $ErrorMessage = $ValidationResult->{ErrorMessage}
+                || "Dynamic field $DynamicFieldConfig->{Label} invalid";
+
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => $ErrorMessage,
+            );
+            return;
+        }
     }
 
     my $CustomerUser = $Param{CustomerUserLogin};
@@ -3852,24 +3688,6 @@ sub _TicketPhoneNew {
             $Self->{LogObject}->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
-            );
-            return;
-        }
-    }
-
-    # get free text config options
-    #my %TicketFreeText = (); not used
-    for ( 1 .. 16 ) {
-
-        # check required FreeTextField (if configured)
-        if (
-            $Self->{Config}{'TicketFreeText'}->{$_} == 2
-            && $Param{"TicketFreeText$_"} eq ''
-            )
-        {
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => "TicketFreeTextField$_ invalid",
             );
             return;
         }
@@ -3967,42 +3785,24 @@ sub _TicketPhoneNew {
         return;
     }
 
-    # set all the FreeFields Migrated from DynamicFields
-    $Self->_SetTicketFreeText(%Param);
+    # set ticket dynamic fields
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
-    # set ticket free time
-    for ( 1 .. 6 ) {
+        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            DynamicFieldConfig => $DynamicFieldConfig,
+        );
 
-        if ( $Param{ 'TicketFreeTime' . $_ } ) {
-            my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay )
-                = $Self->{TimeObject}->SystemTime2Date(
-                SystemTime => $Self->{TimeObject}->SystemTime( $Param{ 'TicketFreeTime' . $_ } ),
-                );
-
-            $Param{ 'TicketFreeTime' . $_ . 'Year' }   = $Year;
-            $Param{ 'TicketFreeTime' . $_ . 'Month' }  = $Month;
-            $Param{ 'TicketFreeTime' . $_ . 'Day' }    = $Day;
-            $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = $Hour;
-            $Param{ 'TicketFreeTime' . $_ . 'Minute' } = $Min;
-
-            # set time stamp to NULL if field is not used/checked
-            if ( !$Param{ 'TicketFreeTime' . $_ . 'Used' } ) {
-                $Param{ 'TicketFreeTime' . $_ . 'Year' }   = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Month' }  = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Day' }    = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Minute' } = 0;
-            }
-
-            # set free time
-            $Self->{TicketObject}->TicketFreeTimeSet(
-                %Param,
-                Prefix   => 'TicketFreeTime',
-                TicketID => $TicketID,
-                Counter  => $_,
-                UserID   => $Param{UserID},
-            );
-        }
+        # set the value
+        my $Success = $Self->{BackendObject}->ValueSet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            ObjectID           => $TicketID,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            UserID             => $Param{UserID},
+        );
     }
 
     my $MimeType = 'text/plain';
@@ -4013,6 +3813,7 @@ sub _TicketPhoneNew {
         $NoAgentNotify = 1;
     }
     my $QueueName = $Self->{QueueObject}->QueueLookup( QueueID => $Param{QueueID} );
+
     my $ArticleID = $Self->{TicketObject}->ArticleCreate(
         NoAgentNotify => $NoAgentNotify,
         TicketID      => $TicketID,
@@ -4041,80 +3842,59 @@ sub _TicketPhoneNew {
 
     if ($ArticleID) {
 
-        # set article free text
-        $Self->_SetArticleFreeText(
-            %Param,
-            ArticleID => $ArticleID
-        );
+        # set ticket dynamic fields
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
+
+            next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+                DynamicFieldConfig => $DynamicFieldConfig,
+            );
+
+            # set the value
+            my $Success = $Self->{BackendObject}->ValueSet(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ObjectID           => $ArticleID,
+                Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+                UserID             => $Param{UserID},
+            );
+        }
 
         # set owner (if new user id is given)
         if ( $Param{OwnerID} ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketOwnerSet(
-                    TicketID  => $TicketID,
-                    NewUserID => $Param{OwnerID},
-                    UserID    => $Param{UserID},
-                );
+            $Self->{TicketObject}->TicketOwnerSet(
+                TicketID  => $TicketID,
+                NewUserID => $Param{OwnerID},
+                UserID    => $Param{UserID},
+            );
 
-                # set lock
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $TicketID,
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->OwnerSet(
-                    TicketID  => $TicketID,
-                    NewUserID => $Param{OwnerID},
-                    UserID    => $Param{UserID},
-                );
-
-                # set lock
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $TicketID,
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-            }
+            # set lock
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $TicketID,
+                Lock     => 'lock',
+                UserID   => $Param{UserID},
+            );
         }
 
         # else set owner to current agent but do not lock it
         else {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketOwnerSet(
-                    TicketID           => $TicketID,
-                    NewUserID          => $Param{UserID},
-                    SendNoNotification => 1,
-                    UserID             => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->OwnerSet(
-                    TicketID           => $TicketID,
-                    NewUserID          => $Param{UserID},
-                    SendNoNotification => 1,
-                    UserID             => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketOwnerSet(
+                TicketID           => $TicketID,
+                NewUserID          => $Param{UserID},
+                SendNoNotification => 1,
+                UserID             => $Param{UserID},
+            );
         }
 
         # set responsible (if new user id is given)
         if ( $Param{ResponsibleID} ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketResponsibleSet(
-                    TicketID  => $TicketID,
-                    NewUserID => $Param{ResponsibleID},
-                    UserID    => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->ResponsibleSet(
-                    TicketID  => $TicketID,
-                    NewUserID => $Param{ResponsibleID},
-                    UserID    => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketResponsibleSet(
+                TicketID  => $TicketID,
+                NewUserID => $Param{ResponsibleID},
+                UserID    => $Param{UserID},
+            );
         }
 
         # time accounting
@@ -4130,20 +3910,11 @@ sub _TicketPhoneNew {
         # should i set an unlock?
         my %StateData = $Self->{StateObject}->StateGet( ID => $Param{StateID} );
         if ( $StateData{TypeName} =~ /^close/i ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $TicketID,
-                    Lock     => 'unlock',
-                    UserID   => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $TicketID,
-                    Lock     => 'unlock',
-                    UserID   => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $TicketID,
+                Lock     => 'unlock',
+                UserID   => $Param{UserID},
+            );
         }
 
         # set pending time
@@ -4156,7 +3927,7 @@ sub _TicketPhoneNew {
                 String   => $Param{PendingDate},
             );
         }
-        return $TicketID;
+        return int $TicketID;
     }
     else {
         $Self->{LogObject}->Log(
@@ -4191,21 +3962,11 @@ sub _TicketCommonActions {
     }
 
     # check permissions
-    my $Access;
-    if ( $Self->{'API3X'} ) {
-        $Access = $Self->{TicketObject}->TicketPermission(
-            Type     => $Self->{Config}->{Permission},
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-        );
-    }
-    else {
-        $Access = $Self->{TicketObject}->Permission(
-            Type     => $Self->{Config}->{Permission},
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-        );
-    }
+    my $Access = $Self->{TicketObject}->TicketPermission(
+        Type     => $Self->{Config}->{Permission},
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+    );
 
     # error screen, don't show ticket
     if ( !$Access ) {
@@ -4220,41 +3981,19 @@ sub _TicketCommonActions {
 
     # get lock state
     if ( $Self->{Config}->{RequiredLock} ) {
-        my $Locked;
-        if ( $Self->{'API3X'} ) {
-            $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
-        }
-        else {
-            my %TicketData = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
-            if ( $TicketData{Lock} eq 'lock' ) {
-                $Locked = 1;
-            }
-        }
+        my $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
+
         if ( !$Locked ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-                my $Success = $Self->{TicketObject}->TicketOwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-                my $Success = $Self->{TicketObject}->OwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $Param{TicketID},
+                Lock     => 'lock',
+                UserID   => $Param{UserID},
+            );
+            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUserID => $Param{UserID},
+            );
         }
         else {
             my $AccessOk = $Self->{TicketObject}->OwnerCheck(
@@ -4273,19 +4012,73 @@ sub _TicketCommonActions {
     }
 
     # transform pending time, time stamp based on user time zone
-    if ( defined $Param{PendingDate} ) {
+    if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
             TimeStamp => $Param{PendingDate},
         );
     }
 
-    # transform free time, time stamp based on user time zone
-    for my $Count ( 1 .. 6 ) {
-        my $Prefix = 'TicketFreeTime' . $Count;
-        next if !defined $Param{$Prefix};
-        $Param{$Prefix} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{$Prefix},
+    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+
+    # get dynamic field config for the screen
+    $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
+
+    # get the dynamic fields for ticket object
+    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => [ 'Ticket', 'Article' ],
+        FieldFilter => $Self->{DynamicFieldFilter} || {},
+    );
+
+    my %DynamicFieldValues;
+
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+
+        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            DynamicFieldConfig => $DynamicFieldConfig,
         );
+
+        # extract the dynamic field value form parameters
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
+            $Self->{iPhoneBackendObject}->EditFieldValueGet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            TransformDates     => 1,
+            UserTimeZone       => $UserTimeZone || 0,
+            %Param,
+            );
+
+        # perform validation of the data
+        my $ValidationResult = $Self->{iPhoneBackendObject}->EditFieldValueValidate(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+        );
+
+        if ( !IsHashRefWithData($ValidationResult) ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
+            );
+            return;
+        }
+
+        # propagate validation error
+        if ( $ValidationResult->{ServerError} ) {
+
+            my $ErrorMessage = $ValidationResult->{ErrorMessage}
+                || "Dynamic field $DynamicFieldConfig->{Label} invalid";
+
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => $ErrorMessage,
+            );
+            return;
+        }
     }
 
     # rewrap body if no rich text is used
@@ -4335,17 +4128,6 @@ sub _TicketCommonActions {
             );
             return;
         }
-    }
-
-    # check required FreeTextField (if configured)
-    for my $Count ( 1 .. 16 ) {
-        next if $Self->{Config}->{TicketFreeText}->{$Count} ne 2;
-        next if $Param{"TicketFreeText$Count"} ne '';
-        $Self->{LogObject}->Log(
-            Priority => 'error',
-            Message  => "TicketFreeTextField$Count invalid",
-        );
-        return;
     }
 
     #check if Title
@@ -4404,33 +4186,17 @@ sub _TicketCommonActions {
     if ( $Self->{Config}->{Owner} ) {
         my $BodyText = $Param{Body} || '';
         if ( $Param{OwnerID} ) {
-            my $Success;
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-                $Success = $Self->{TicketObject}->TicketOwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{OwnerID},
-                    Comment   => $BodyText,
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-                $Success = $Self->{TicketObject}->OwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{OwnerID},
-                    Comment   => $BodyText,
-                );
-            }
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $Param{TicketID},
+                Lock     => 'lock',
+                UserID   => $Param{UserID},
+            );
+            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUserID => $Param{OwnerID},
+                Comment   => $BodyText,
+            );
 
             # remember to not notify owner twice
             if ( $Success && $Success eq 1 ) {
@@ -4443,23 +4209,12 @@ sub _TicketCommonActions {
     if ( $Self->{Config}->{Responsible} ) {
         if ( $Param{ResponsibleID} ) {
             my $BodyText = $Param{Body} || '';
-            my $Success;
-            if ( $Self->{'API3X'} ) {
-                $Success = $Self->{TicketObject}->TicketResponsibleSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{ResponsibleID},
-                    Comment   => $BodyText,
-                );
-            }
-            else {
-                $Success = $Self->{TicketObject}->ResponsibleSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{ResponsibleID},
-                    Comment   => $BodyText,
-                );
-            }
+            my $Success = $Self->{TicketObject}->TicketResponsibleSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUserID => $Param{ResponsibleID},
+                Comment   => $BodyText,
+            );
 
             # remember to not notify responsible twice
             if ( $Success && $Success eq 1 ) {
@@ -4514,81 +4269,41 @@ sub _TicketCommonActions {
             );
         }
 
-        # set all the FreeFields Migrated from DynamicFields
-        $Self->_SetTicketFreeText(%Param);
+        # set dynamic fields
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        # set ticket free time
-        for ( 1 .. 6 ) {
+            # set the object ID (TicketID or ArticleID) depending on the field configration
+            my $ObjectID
+                = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
-            if ( $Param{ 'TicketFreeTime' . $_ } ) {
-                my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay )
-                    = $Self->{TimeObject}->SystemTime2Date(
-                    SystemTime =>
-                        $Self->{TimeObject}->SystemTime( $Param{ 'TicketFreeTime' . $_ } ),
-                    );
-
-                $Param{ 'TicketFreeTime' . $_ . 'Year' }   = $Year;
-                $Param{ 'TicketFreeTime' . $_ . 'Month' }  = $Month;
-                $Param{ 'TicketFreeTime' . $_ . 'Day' }    = $Day;
-                $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = $Hour;
-                $Param{ 'TicketFreeTime' . $_ . 'Minute' } = $Min;
-
-                # set time stamp to NULL if field is not used/checked
-                if ( !$Param{ 'TicketFreeTime' . $_ . 'Used' } ) {
-                    $Param{ 'TicketFreeTime' . $_ . 'Year' }   = 0;
-                    $Param{ 'TicketFreeTime' . $_ . 'Month' }  = 0;
-                    $Param{ 'TicketFreeTime' . $_ . 'Day' }    = 0;
-                    $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = 0;
-                    $Param{ 'TicketFreeTime' . $_ . 'Minute' } = 0;
-                }
-
-                # set free time
-                $Self->{TicketObject}->TicketFreeTimeSet(
-                    %Param,
-                    Prefix   => 'TicketFreeTime',
-                    TicketID => $Param{TicketID},
-                    Counter  => $_,
-                    UserID   => $Param{UserID},
-                );
-            }
+            # set the value
+            my $Success = $Self->{BackendObject}->ValueSet(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ObjectID           => $ObjectID,
+                Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+                UserID             => $Param{UserID},
+            );
         }
-
-        $Self->_SetArticleFreeText( %Param, ArticleID => $ArticleID );
 
         # set priority
         if ( $Self->{Config}->{Priority} && $Param{PriorityID} ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketPrioritySet(
-                    TicketID   => $Param{TicketID},
-                    PriorityID => $Param{PriorityID},
-                    UserID     => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->PrioritySet(
-                    TicketID   => $Param{TicketID},
-                    PriorityID => $Param{PriorityID},
-                    UserID     => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketPrioritySet(
+                TicketID   => $Param{TicketID},
+                PriorityID => $Param{PriorityID},
+                UserID     => $Param{UserID},
+            );
         }
 
         # set state
         if ( $Self->{Config}->{State} && $Param{StateID} ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketStateSet(
-                    TicketID => $Param{TicketID},
-                    StateID  => $Param{StateID},
-                    UserID   => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->StateSet(
-                    TicketID => $Param{TicketID},
-                    StateID  => $Param{StateID},
-                    UserID   => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketStateSet(
+                TicketID => $Param{TicketID},
+                StateID  => $Param{StateID},
+                UserID   => $Param{UserID},
+            );
 
             # unlock the ticket after close
             my %StateData = $Self->{TicketObject}->{StateObject}->StateGet(
@@ -4597,20 +4312,11 @@ sub _TicketCommonActions {
 
             # set unlock on close state
             if ( $StateData{TypeName} =~ /^close/i ) {
-                if ( $Self->{'API3X'} ) {
-                    $Self->{TicketObject}->TicketLockSet(
-                        TicketID => $Param{TicketID},
-                        Lock     => 'unlock',
-                        UserID   => $Param{UserID},
-                    );
-                }
-                else {
-                    $Self->{TicketObject}->LockSet(
-                        TicketID => $Param{TicketID},
-                        Lock     => 'unlock',
-                        UserID   => $Param{UserID},
-                    );
-                }
+                $Self->{TicketObject}->TicketLockSet(
+                    TicketID => $Param{TicketID},
+                    Lock     => 'unlock',
+                    UserID   => $Param{UserID},
+                );
             }
 
             # set pending time on pendig state
@@ -4635,23 +4341,6 @@ sub _TicketCommonActions {
         if ( !defined $Param{Subject} && $Self->{Config}->{Subject} ) {
             $Param{Subject} = $Self->{Config}->{Subject},;
         }
-
-        $Self->_GetTicketFreeTextValues( \%Param );
-
-        # ticket free time
-
-        # get default selections
-        my %ArticleFreeDefault;
-        for my $Count ( 1 .. 3 ) {
-            my $Key  = 'ArticleFreeKey' . $Count;
-            my $Text = 'ArticleFreeText' . $Count;
-            $ArticleFreeDefault{$Key} = $Param{$Key}
-                || $Self->{ConfigObject}->Get( $Key . '::DefaultSelection' );
-            $ArticleFreeDefault{$Text} = $Param{$Text}
-                || $Self->{ConfigObject}->Get( $Text . '::DefaultSelection' );
-        }
-
-        $Self->_GetArticleFreeTextValues( \%Param );    # with the ticket id
 
         my $result = $Self->_TicketCommonActions(
             %Param,
@@ -4678,21 +4367,11 @@ sub _TicketCompose {
     }
 
     # check permissions
-    my $Access;
-    if ( $Self->{'API3X'} ) {
-        $Access = $Self->{TicketObject}->TicketPermission(
-            Type     => $Self->{Config}->{Permission},
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-        );
-    }
-    else {
-        $Access = $Self->{TicketObject}->Permission(
-            Type     => $Self->{Config}->{Permission},
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-        );
-    }
+    my $Access = $Self->{TicketObject}->TicketPermission(
+        Type     => $Self->{Config}->{Permission},
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+    );
 
     # error screen, don't show ticket
     if ( !$Access ) {
@@ -4706,44 +4385,19 @@ sub _TicketCompose {
 
     # get lock state
     if ( $Self->{Config}->{RequiredLock} ) {
-        my $Locked;
-        if ( $Self->{'API3X'} ) {
-            $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
-        }
-        else {
-            my %TicketData = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
-            if ( $TicketData{Lock} eq 'lock' ) {
-                $Locked = 1;
-            }
-        }
+        my $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
         if ( !$Locked ) {
-            my $Success;
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $Param{TicketID},
+                Lock     => 'lock',
+                UserID   => $Param{UserID},
+            );
 
-                $Success = $Self->{TicketObject}->TicketOwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-
-                $Success = $Self->{TicketObject}->OwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{UserID},
-                );
-            }
+            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUserID => $Param{UserID},
+            );
         }
         else {
             my $AccessOk = $Self->{TicketObject}->OwnerCheck(
@@ -4762,23 +4416,77 @@ sub _TicketCompose {
     }
 
     # transform pending time, time stamp based on user time zone
-    if ( defined $Param{PendingDate} ) {
+    if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
             TimeStamp => $Param{PendingDate},
         );
     }
 
-    # transform free time, time stamp based on user time zone
-    for my $Count ( 1 .. 6 ) {
-        my $Prefix = 'TicketFreeTime' . $Count;
-        next if !defined $Param{$Prefix};
-        $Param{$Prefix} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{$Prefix},
+    #TODO dynamic fields
+    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+
+    # get dynamic field config for the screen
+    $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
+
+    # get the dynamic fields for ticket object
+    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => [ 'Ticket', 'Article' ],
+        FieldFilter => $Self->{DynamicFieldFilter} || {},
+    );
+
+    my %DynamicFieldValues;
+
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+
+        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            DynamicFieldConfig => $DynamicFieldConfig,
         );
+
+        # extract the dynamic field value form parameters
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
+            $Self->{iPhoneBackendObject}->EditFieldValueGet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            TransformDates     => 1,
+            UserTimeZone       => $UserTimeZone || 0,
+            %Param,
+            );
+
+        # perform validation of the data
+        my $ValidationResult = $Self->{iPhoneBackendObject}->EditFieldValueValidate(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+        );
+
+        if ( !IsHashRefWithData($ValidationResult) ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
+            );
+            return;
+        }
+
+        # propagate validation error
+        if ( $ValidationResult->{ServerError} ) {
+
+            my $ErrorMessage = $ValidationResult->{ErrorMessage}
+                || "Dynamic field $DynamicFieldConfig->{Label} invalid";
+
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => $ErrorMessage,
+            );
+            return;
+        }
     }
 
     # send email
-
     my %StateData = $Self->{TicketObject}->{StateObject}->StateGet( ID => $Param{StateID}, );
 
     # check pending date
@@ -4798,21 +4506,6 @@ sub _TicketCompose {
             $Self->{LogObject}->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
-            );
-            return;
-        }
-    }
-
-    # check required FreeTextField (if configured)
-    for ( 1 .. 16 ) {
-        if (
-            $Self->{Config}->{TicketFreeText}->{$_} == 2
-            && $Param{"TicketFreeText$_"} eq ''
-            )
-        {
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => "TicketFreeTextField$_ invalid",
             );
             return;
         }
@@ -4891,81 +4584,41 @@ sub _TicketCompose {
         );
     }
 
-    # set ticket free text
-    $Self->_SetTicketFreeText(%Param);
+    # set dynamic fields
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-    # set ticket free time
-    for ( 1 .. 6 ) {
+        # set the object ID (TicketID or ArticleID) depending on the field configration
+        my $ObjectID
+            = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
-        if ( $Param{ 'TicketFreeTime' . $_ } ) {
-            my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay )
-                = $Self->{TimeObject}->SystemTime2Date(
-                SystemTime =>
-                    $Self->{TimeObject}->SystemTime( $Param{ 'TicketFreeTime' . $_ } ),
-                );
-
-            $Param{ 'TicketFreeTime' . $_ . 'Year' }   = $Year;
-            $Param{ 'TicketFreeTime' . $_ . 'Month' }  = $Month;
-            $Param{ 'TicketFreeTime' . $_ . 'Day' }    = $Day;
-            $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = $Hour;
-            $Param{ 'TicketFreeTime' . $_ . 'Minute' } = $Min;
-
-            # set time stamp to NULL if field is not used/checked
-            if ( !$Param{ 'TicketFreeTime' . $_ . 'Used' } ) {
-                $Param{ 'TicketFreeTime' . $_ . 'Year' }   = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Month' }  = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Day' }    = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Minute' } = 0;
-            }
-
-            # set free time
-            $Self->{TicketObject}->TicketFreeTimeSet(
-                %Param,
-                Prefix   => 'TicketFreeTime',
-                TicketID => $Param{TicketID},
-                Counter  => $_,
-                UserID   => $Param{UserID},
-            );
-        }
+        # set the value
+        my $Success = $Self->{BackendObject}->ValueSet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            ObjectID           => $ObjectID,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            UserID             => $Param{UserID},
+        );
     }
-
-    $Self->_SetArticleFreeText( %Param, ArticleID => $ArticleID );
 
     # set state
     if ( $Self->{Config}->{State} && $Param{StateID} ) {
-        if ( $Self->{'API3X'} ) {
-            $Self->{TicketObject}->TicketStateSet(
-                TicketID => $Param{TicketID},
-                StateID  => $Param{StateID},
-                UserID   => $Param{UserID},
-            );
-        }
-        else {
-            $Self->{TicketObject}->StateSet(
-                TicketID => $Param{TicketID},
-                StateID  => $Param{StateID},
-                UserID   => $Param{UserID},
-            );
-        }
+        $Self->{TicketObject}->TicketStateSet(
+            TicketID => $Param{TicketID},
+            StateID  => $Param{StateID},
+            UserID   => $Param{UserID},
+        );
     }
 
     # should I set an unlock?
     if ( $StateData{TypeName} =~ /^close/i ) {
-        if ( $Self->{'API3X'} ) {
-            $Self->{TicketObject}->TicketLockSet(
-                TicketID => $Param{TicketID},
-                Lock     => 'unlock',
-                UserID   => $Param{UserID},
-            );
-        }
-        else {
-            $Self->{TicketObject}->LockSet(
-                TicketID => $Param{TicketID},
-                Lock     => 'unlock',
-                UserID   => $Param{UserID},
-            );
-        }
+        $Self->{TicketObject}->TicketLockSet(
+            TicketID => $Param{TicketID},
+            Lock     => 'unlock',
+            UserID   => $Param{UserID},
+        );
     }
 
     # set pending time
@@ -5012,21 +4665,11 @@ sub _TicketMove {
         = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketMove');
 
     # check permissions
-    my $Access;
-    if ( $Self->{'API3X'} ) {
-        $Access = $Self->{TicketObject}->TicketPermission(
-            Type     => 'move',
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID}
-        );
-    }
-    else {
-        $Access = $Self->{TicketObject}->Permission(
-            Type     => 'move',
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID}
-        );
-    }
+    my $Access = $Self->{TicketObject}->TicketPermission(
+        Type     => 'move',
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID}
+    );
 
     # error screen, don't show ticket
     if ( !$Access ) {
@@ -5039,44 +4682,19 @@ sub _TicketMove {
 
     # get lock state
     if ( $Self->{Config}->{RequiredLock} ) {
-        my $Locked;
-        if ( $Self->{'API3X'} ) {
-            $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
-        }
-        else {
-            my %TicketData = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
-            if ( $TicketData{Lock} eq 'lock' ) {
-                $Locked = 1;
-            }
-        }
+        my $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
         if ( !$Locked ) {
-            my $Success;
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $Param{TicketID},
+                Lock     => 'lock',
+                UserID   => $Param{UserID},
+            );
 
-                $Success = $Self->{TicketObject}->TicketOwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Param{UserID},
-                );
-
-                $Success = $Self->{TicketObject}->OwnerSet(
-                    TicketID  => $Param{TicketID},
-                    UserID    => $Param{UserID},
-                    NewUserID => $Param{UserID},
-                );
-            }
+            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                NewUserID => $Param{UserID},
+            );
         }
         else {
             my $AccessOk = $Self->{TicketObject}->OwnerCheck(
@@ -5098,31 +4716,70 @@ sub _TicketMove {
     my %Ticket = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
 
     # transform pending time, time stamp based on user time zone
-    if ( defined $Param{PendingDate} ) {
+    if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
             TimeStamp => $Param{PendingDate},
         );
     }
 
-    # transform free time, time stamp based on user time zone
-    for my $Count ( 1 .. 6 ) {
-        my $Prefix = 'TicketFreeTime' . $Count;
-        next if !defined $Param{$Prefix};
-        $Param{$Prefix} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{$Prefix},
-        );
-    }
+    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
 
-    # check required FreeTextField (if configured)
-    for ( 1 .. 16 ) {
-        if (
-            $Self->{Config}->{'TicketFreeText'}->{$_} == 2
-            && $Param{"TicketFreeText$_"} eq ''
-            )
-        {
+    # get dynamic field config for the screen
+    $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
+
+    # get the dynamic fields for ticket object
+    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => [ 'Ticket', 'Article' ],
+        FieldFilter => $Self->{DynamicFieldFilter} || {},
+    );
+
+    my %DynamicFieldValues;
+
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+
+        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            DynamicFieldConfig => $DynamicFieldConfig,
+        );
+
+        # extract the dynamic field value form parameters
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
+            $Self->{iPhoneBackendObject}->EditFieldValueGet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            TransformDates     => 1,
+            UserTimeZone       => $UserTimeZone || 0,
+            %Param,
+            );
+
+        # perform validation of the data
+        my $ValidationResult = $Self->{iPhoneBackendObject}->EditFieldValueValidate(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+        );
+
+        if ( !IsHashRefWithData($ValidationResult) ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
-                Message  => "TicketFreeTextField$_ invalid",
+                Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
+            );
+            return;
+        }
+
+        # propagate validation error
+        if ( $ValidationResult->{ServerError} ) {
+
+            my $ErrorMessage = $ValidationResult->{ErrorMessage}
+                || "Dynamic field $DynamicFieldConfig->{Label} invalid";
+
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => $ErrorMessage,
             );
             return;
         }
@@ -5142,26 +4799,14 @@ sub _TicketMove {
     }
 
     # move ticket (send notification of no new owner is selected)
-    my $BodyAsText = $Param{Body} || 0;
-    my $Move;
-    if ( $Self->{'API3X'} ) {
-        $Move = $Self->{TicketObject}->TicketQueueSet(
-            QueueID            => $Param{QueueID},
-            UserID             => $Param{UserID},
-            TicketID           => $Param{TicketID},
-            SendNoNotification => $Param{NewUserID},
-            Comment            => $BodyAsText,
-        );
-    }
-    else {
-        $Move = $Self->{TicketObject}->MoveTicket(
-            QueueID            => $Param{QueueID},
-            UserID             => $Param{UserID},
-            TicketID           => $Param{TicketID},
-            SendNoNotification => $Param{NewUserID},
-            Comment            => $BodyAsText,
-        );
-    }
+    my $BodyAsText = $Param{Body} || '';
+    my $Move = $Self->{TicketObject}->TicketQueueSet(
+        QueueID            => $Param{QueueID},
+        UserID             => $Param{UserID},
+        TicketID           => $Param{TicketID},
+        SendNoNotification => $Param{NewUserID},
+        Comment            => $BodyAsText,
+    );
     if ( !$Move ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
@@ -5172,39 +4817,21 @@ sub _TicketMove {
 
     # set priority
     if ( $Self->{Config}->{Priority} && $Param{PriorityID} ) {
-        if ( $Self->{'API3X'} ) {
-            $Self->{TicketObject}->TicketPrioritySet(
-                TicketID   => $Param{TicketID},
-                PriorityID => $Param{PriorityID},
-                UserID     => $Param{UserID},
-            );
-        }
-        else {
-            $Self->{TicketObject}->PrioritySet(
-                TicketID   => $Param{TicketID},
-                PriorityID => $Param{PriorityID},
-                UserID     => $Param{UserID},
-            );
-        }
+        $Self->{TicketObject}->TicketPrioritySet(
+            TicketID   => $Param{TicketID},
+            PriorityID => $Param{PriorityID},
+            UserID     => $Param{UserID},
+        );
     }
 
     # set state
     if ( $Self->{Config}->{State} && $Param{StateID} ) {
 
-        if ( $Self->{'API3X'} ) {
-            $Self->{TicketObject}->TicketStateSet(
-                TicketID => $Param{TicketID},
-                StateID  => $Param{StateID},
-                UserID   => $Param{UserID},
-            );
-        }
-        else {
-            $Self->{TicketObject}->StateSet(
-                TicketID => $Param{TicketID},
-                StateID  => $Param{StateID},
-                UserID   => $Param{UserID},
-            );
-        }
+        $Self->{TicketObject}->TicketStateSet(
+            TicketID => $Param{TicketID},
+            StateID  => $Param{StateID},
+            UserID   => $Param{UserID},
+        );
 
         # unlock the ticket after close
         my %StateData = $Self->{TicketObject}->{StateObject}->StateGet(
@@ -5213,151 +4840,89 @@ sub _TicketMove {
 
         # set unlock on close state
         if ( $StateData{TypeName} =~ /^close/i ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'unlock',
-                    UserID   => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'unlock',
-                    UserID   => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $Param{TicketID},
+                Lock     => 'unlock',
+                UserID   => $Param{UserID},
+            );
         }
     }
 
     # check if new user is given and send notification
     if ( $Param{NewUserID} ) {
-        if ( $Self->{'API3X'} ) {
 
-            # lock
-            $Self->{TicketObject}->TicketLockSet(
-                TicketID => $Param{TicketID},
-                Lock     => 'lock',
-                UserID   => $Param{UserID},
-            );
+        # lock
+        $Self->{TicketObject}->TicketLockSet(
+            TicketID => $Param{TicketID},
+            Lock     => 'lock',
+            UserID   => $Param{UserID},
+        );
 
-            # set owner
-            $Self->{TicketObject}->TicketOwnerSet(
-                TicketID  => $Param{TicketID},
-                UserID    => $Param{UserID},
-                NewUserID => $Param{NewUserID},
-                Comment   => $BodyAsText,
-            );
-        }
-        else {
-
-            # lock
-            $Self->{TicketObject}->LockSet(
-                TicketID => $Param{TicketID},
-                Lock     => 'lock',
-                UserID   => $Param{UserID},
-            );
-
-            # set owner
-            $Self->{TicketObject}->OwnerSet(
-                TicketID  => $Param{TicketID},
-                UserID    => $Param{UserID},
-                NewUserID => $Param{NewUserID},
-                Comment   => $BodyAsText,
-            );
-        }
+        # set owner
+        $Self->{TicketObject}->TicketOwnerSet(
+            TicketID  => $Param{TicketID},
+            UserID    => $Param{UserID},
+            NewUserID => $Param{NewUserID},
+            Comment   => $BodyAsText,
+        );
     }
 
     # force unlock if no new owner is set and ticket was unlocked
     else {
         if ( $Self->{TicketUnlock} ) {
-            if ( $Self->{'API3X'} ) {
-                $Self->{TicketObject}->TicketLockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'unlock',
-                    UserID   => $Param{UserID},
-                );
-            }
-            else {
-                $Self->{TicketObject}->LockSet(
-                    TicketID => $Param{TicketID},
-                    Lock     => 'unlock',
-                    UserID   => $Param{UserID},
-                );
-            }
+            $Self->{TicketObject}->TicketLockSet(
+                TicketID => $Param{TicketID},
+                Lock     => 'unlock',
+                UserID   => $Param{UserID},
+            );
         }
     }
 
     # add note (send no notification)
-    my $ArticleID;
+    my $MimeType = 'text/plain';
 
-    if ( $Param{Body} ) {
+    my %UserData = $Self->{UserObject}->GetUserData( UserID => $Param{UserID} );
 
-        my $MimeType = 'text/plain';
+    my $ArticleID = $Self->{TicketObject}->ArticleCreate(
+        TicketID       => $Param{TicketID},
+        ArticleType    => 'note-internal',
+        SenderType     => 'agent',
+        From           => "$UserData{UserFirstname} $UserData{UserLastname} <$UserData{UserEmail}>",
+        Subject        => $Param{Subject},
+        Body           => $Param{Body},
+        MimeType       => $MimeType,
+        Charset        => $Self->{ConfigObject}->Get('DefaultCharset'),
+        UserID         => $Param{UserID},
+        HistoryType    => 'AddNote',
+        HistoryComment => '%%Move',
+        NoAgentNotify  => 1,
+    );
 
-        my %UserData = $Self->{UserObject}->GetUserData( UserID => $Param{UserID} );
-
-        $ArticleID = $Self->{TicketObject}->ArticleCreate(
-            TicketID    => $Param{TicketID},
-            ArticleType => 'note-internal',
-            SenderType  => 'agent',
-            From     => "$UserData{UserFirstname} $UserData{UserLastname} <$UserData{UserEmail}>",
-            Subject  => $Param{Subject},
-            Body     => $Param{Body},
-            MimeType => $MimeType,
-            Charset  => $Self->{ConfigObject}->Get('DefaultCharset'),
-            UserID   => $Param{UserID},
-            HistoryType    => 'AddNote',
-            HistoryComment => '%%Move',
-            NoAgentNotify  => 1,
+    if ( !$ArticleID ) {
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "Error: Can't create an article for the moved ticket",
         );
-
-        if ( !$ArticleID ) {
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => "Error: Can't create an article for the moved ticket",
-            );
-            return;
-        }
+        return;
     }
 
-    # set ticket free text
-    $Self->_SetTicketFreeText(%Param);
+    # set dynamic fields
+    # cycle trough the activated Dynamic Fields for this screen
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-    # set ticket free time
-    for ( 1 .. 6 ) {
+        # set the object ID (TicketID or ArticleID) depending on the field configration
+        my $ObjectID
+            = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
-        if ( $Param{ 'TicketFreeTime' . $_ } ) {
-            my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay )
-                = $Self->{TimeObject}->SystemTime2Date(
-                SystemTime =>
-                    $Self->{TimeObject}->SystemTime( $Param{ 'TicketFreeTime' . $_ } ),
-                );
-
-            $Param{ 'TicketFreeTime' . $_ . 'Year' }   = $Year;
-            $Param{ 'TicketFreeTime' . $_ . 'Month' }  = $Month;
-            $Param{ 'TicketFreeTime' . $_ . 'Day' }    = $Day;
-            $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = $Hour;
-            $Param{ 'TicketFreeTime' . $_ . 'Minute' } = $Min;
-
-            # set time stamp to NULL if field is not used/checked
-            if ( !$Param{ 'TicketFreeTime' . $_ . 'Used' } ) {
-                $Param{ 'TicketFreeTime' . $_ . 'Year' }   = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Month' }  = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Day' }    = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Hour' }   = 0;
-                $Param{ 'TicketFreeTime' . $_ . 'Minute' } = 0;
-            }
-
-            # set free time
-            $Self->{TicketObject}->TicketFreeTimeSet(
-                %Param,
-                Prefix   => 'TicketFreeTime',
-                TicketID => $Param{TicketID},
-                Counter  => $_,
-                UserID   => $Param{UserID},
-            );
-        }
+        # set the value
+        my $Success = $Self->{BackendObject}->ValueSet(
+            DynamicFieldConfig => $DynamicFieldConfig,
+            ObjectID           => $ObjectID,
+            Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+            UserID             => $Param{UserID},
+        );
     }
 
     # time accounting
@@ -5650,282 +5215,13 @@ sub _TransformDateSelection {
     return $Param{TimeStamp};
 }
 
-# new helper functions
-
-sub _SetTicketFreeText {
-    my $Self = shift || die "no self";
-    my %Param = @_;
-
-    for my $Needed (qw(TicketID UserID )) {
-        if ( !defined $Param{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
-            return;
-        }
-    }
-
-    # set ticket free text
-    for my $Count ( 1 .. 16 ) {    #FreeFieldBad
-        my $Key  = 'TicketFreeKey' . $Count;
-        my $Text = 'TicketFreeText' . $Count;
-
-        #       next if !defined $Param{$Key}; # skip if
-
-        if ( !exists $Param{$Text} )
-        {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "missing value for $Text!" );
-        }
-
-        if ( !exists $Param{$Key} )
-        {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "missing value for $Key!" );
-            next;
-        }
-
-        $Self->_TicketFreeTextSet(
-            Ticket   => $Self->{TicketObject},
-            TicketID => $Param{TicketID},
-            Key      => $Param{$Key},
-            Value    => $Param{$Text},
-            Counter  => $Count,
-            UserID   => $Param{UserID},
-        );
-    }
-}
-
-sub _SetArticleFreeText {
-    my $Self = shift || die "no self";
-    my %Param = @_;
-
-    for my $Needed (qw(ArticleID UserID )) {
-        if ( !defined $Param{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
-            return;
-        }
-    }
-
-    # set article free text
-    for my $Count ( 1 .. 3 ) {    #FreeFieldBad
-        my $Key  = 'ArticleFreeKey' . $Count;
-        my $Text = 'ArticleFreeText' . $Count;
-        next if !defined $Param{$Key};
-        if ( !exists $Param{$Text} ) {
-            $Self->{LogObject}
-                ->Log( Priority => 'error', Message => "No data defined for  $Text!" );
-        }
-
-        $Self->_ArticleFreeTextSet(
-            Ticket    => $Self->{TicketObject},
-            ArticleID => $Param{ArticleID},
-            Key       => $Param{$Key},
-            Value     => $Param{$Text},
-            Counter   => $Count,
-            UserID    => $Param{UserID},
-        );
-    }
-}
-
-sub _GetArticleFreeTextValues {
-    my $Self  = shift || die "no self";
-    my $Param = shift || die "no param hashref";
-
-    for my $Needed (qw(UserID TicketID)) {
-        if ( !defined $Param->{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
-            return;
-        }
-    }
-
-    # get article free text config options
-    my %ArticleFreeText;
-    for my $Count ( 1 .. 3 ) {    #FreeFieldBad
-        my $Key  = 'ArticleFreeKey' . $Count;
-        my $Text = 'ArticleFreeText' . $Count;
-
-        # build a list of values to get
-        $ArticleFreeText{$Key}++;
-        $ArticleFreeText{$Text}++;
-    }
-
-    my %Article = $Self->{TicketObject}->ArticleGet(
-        TicketID      => $Param->{TicketID},,
-        UserID        => $Param->{UserID},
-        DynamicFields => 1,
-    );
-
-    foreach my $Key ( keys %ArticleFreeText ) {
-        my $Value = $Article{$Key} || '';
-        $Param->{$Key} = $Key;
-    }
-
-    # $Param contains the data that was collected in the hash
-}
-
-sub _GetTicketFreeTextValues {
-    my $Self  = shift || die "no self";
-    my $Param = shift || die "no param hashref";
-
-    for my $Needed (qw(TicketID UserID )) {
-        if ( !defined $Param->{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
-            return;
-        }
-    }
-
-    # get article free text config options
-    my %FreeText;
-    for my $Count ( 1 .. 16 ) {    #FreeFieldBad
-        my $Key  = 'TicketFreeKey' . $Count;
-        my $Text = 'TicketFreeText' . $Count;
-
-        # build a list of values to get
-        $FreeText{$Key}++;
-        $FreeText{$Text}++;
-    }
-
-    my %Article = $Self->{TicketObject}->TicketGet(
-        TicketID      => $Param->{TicketID},
-        UserID        => $Param->{UserID},
-        DynamicFields => 1,
-    );
-
-    foreach my $Key ( keys %FreeText ) {
-        my $Value = $Article{$Key} || '';
-        $Param->{$Key} = $Key;
-    }
-
-    # $Param contains the data that was collected in the hash
-}
-
-sub _TicketFreeTextSet {
+sub _GetUserTimeZone {
     my ( $Self, %Param ) = @_;
 
-    # Parm Structure :
-    #           Ticket   => $Self->{TicketObject},
-    #           TicketID => $Param{TicketID},
-    #           Key      => $Param{$Key},
-    #           Value    => $Param{$Text},
-    #           Counter  => $Count,
-    #           UserID   => $Param{UserID},
-    if ( !exists $Param{Value} )
-    {
-        $Self->{LogObject}
-            ->Log( Priority => 'error', Message => "No Text Passed for $Param{Key} !" );
-    }
-    my $NewValue = $Param{Value} || "";
+    my %UserPreferences = $Self->{UserObject}->GetPreferences( UserID => $Param{UserID} );
+    my $UserTimeZone = $UserPreferences{UserTimeZone} || 0;
 
-    # check needed stuff
-    for my $Needed (qw(TicketID UserID )) {
-        if ( !defined $Param{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
-            return;
-        }
-    }
-
-    # check if update is needed
-    my %Ticket = $Self->TicketGet(
-        TicketID      => $Param{TicketID},
-        UserID        => $Param{UserID},
-        DynamicFields => 1,
-    );
-
-    my $TicketFreeTextValue = $Ticket{Key} || '';
-
-    if ( $NewValue eq $TicketFreeTextValue ) {
-        return 1;    # dont need to set this
-    }
-
-    # set the TicketFreeText value as a DynamicField
-    my $DynamicFieldConfig = $Self->{DynamicFieldObject}->DynamicFieldGet(
-        Name => $Param{Key},
-    );
-
-    # check DynamicFieldConfig (general)
-
-    if ( !keys %{$DynamicFieldConfig} ) {
-        $Self->{LogObject}->Log(
-            Priority => 'error',
-            Message  => "The field configuration for the dynamic field \"$Param{Key}\" is invalid",
-        );
-        return;    # we dont have this field defined!
-    }
-
-    my $Success = $Self->{DynamicFieldBackendObject}->ValueSet(
-        DynamicFieldConfig => $DynamicFieldConfig,
-        ObjectID           => $Param{TicketID},
-        Value              => $NewValue,
-        UserID             => $Param{UserID},
-    );
-
-    return if !$Success;
-
-    # clear ticket cache
-    delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
-
-    return 1;
-}
-
-sub _ArticleFreeTextSet {
-    my ( $Self, %Param ) = @_;
-
-    # Parm Structure :
-    #           Ticket   => $Self->{TicketObject},
-    #           ArticleID => $Param{TicketID},
-    #           Key      => $Param{$Key},
-    #           Value    => $Param{$Text},
-    #           Counter  => $Count,
-    #           UserID   => $Param{UserID},
-    if ( !exists $Param{Value} )
-    {
-        $Self->{LogObject}->Log( Priority => 'error', Message => "No Text Passed for Value !" );
-    }
-    my $NewValue = $Param{Text} || "";
-
-    # check needed stuff
-    for my $Needed (qw(ArticleID UserID )) {
-        if ( !defined $Param{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
-            return;
-        }
-    }
-
-    # check if update is needed
-    my %Ticket = $Self->ArticleGet(
-        ArticleID     => $Param{ArticleID},
-        UserID        => $Param{UserID},
-        DynamicFields => 1,
-    );
-
-    my $FreeTextValue = $Ticket{Key} || '';
-
-    if ( $NewValue eq $FreeTextValue ) {
-        return 1;    # dont need to set this
-    }
-
-    # set the FreeText value as a DynamicField
-    my $DynamicFieldConfig = $Self->{DynamicFieldObject}->DynamicFieldGet(
-        Name => $Param{Key},
-    );
-    if ( !keys %{$DynamicFieldConfig} ) {
-        $Self->{LogObject}->Log(
-            Priority => 'error',
-            Message  => "The field configuration for the dynamic field \"$Param{Key}\" is invalid",
-        );
-        return;      # we dont have this field defined!
-    }
-
-    my $Success = $Self->{DynamicFieldBackendObject}->ValueSet(
-        DynamicFieldConfig => $DynamicFieldConfig,
-        ObjectID           => $Param{ArticleID},
-        Value              => $NewValue,
-        UserID             => $Param{UserID},
-    );
-
-    return if !$Success;
-
-    # clear ticket cache
-    delete $Self->{ 'Cache::GetArticle' . $Param{ArticleID} };
-
-    return 1;
+    return $UserTimeZone;
 }
 
 1;
@@ -5944,6 +5240,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 VERSION
 
-$Id: iPhone.pm,v 1.68 2012-02-01 18:51:07 md Exp $
+$Id: iPhone.pm,v 1.69 2012-02-24 21:53:07 cr Exp $
 
 =cut

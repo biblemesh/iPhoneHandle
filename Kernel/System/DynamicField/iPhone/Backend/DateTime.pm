@@ -2,7 +2,7 @@
 # Kernel/System/DynamicField/iPhone/Backend/DateTime.pm - Delegate for DynamicField DateTime backend
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: DateTime.pm,v 1.1 2012-02-24 21:54:53 cr Exp $
+# $Id: DateTime.pm,v 1.2 2012-03-05 16:29:42 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -19,7 +19,7 @@ use Kernel::System::DynamicFieldValue;
 use Kernel::System::Time;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.1 $) [1];
+$VERSION = qw($Revision: 1.2 $) [1];
 
 =head1 NAME
 
@@ -115,6 +115,27 @@ sub EditFieldValueGet {
 
     my $Value = $Param{$FieldName};
 
+    # time zone translation if needed
+    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
+
+        # covert $Value to a numeric time for convetrsions
+        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+            String => $Value,
+        );
+
+        # create a time object for thes user (because of the time zone)
+        $Self->{UserTimeObject} = Kernel::System::Time->new(
+            %{$Self},
+            UserTimeZone => $Param{UserTimeZone},
+        );
+
+        # subtract the user time zone from the current value
+        $SystemTime = $SystemTime - ( $Param{UserTimeZone} * 3600 );
+
+        # convert numeric value again to string
+        $Value = $Self->{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
+    }
+
     return $Value;
 }
 
@@ -155,6 +176,27 @@ sub EditFieldValueValidate {
     };
 
     return $Result;
+}
+
+sub _TransformDateSelection {
+    my ( $Self, %Param ) = @_;
+
+    # time zone translation if needed
+    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
+        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+            String => $Param{TimeStamp},
+        );
+        $SystemTime = $SystemTime - ( $Self->{UserTimeZone} * 3600 );
+
+        $Self->{UserTimeObject} = Kernel::System::Time->new(
+            %{$Self},
+            UserTimeZone => $Param{UserTimeZone},
+        );
+
+        $Param{TimeStamp}
+            = $Self->{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
+    }
+    return $Param{TimeStamp};
 }
 
 1;

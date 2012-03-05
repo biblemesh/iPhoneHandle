@@ -2,7 +2,7 @@
 # iPhoneHandle.pm - code to excecute during package installation
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhoneHandle.pm,v 1.1 2012-02-24 21:59:23 cr Exp $
+# $Id: iPhoneHandle.pm,v 1.2 2012-03-05 22:52:34 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -20,7 +20,7 @@ use Kernel::System::Package;
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.1 $) [1];
+$VERSION = qw($Revision: 1.2 $) [1];
 
 =head1 NAME
 
@@ -239,6 +239,14 @@ sub _UpdateReleaseFile {
         return -1;
     }
 
+    # check RELEASE file
+    if ( !-e "$Home/RELEASE.iPhoneHandle" ) {
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "File $Home/RELEASE.iPhoneHandle was not created!.\n",
+        );
+    }
+
     return 1;
 }
 
@@ -366,6 +374,6 @@ did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
 
 =head1 VERSION
 
-$Revision: 1.1 $ $Date: 2012-02-24 21:59:23 $
+$Revision: 1.2 $ $Date: 2012-03-05 22:52:34 $
 
 =cut

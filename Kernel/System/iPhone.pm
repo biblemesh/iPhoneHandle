@@ -2,7 +2,7 @@
 # Kernel/System/iPhone.pm - all iPhone handle functions
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhone.pm,v 1.70 2012-03-05 16:28:29 cr Exp $
+# $Id: iPhone.pm,v 1.71 2012-03-05 23:25:28 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -24,7 +24,7 @@ use Kernel::System::DynamicField::iPhone::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.70 $) [1];
+$VERSION = qw($Revision: 1.71 $) [1];
 
 =head1 NAME
 
@@ -2784,17 +2784,17 @@ sub VersionGet {
     my $Home = $Self->{ConfigObject}->Get('Home');
 
     # load RELEASE file
-    if ( -e !"$Home/RELEASE.iPhoneHandle" ) {
+    if ( -e !"$Home/var/RELEASE.iPhoneHandle" ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
-            Message  => "ERROR: $Home/RELEASE.iPhoneHandle does not exist! This file is"
+            Message  => "ERROR: $Home/var/RELEASE.iPhoneHandle does not exist! This file is"
                 . " needed by iPhoneHandle, the system will not work without this file.\n",
         );
         return -1;
     }
     my $PackageName;
     my $PackageVersion;
-    if ( open( my $Product, '<', "$Home/RELEASE.iPhoneHandle" ) ) {
+    if ( open( my $Product, '<', "$Home/var/RELEASE.iPhoneHandle" ) ) {
         while (<$Product>) {
 
             # filtering of comment lines
@@ -2812,7 +2812,7 @@ sub VersionGet {
     else {
         $Self->{LogObject}->Log(
             Priority => 'error',
-            Message  => "ERROR: Can't read $Home/RELEASE.iPhoneHandle! This file is"
+            Message  => "ERROR: Can't read $Home/var/RELEASE.iPhoneHandle! This file is"
                 . " needed by iPhoneHandle, the system will not work without this file.\n",
         );
         return -1;
@@ -5232,6 +5232,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 VERSION
 
-$Id: iPhone.pm,v 1.70 2012-03-05 16:28:29 cr Exp $
+$Id: iPhone.pm,v 1.71 2012-03-05 23:25:28 cr Exp $
 
 =cut

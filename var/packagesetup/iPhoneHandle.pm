@@ -2,7 +2,7 @@
 # iPhoneHandle.pm - code to excecute during package installation
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhoneHandle.pm,v 1.2 2012-03-05 22:52:34 cr Exp $
+# $Id: iPhoneHandle.pm,v 1.3 2012-03-05 23:25:28 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -20,7 +20,7 @@ use Kernel::System::Package;
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.2 $) [1];
+$VERSION = qw($Revision: 1.3 $) [1];
 
 =head1 NAME
 
@@ -226,7 +226,7 @@ sub _UpdateReleaseFile {
     my $Home = $Self->{ConfigObject}->Get('Home');
 
     # create or overwrite RELEASE.iPhoneHandle file
-    if ( open( my $ReleaseFile, '>', "$Home/RELEASE.iPhoneHandle" ) ) {
+    if ( open( my $ReleaseFile, '>', "$Home/var/RELEASE.iPhoneHandle" ) ) {
         print $ReleaseFile "PRODUCT = iPhoneHandle\n";
         print $ReleaseFile "VERSION = $PackageVersion";
         close($ReleaseFile);
@@ -234,16 +234,16 @@ sub _UpdateReleaseFile {
     else {
         $Self->{LogObject}->Log(
             Priority => 'error',
-            Message  => "ERROR: Can't write $Home/RELEASE.iPhoneHandle!.\n",
+            Message  => "ERROR: Can't write $Home/var/RELEASE.iPhoneHandle!.\n",
         );
         return -1;
     }
 
     # check RELEASE file
-    if ( !-e "$Home/RELEASE.iPhoneHandle" ) {
+    if ( !-e "$Home/var/RELEASE.iPhoneHandle" ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
-            Message  => "File $Home/RELEASE.iPhoneHandle was not created!.\n",
+            Message  => "File $Home/var/RELEASE.iPhoneHandle was not created!.\n",
         );
     }
 
@@ -265,11 +265,11 @@ sub _RemoveReleaseFile {
     my $Home = $Self->{ConfigObject}->Get('Home');
 
     # delete RELEASE file
-    if ( -e "$Home/RELEASE.iPhoneHandle" ) {
-        if ( !unlink "$Home/RELEASE.iPhoneHandle" ) {
+    if ( -e "$Home/var/RELEASE.iPhoneHandle" ) {
+        if ( !unlink "$Home/var/RELEASE.iPhoneHandle" ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
-                Message  => "File $Home/RELEASE.iPhoneHandle could not be deleted!.\n",
+                Message  => "File $Home/var/RELEASE.iPhoneHandle could not be deleted!.\n",
             );
         }
         return -1;
@@ -277,7 +277,7 @@ sub _RemoveReleaseFile {
     else {
         $Self->{LogObject}->Log(
             Priority => 'notice',
-            Message  => "File $Home/RELEASE.iPhoneHandle was already deleted!.\n",
+            Message  => "File $Home/var/RELEASE.iPhoneHandle was already deleted!.\n",
         );
     }
     return 1;
@@ -374,6 +374,6 @@ did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
 
 =head1 VERSION
 
-$Revision: 1.2 $ $Date: 2012-03-05 22:52:34 $
+$Revision: 1.3 $ $Date: 2012-03-05 23:25:28 $
 
 =cut

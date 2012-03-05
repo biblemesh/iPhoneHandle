@@ -2,7 +2,7 @@
 # Kernel/System/iPhone.pm - all iPhone handle functions
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhone.pm,v 1.69 2012-02-24 21:53:07 cr Exp $
+# $Id: iPhone.pm,v 1.70 2012-03-05 16:28:29 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -24,7 +24,7 @@ use Kernel::System::DynamicField::iPhone::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.69 $) [1];
+$VERSION = qw($Revision: 1.70 $) [1];
 
 =head1 NAME
 
@@ -2703,6 +2703,8 @@ sub ScreenActions {
         $Self->{UserTimeZone}   = '';
     }
 
+    $Param{UserTimeZone} = $Self->{UserTimeZone};
+
     if ( $Param{Action} ) {
         my $Result;
         if ( $Param{Action} eq 'Phone' ) {
@@ -3599,7 +3601,7 @@ sub _TicketPhoneNew {
         );
     }
 
-    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
@@ -4018,7 +4020,7 @@ sub _TicketCommonActions {
         );
     }
 
-    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
@@ -4422,8 +4424,7 @@ sub _TicketCompose {
         );
     }
 
-    #TODO dynamic fields
-    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
@@ -4722,7 +4723,7 @@ sub _TicketMove {
         );
     }
 
-    my $UserTimeZone = $Self->_GetUserTimeZone( UserID => $Param{UserID} );
+    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
@@ -5215,15 +5216,6 @@ sub _TransformDateSelection {
     return $Param{TimeStamp};
 }
 
-sub _GetUserTimeZone {
-    my ( $Self, %Param ) = @_;
-
-    my %UserPreferences = $Self->{UserObject}->GetPreferences( UserID => $Param{UserID} );
-    my $UserTimeZone = $UserPreferences{UserTimeZone} || 0;
-
-    return $UserTimeZone;
-}
-
 1;
 
 =back
@@ -5240,6 +5232,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 VERSION
 
-$Id: iPhone.pm,v 1.69 2012-02-24 21:53:07 cr Exp $
+$Id: iPhone.pm,v 1.70 2012-03-05 16:28:29 cr Exp $
 
 =cut

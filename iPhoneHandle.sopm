@@ -23,9 +23,9 @@
         <File Permission="644" Location="Kernel/System/DynamicField/iPhone/iPhoneBackend.pm"/>
         <File Permission="644" Location="var/packagesetup/iPhoneHandle.pm"/>
         <File Permission="644" Location="Kernel/System/iPhone.pm"/>
-        <!-- the following file is created by the package installer -->
-        <File Permission="644" Location="RELEASE.iPhoneHandle"/>
-
+        <!-- the following file is created by the package installer
+        <File Permission="644" Location="var/RELEASE.iPhoneHandle"/>
+        -->
     </Filelist>
     <CodeInstall Type="post">
 

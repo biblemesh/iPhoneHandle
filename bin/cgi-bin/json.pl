@@ -3,7 +3,7 @@
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.17 2012-02-24 21:41:55 cr Exp $
+# $Id: json.pl,v 1.18 2012-03-05 16:26:01 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.17 $) [1];
+$VERSION = qw($Revision: 1.18 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -305,7 +305,7 @@ sub Log {
 
     # write log file
     print $FH '[' . $Self->{TimeObject}->CurrentTimestamp() . ']';
-    print $FH "[Debug] [$Param{Direction}] [$Param{Message}\n";
+    print $FH "[Debug] [$Param{Direction}] $Param{Message}\n";
 
     # close file handle
     close $FH;

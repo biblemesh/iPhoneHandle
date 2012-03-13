@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <otrs_config version="1.0" init="Application">
-    <CVS>$Id: iPhone.xml,v 1.14 2012-02-24 21:45:02 cr Exp $</CVS>
+    <CVS>$Id: iPhone.xml,v 1.15 2012-03-13 02:59:26 cr Exp $</CVS>
 
     <ConfigItem Name="iPhone::DebugLog" Required="1" Valid="1">
         <Description Translatable="1">Allows to enable a special log for all communication between iPhone and otrs.</Description>
@@ -820,6 +820,14 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###CustomObject" Required="1" Valid="1">
+        <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
+        <Group>iPhone</Group>
+        <SubGroup>API</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="iPhone::API::Object###iPhoneObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
         <Group>iPhone</Group>
         <SubGroup>API</SubGroup>

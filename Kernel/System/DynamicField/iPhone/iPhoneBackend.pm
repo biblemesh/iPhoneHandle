@@ -2,7 +2,7 @@
 # Kernel/System/DynamicField/iPhone/iPhoneBackend.pm - Interface for DynamicField backends
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhoneBackend.pm,v 1.1 2012-02-24 21:53:52 cr Exp $
+# $Id: iPhoneBackend.pm,v 1.2 2012-04-18 19:52:06 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -18,7 +18,7 @@ use Scalar::Util qw(weaken);
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.1 $) [1];
+$VERSION = qw($Revision: 1.2 $) [1];
 
 =head1 NAME
 
@@ -254,7 +254,7 @@ sub IsIPhoneCapable {
         }
     }
 
-    # set the dynamic filed specific backend
+    # set the dynamic field specific backend
     my $DynamicFieldBackend = 'DynamicField' . $Param{DynamicFieldConfig}->{FieldType} . 'Object';
 
     if ( !$Self->{$DynamicFieldBackend} ) {
@@ -297,7 +297,7 @@ creates the field definition to be used in iphone edit masks.
                                                 #    Date || Time || DateTime || Text
                                                 #    || Numeric
 
-            Viewtype       => $ViewType,        # The format of the filed in the iPhone App
+            Viewtype       => $ViewType,        # The format of the field in the iPhone App
                                                 #    AutoCompletion (input field with an
                                                 #       auto-completion feature; possible values
                                                 #       are loaded dynamically from the server with
@@ -391,7 +391,7 @@ sub EditFieldRender {
         }
     }
 
-    # set the dynamic filed specific backend
+    # set the dynamic field specific backend
     my $DynamicFieldBackend = 'DynamicField' . $Param{DynamicFieldConfig}->{FieldType} . 'Object';
 
     if ( !$Self->{$DynamicFieldBackend} ) {
@@ -473,7 +473,7 @@ sub EditFieldValueGet {
         }
     }
 
-    # set the dynamic filed specific backend
+    # set the dynamic field specific backend
     my $DynamicFieldBackend = 'DynamicField' . $Param{DynamicFieldConfig}->{FieldType} . 'Object';
 
     if ( !$Self->{$DynamicFieldBackend} ) {
@@ -536,7 +536,7 @@ sub EditFieldValueValidate {
         }
     }
 
-    # set the dynamic filed specific backend
+    # set the dynamic field specific backend
     my $DynamicFieldBackend = 'DynamicField' . $Param{DynamicFieldConfig}->{FieldType} . 'Object';
 
     if ( !$Self->{$DynamicFieldBackend} ) {
@@ -568,6 +568,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 VERSION
 
-$Revision: 1.1 $ $Date: 2012-02-24 21:53:52 $
+$Revision: 1.2 $ $Date: 2012-04-18 19:52:06 $
 
 =cut

@@ -3,7 +3,7 @@
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.18 2012-03-05 16:26:01 cr Exp $
+# $Id: json.pl,v 1.19 2012-06-17 20:42:27 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.18 $) [1];
+$VERSION = qw($Revision: 1.19 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -104,10 +104,10 @@ sub Dispatch {
     $Self->{DebugLogFile} = $Self->{ConfigObject}->Get('iPhone::LogFile') || '';
 
     # set common variables
-    my $User   = $Self->{ParamObject}->GetParam( Param => 'User' );
-    my $Pw     = $Self->{ParamObject}->GetParam( Param => 'Password' );
-    my $Object = $Self->{ParamObject}->GetParam( Param => 'Object' );
-    my $Method = $Self->{ParamObject}->GetParam( Param => 'Method' );
+    my $User   = $Self->{ParamObject}->GetParam( Param => 'User' )     || '';
+    my $Pw     = $Self->{ParamObject}->GetParam( Param => 'Password' ) || '';
+    my $Object = $Self->{ParamObject}->GetParam( Param => 'Object' )   || '';
+    my $Method = $Self->{ParamObject}->GetParam( Param => 'Method' )   || '';
     my $Data   = $Self->{ParamObject}->GetParam( Param => 'Data' );
     my $ParamScalar = $Self->{JSONObject}->Decode( Data => $Data );
 
@@ -115,8 +115,6 @@ sub Dispatch {
     if ($ParamScalar) {
         %Param = %{$ParamScalar};
     }
-    $User ||= '';
-    $Pw   ||= '';
 
     # inbound log
     if ( $Self->{ConfigObject}->Get('iPhone::DebugLog') ) {

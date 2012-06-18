@@ -3,7 +3,7 @@
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.21 2012-06-18 15:12:11 cr Exp $
+# $Id: json.pl,v 1.22 2012-06-18 15:24:45 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.21 $) [1];
+$VERSION = qw($Revision: 1.22 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -239,6 +239,23 @@ sub Dispatch {
             },
         );
     }
+    elsif ( $Object eq 'CustomObject' ) {
+
+        # check if method exists in iPhoneObject
+        if ( !$Self->{iPhoneObject}->can($Method) ) {
+            my $Message = "No such method '$Method' in '$Object'!";
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => $Message,
+            );
+            return $Self->Result(
+                {
+                    Success      => 0,
+                    ErrorMessage => $Message,
+                },
+            );
+        }
+    }
 
     # object white list
     my $ObjectWhiteList = $Self->{ConfigObject}->Get('iPhone::API::Object');
@@ -272,22 +289,7 @@ sub Dispatch {
     }
 
     # execute iPhoneObject methods
-    if ( $Object eq 'CustomObject' ) {
-
-        # check if method exists in iPhoneObject
-        if ( !$Self->{iPhoneObject}->can($Method) ) {
-            my $Message = "No such method '$Method' in '$Object'!";
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => $Message,
-            );
-            return $Self->Result(
-                {
-                    Success      => 0,
-                    ErrorMessage => $Message,
-                },
-            );
-        }
+    if ( $Object eq 'CustomObject' || $Object eq 'iPhoneObject' ) {
 
         # TODO change the way the result is got, to accept either hash or array
         my @Result = $Self->{iPhoneObject}->$Method(
@@ -296,6 +298,8 @@ sub Dispatch {
         );
         return $Self->Result( \@Result );
     }
+
+    # execute other object methods
     else {
         my @Result = $Self->{$Object}->$Method(
             %Param,

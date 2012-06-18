@@ -3,7 +3,7 @@
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.20 2012-06-18 14:55:03 cr Exp $
+# $Id: json.pl,v 1.21 2012-06-18 15:12:11 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.20 $) [1];
+$VERSION = qw($Revision: 1.21 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -221,7 +221,12 @@ sub Dispatch {
         );
     }
 
-    if ( ( $Self->{$Object} && !$Self->{$Object}->can($Method) ) && !$Self->can($Method) ) {
+    # check if method exists in objects other than 'CustomObject'
+    if (
+        ( $Self->{$Object} && !$Self->{$Object}->can($Method) )
+        && !$Self->can($Method)
+        )
+    {
         my $Message = "No such method '$Method' in '$Object'!";
         $Self->{LogObject}->Log(
             Priority => 'error',
@@ -266,11 +271,25 @@ sub Dispatch {
         }
     }
 
-    # ticket permission check
-
+    # execute iPhoneObject methods
     if ( $Object eq 'CustomObject' ) {
 
-        # TODO change the way the result is got to accept either hash or array
+        # check if method exists in iPhoneObject
+        if ( !$Self->{iPhoneObject}->can($Method) ) {
+            my $Message = "No such method '$Method' in '$Object'!";
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => $Message,
+            );
+            return $Self->Result(
+                {
+                    Success      => 0,
+                    ErrorMessage => $Message,
+                },
+            );
+        }
+
+        # TODO change the way the result is got, to accept either hash or array
         my @Result = $Self->{iPhoneObject}->$Method(
             %Param,
             %ParamFixed,

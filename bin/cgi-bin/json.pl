@@ -3,7 +3,7 @@
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.19 2012-06-17 20:42:27 cr Exp $
+# $Id: json.pl,v 1.20 2012-06-18 14:55:03 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.19 $) [1];
+$VERSION = qw($Revision: 1.20 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -127,6 +127,22 @@ sub Dispatch {
         );
     }
 
+    # check needed
+    if ( !$User || !$Object || !$Method ) {
+        my $Message = "Need User, Object and Method!";
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => $Message,
+        );
+
+        return $Self->Result(
+            {
+                Success      => 0,
+                ErrorMessage => $Message,
+            },
+        );
+    }
+
     # agent auth
     my %ParamFixed;
     if (1) {
@@ -134,23 +150,37 @@ sub Dispatch {
         my $UserLogin = $AuthObject->Auth( User => $User, Pw => $Pw );
 
         if ( !$UserLogin ) {
+            my $Message = "Auth for user $User failed!";
             $Self->{LogObject}->Log(
                 Priority => 'notice',
-                Message  => "Auth for user $User failed!",
+                Message  => $Message,
             );
-            return $Self->Result();
+            return $Self->Result(
+                {
+                    Success      => 0,
+                    ErrorMessage => $Message,
+                },
+            );
         }
 
         # set user id
         my $UserID = $Self->{UserObject}->UserLookup(
             UserLogin => $UserLogin,
         );
-        return if !$UserID;
+        if ( !$UserID ) {
+            return $Self->Result(
+                {
+                    Success      => 0,
+                    ErrorMessage => "User $UserLogin not found, UserID can not be set!",
+                },
+            );
+        }
 
         $ParamFixed{UserID} = $UserID;
     }
 
     # system auth
+    # This code is not needed and has to be removed!
     else {
         my $RequiredUser     = $Self->{ConfigObject}->Get('SOAP::User');
         my $RequiredPassword = $Self->{ConfigObject}->Get('SOAP::Password');
@@ -178,43 +208,69 @@ sub Dispatch {
     }
 
     if ( !$Self->{$Object} && $Object ne 'CustomObject' ) {
+        my $Message = "No such Object $Object!";
         $Self->{LogObject}->Log(
             Priority => 'error',
-            Message  => "No such Object $Object!",
+            Message  => $Message,
         );
-        return $Self->Result();
+        return $Self->Result(
+            {
+                Success      => 0,
+                ErrorMessage => $Message,
+            },
+        );
     }
 
     if ( ( $Self->{$Object} && !$Self->{$Object}->can($Method) ) && !$Self->can($Method) ) {
+        my $Message = "No such method '$Method' in '$Object'!";
         $Self->{LogObject}->Log(
             Priority => 'error',
-            Message  => "No such method '$Method' in '$Object'!",
+            Message  => $Message,
         );
-        return $Self->Result();
+        return $Self->Result(
+            {
+                Success      => 0,
+                ErrorMessage => $Message,
+            },
+        );
     }
 
     # object white list
     my $ObjectWhiteList = $Self->{ConfigObject}->Get('iPhone::API::Object');
     if ($ObjectWhiteList) {
         if ( !defined $ObjectWhiteList->{$Object} ) {
+            my $Message = "No access to '$Object'!";
             $Self->{LogObject}->Log(
                 Priority => 'error',
-                Message  => "No access to '$Object'!",
+                Message  => $Message,
             );
-            return $Self->Result();
+            return $Self->Result(
+                {
+                    Success      => 0,
+                    ErrorMessage => $Message,
+                },
+            );
         }
         if ( $ObjectWhiteList->{$Object} && $Method !~ /$ObjectWhiteList->{$Object}/ ) {
+            my $Message = "No access method '$Method()' from '$Object'!";
             $Self->{LogObject}->Log(
                 Priority => 'error',
-                Message  => "No access method '$Method' of '$Object'!",
+                Message  => $Message,
             );
-            return $Self->Result();
+            return $Self->Result(
+                {
+                    Success      => 0,
+                    ErrorMessage => $Message,
+                },
+            );
         }
     }
 
     # ticket permission check
 
     if ( $Object eq 'CustomObject' ) {
+
+        # TODO change the way the result is got to accept either hash or array
         my @Result = $Self->{iPhoneObject}->$Method(
             %Param,
             %ParamFixed,
@@ -236,7 +292,9 @@ sub Result {
     my %ResultProtocol;
 
     if ($Result) {
-        if ( @{$Result} ) {
+
+        # this method is still needed for other objects than CustomObject
+        if ( ref $Result eq 'ARRAY' ) {
             if ( @{$Result}[0] eq -1 ) {
                 $ResultProtocol{Result} = 'failed';
                 for my $Key (qw(error notice)) {
@@ -247,10 +305,23 @@ sub Result {
                     last if $ResultProtocol{Message};
                 }
             }
-
             else {
                 $ResultProtocol{Result} = 'successful';
                 $ResultProtocol{Data}   = $Result;
+            }
+        }
+
+        # TODO change the object call for CustomObject tu support array or hash
+        # new result format (to be used within iPhoneHandle functions)
+        # only a few functions are using this new method
+        elsif ( ref $Result eq 'HASH' ) {
+            if ( defined $Result->{Success} && $Result->{Success} == 1 ) {
+                $ResultProtocol{Result} = 'successful';
+                $ResultProtocol{Data}   = $Result->{Data};
+            }
+            elsif ( defined $Result->{Success} && !$Result->{Success} ) {
+                $ResultProtocol{Result}      = 'failed',
+                    $ResultProtocol{Message} = $Result->{ErrorMessage};
             }
         }
 

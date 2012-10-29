@@ -2,7 +2,7 @@
 # Kernel/System/iPhone.pm - all iPhone handle functions
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhone.pm,v 1.71 2012-03-05 23:25:28 cr Exp $
+# $Id: iPhone.pm,v 1.72 2012-10-29 21:56:41 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -24,7 +24,7 @@ use Kernel::System::DynamicField::iPhone::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.71 $) [1];
+$VERSION = qw($Revision: 1.72 $) [1];
 
 =head1 NAME
 
@@ -189,7 +189,7 @@ create an object
         LockObject         => $LockObject,
         SLAObject          => $SLAObject,
         TicketObject       => $TicketObject,
-        Linkbject          => $LinkObject,
+        LinkObject         => $LinkObject,
     );
 
 =cut
@@ -2900,7 +2900,9 @@ sub ArticleIndex {
 
 returns a hash reference with initial configuration required by the iPhone app
 
-    my $Result = $iPhoneObject->InitConfigGet();
+    my $Result = $iPhoneObject->InitConfigGet(
+        UserID => 1,
+    );
 
     a result could be
 
@@ -2929,6 +2931,14 @@ returns a hash reference with initial configuration required by the iPhone app
 
 sub InitConfigGet {
     my ( $Self, %Param ) = @_;
+
+    if ( !$Param{UserID} ) {
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => 'No UserID given! Please contact the admin.',
+        );
+        return -1;
+    }
 
     my %InitConfig;
 
@@ -5232,6 +5242,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 VERSION
 
-$Id: iPhone.pm,v 1.71 2012-03-05 23:25:28 cr Exp $
+$Id: iPhone.pm,v 1.72 2012-10-29 21:56:41 cr Exp $
 
 =cut

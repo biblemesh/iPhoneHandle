@@ -3,7 +3,7 @@
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.22 2012-06-18 15:24:45 cr Exp $
+# $Id: json.pl,v 1.23 2012-10-29 21:56:07 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.22 $) [1];
+$VERSION = qw($Revision: 1.23 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -291,7 +291,6 @@ sub Dispatch {
     # execute iPhoneObject methods
     if ( $Object eq 'CustomObject' || $Object eq 'iPhoneObject' ) {
 
-        # TODO change the way the result is got, to accept either hash or array
         my @Result = $Self->{iPhoneObject}->$Method(
             %Param,
             %ParamFixed,
@@ -317,9 +316,14 @@ sub Result {
     if ($Result) {
 
         # this method is still needed for other objects than CustomObject
+        # this method is also used for backward compatibility of not migrated CustomObject functions
         if ( ref $Result eq 'ARRAY' ) {
+
+            # -1 response means an error
             if ( @{$Result}[0] eq -1 ) {
                 $ResultProtocol{Result} = 'failed';
+
+                # get last loged error and set is as the error message
                 for my $Key (qw(error notice)) {
                     $ResultProtocol{Message} = $Self->{LogObject}->GetLogEntry(
                         Type => $Key,
@@ -328,34 +332,44 @@ sub Result {
                     last if $ResultProtocol{Message};
                 }
             }
+
+            # otherwise is always successful
             else {
                 $ResultProtocol{Result} = 'successful';
                 $ResultProtocol{Data}   = $Result;
             }
         }
 
-        # TODO change the object call for CustomObject tu support array or hash
-        # new result format (to be used within iPhoneHandle functions)
-        # only a few functions are using this new method
+        # this method will have more control over the error messages
         elsif ( ref $Result eq 'HASH' ) {
+
+            # check for a true value in Success key
             if ( defined $Result->{Success} && $Result->{Success} == 1 ) {
                 $ResultProtocol{Result} = 'successful';
                 $ResultProtocol{Data}   = $Result->{Data};
             }
+
+            # otherwise is an error
             elsif ( defined $Result->{Success} && !$Result->{Success} ) {
-                $ResultProtocol{Result}      = 'failed',
-                    $ResultProtocol{Message} = $Result->{ErrorMessage};
+                $ResultProtocol{Result} = 'failed',
+                    $ResultProtocol{Message}
+                    = $Result->{ErrorMessage}
+                    || 'Unknown Error, plase contact system administrator to check OTRS Logs!';
             }
         }
 
+        # success fallback if result is not an ARRAY or HASH
         else {
             $ResultProtocol{Result} = 'successful';
             $ResultProtocol{Data}   = $Result;
         }
     }
 
+    # failed fallback if there was no response
     else {
         $ResultProtocol{Result} = 'failed';
+
+        # get last loged error and set is as the error message
         for my $Key (qw(error notice)) {
             $ResultProtocol{Message} = $Self->{LogObject}->GetLogEntry(
                 Type => $Key,

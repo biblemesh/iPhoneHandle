@@ -1,8 +1,8 @@
 # --
-# scripts/test/JSONGateway.t - layout BuildSelection() testscript
-# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
+# scripts/test/JSONGateway.t - JSON gateway testscript
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
 # --
-# $Id: JSONGateway.t,v 1.1 2012-10-29 21:59:32 cr Exp $
+# $Id: JSONGateway.t,v 1.2 2013-01-03 23:33:44 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -59,9 +59,6 @@ my $CallJSONCGI = sub {
     for my $Item ( keys %JSONParams ) {
         $Command .= " $Item=$JSONParams{$Item}";
     }
-
-    # use Data::Dumper;
-    # print STDERR Dumper($Command); #TODO Delete Developers Oputput
 
     # execute JSON CGI with all parameters
     my $RawResponse = `$Command` || '';

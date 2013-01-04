@@ -1,8 +1,8 @@
 # --
 # Kernel/System/iPhone.pm - all iPhone handle functions
-# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
 # --
-# $Id: iPhone.pm,v 1.72 2012-10-29 21:56:41 cr Exp $
+# $Id: iPhone.pm,v 1.73 2013-01-04 00:21:52 cr Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -24,7 +24,7 @@ use Kernel::System::DynamicField::iPhone::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
 
 use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.72 $) [1];
+$VERSION = qw($Revision: 1.73 $) [1];
 
 =head1 NAME
 
@@ -2193,27 +2193,29 @@ sub TicketGet {
         # check if ticket need to be marked as seen
         my $ArticleAllSeen = 1;
         my @Index = $Self->{TicketObject}->ArticleIndex( TicketID => $Ticket{TicketID} );
-        for my $ArticleID (@Index) {
-            my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
-                ArticleID => $ArticleID,
-                UserID    => $Param{UserID},
-            );
+        if ( IsArrayRefWithData( \@Index ) ) {
+            for my $ArticleID (@Index) {
+                my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+                    ArticleID => $ArticleID,
+                    UserID    => $Param{UserID},
+                );
 
-            # last if article was not shown
-            if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
-                $ArticleAllSeen = 0;
-                last;
+                # last if article was not shown
+                if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
+                    $ArticleAllSeen = 0;
+                    last;
+                }
             }
-        }
 
-        # mark ticket as seen if all article are shown
-        if ($ArticleAllSeen) {
-            $Self->{TicketObject}->TicketFlagSet(
-                TicketID => $Ticket{TicketID},
-                Key      => 'Seen',
-                Value    => 1,
-                UserID   => $Param{UserID},
-            );
+            # mark ticket as seen if all article are shown
+            if ($ArticleAllSeen) {
+                $Self->{TicketObject}->TicketFlagSet(
+                    TicketID => $Ticket{TicketID},
+                    Key      => 'Seen',
+                    Value    => 1,
+                    UserID   => $Param{UserID},
+                );
+            }
         }
     }
 
@@ -2353,27 +2355,29 @@ sub ArticleGet {
         # check if ticket need to be marked as seen
         my $ArticleAllSeen = 1;
         my @Index = $Self->{TicketObject}->ArticleIndex( TicketID => $Article{TicketID} );
-        for my $ArticleID (@Index) {
-            my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
-                ArticleID => $ArticleID,
-                UserID    => $Param{UserID},
-            );
+        if ( IsArrayRefWithData( \@Index ) ) {
+            for my $ArticleID (@Index) {
+                my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+                    ArticleID => $ArticleID,
+                    UserID    => $Param{UserID},
+                );
 
-            # last if article was not shown
-            if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
-                $ArticleAllSeen = 0;
-                last;
+                # last if article was not shown
+                if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
+                    $ArticleAllSeen = 0;
+                    last;
+                }
             }
-        }
 
-        # mark ticket as seen if all article are shown
-        if ($ArticleAllSeen) {
-            $Self->{TicketObject}->TicketFlagSet(
-                TicketID => $Article{TicketID},
-                Key      => 'Seen',
-                Value    => 1,
-                UserID   => $Param{UserID},
-            );
+            # mark ticket as seen if all article are shown
+            if ($ArticleAllSeen) {
+                $Self->{TicketObject}->TicketFlagSet(
+                    TicketID => $Article{TicketID},
+                    Key      => 'Seen',
+                    Value    => 1,
+                    UserID   => $Param{UserID},
+                );
+            }
         }
 
         # add accounted time
@@ -2886,13 +2890,6 @@ sub ArticleIndex {
 
     my @Index = $Self->{TicketObject}->ArticleIndex(%Param);
 
-    if ( !@Index ) {
-        $Self->{LogObject}->Log(
-            Priority => 'error',
-            Message  => 'There are no articles for this ticket',
-        );
-    }
-
     return @Index;
 }
 
@@ -3089,7 +3086,7 @@ sub _GetScreenElements {
                         %Param,
                         UserID => $Param{UserID},
                         )
-                    },
+                },
             },
             Mandatory => 1,
             Default   => '',
@@ -3150,7 +3147,7 @@ sub _GetScreenElements {
                         %Param,
                         UserID => $Param{UserID},
                         )
-                    },
+                },
             },
             Mandatory => 1,
             Default   => '',
@@ -5242,6 +5239,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 VERSION
 
-$Id: iPhone.pm,v 1.72 2012-10-29 21:56:41 cr Exp $
+$Id: iPhone.pm,v 1.73 2013-01-04 00:21:52 cr Exp $
 
 =cut

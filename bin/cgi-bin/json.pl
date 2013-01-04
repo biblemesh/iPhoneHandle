@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 # --
 # bin/cgi-bin/json.pl - json handle
-# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.24 2012-11-20 19:16:26 mh Exp $
+# $Id: json.pl,v 1.25 2013-01-04 02:16:26 cr Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,7 +53,7 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.24 $) [1];
+$VERSION = qw($Revision: 1.25 $) [1];
 
 my $Self = Core->new();
 print "Content-Type: text/plain; \n";
@@ -320,7 +320,7 @@ sub Result {
         if ( ref $Result eq 'ARRAY' ) {
 
             # -1 response means an error
-            if ( @{$Result}[0] eq -1 ) {
+            if ( defined @{$Result}[0] && @{$Result}[0] eq -1 ) {
                 $ResultProtocol{Result} = 'failed';
 
                 # get last loged error and set is as the error message

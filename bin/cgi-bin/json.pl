@@ -1,9 +1,9 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # --
 # bin/cgi-bin/json.pl - json handle
 # Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
 # --
-# $Id: json.pl,v 1.25 2013-01-04 02:16:26 cr Exp $
+# $Id: json.pl,v 1.26 2013-07-10 14:48:52 mb Exp $
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -53,14 +53,13 @@ use Kernel::System::iPhone;
 use Kernel::System::Web::Request;
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.25 $) [1];
+$VERSION = qw($Revision: 1.26 $) [1];
 
-my $Self = Core->new();
+my $Self = {};
+bless($Self);
 print "Content-Type: text/plain; \n";
 print "\n";
 print $Self->Dispatch();
-
-package Core;
 
 sub new {
     my ( $Type, %Param ) = @_;

@@ -2,7 +2,7 @@
 # scripts/test/JSONGateway.t - JSON gateway testscript
 # Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
 # --
-# $Id: JSONGateway.t,v 1.2 2013-01-03 23:33:44 cr Exp $
+# $Id: JSONGateway.t,v 1.3 2013-07-10 14:56:20 mb Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -18,6 +18,7 @@ use Kernel::Config;
 use Kernel::System::JSON;
 use Kernel::System::UnitTest::Helper;
 use Kernel::System::VariableCheck qw(IsArrayRefWithData IsHashRefWithData IsStringWithData);
+use Kernel::System::WebUserAgent;
 
 # helper object
 my $HelperObject = Kernel::System::UnitTest::Helper->new(
@@ -27,23 +28,37 @@ my $HelperObject = Kernel::System::UnitTest::Helper->new(
 );
 
 # create other objects
-my $ConfigObject = Kernel::Config->new();
-my $JSONObject   = Kernel::System::JSON->new( %{$Self} );
+my $ConfigObject       = Kernel::Config->new();
+my $JSONObject         = Kernel::System::JSON->new( %{$Self} );
+my $WebUserAgentObject = Kernel::System::WebUserAgent->new( %{$Self} );
 
-my $Home = $ConfigObject->Get('Home');
+# get remote host with some precautions for certain unit test systems
+my $Host;
+my $FQDN = $Self->{ConfigObject}->Get('FQDN');
 
-my $JSONCGI = $Home . '/bin/cgi-bin/json.pl';
-
-my $FileExists;
-if ( -e $JSONCGI ) {
-    $FileExists = 1;
+# try to resolve fqdn host
+if ( $FQDN ne 'yourhost.example.com' && gethostbyname($FQDN) ) {
+    $Host = $FQDN;
 }
 
-# sanity test
-$Self->True(
-    $FileExists,
-    "$JSONCGI exists in the file system",
-);
+# try to resolve localhost instead
+if ( !$Host && gethostbyname('localhost') ) {
+    $Host = 'localhost';
+}
+
+# use hardcoded localhost ip address
+if ( !$Host ) {
+    $Host = '127.0.0.1';
+}
+
+# prepare webservice config
+my $URL =
+    $Self->{ConfigObject}->Get('HttpType')
+    . '://'
+    . $Host
+    . '/'
+    . $Self->{ConfigObject}->Get('ScriptAlias')
+    . 'json.pl';
 
 my $CallJSONCGI = sub {
     my %Param = @_;
@@ -54,49 +69,30 @@ my $CallJSONCGI = sub {
     }
 
     # copy JSON CGI handler
-    my $Command = $JSONCGI;
+    my $JSONUrl = $URL . '?';
 
     for my $Item ( keys %JSONParams ) {
-        $Command .= " $Item=$JSONParams{$Item}";
+        $JSONUrl .= "$Item=$JSONParams{$Item};";
     }
-
-    # execute JSON CGI with all parameters
-    my $RawResponse = `$Command` || '';
-
-    $Self->IsNot(
-        $RawResponse,
-        '',
-        "JSON CGI - Test $Param{TestName} - response is not empty",
-    );
-
-    # JSON response in this mode should be always a 3 lines string, the important result is the
-    # line number 3
-    my @Response = split /\n/, $RawResponse;
-
-    $Self->Is(
-        scalar @Response,
-        3,
-        "JSON CGI - Test $Param{TestName} - response contains 3 lines",
+    my %Response = $WebUserAgentObject->Request(
+        URL => $JSONUrl,
     );
 
     $Self->Is(
-        $Response[0],
-        'Content-Type: text/plain; ',
-        "JSON CGI - Test $Param{TestName} - response line 1 match expected results",
+        $Response{Status},
+        '200 OK',
+        "JSON CGI - Test $Param{TestName} - response is 200 OK",
     );
 
-    $Self->IsNot(
-        $Response[2],
-        '',
-        "JSON CGI - Test $Param{TestName} - response line 2 is not empty",
-    );
-
-    # return line number 3 (position 2 in the array)
-    return $Response[2];
+    return $Response{Content};
 };
 
-my $User     = 'root@localhost';
-my $Password = 'root';
+# create test user
+my $User = $HelperObject->TestUserCreate(
+    Groups => ['users'],
+);
+my $Password = $User;
+
 my $RandomID = $HelperObject->GetRandomID();
 
 my @Tests = (
@@ -260,7 +256,7 @@ for my $Test (@Tests) {
         JSONParams => $Test->{JSONParams},
     );
 
-    my $Response = $JSONObject->Decode( Data => $JSONResponse );
+    my $Response = $JSONObject->Decode( Data => ${$JSONResponse} );
 
     $Self->Is(
         ref $Response,

@@ -10,7 +10,6 @@
     <Description Lang="de">Das iPhoneHandle Paket.</Description>
     <Filelist>
         <File Permission="755" Location="bin/cgi-bin/json.pl"/>
-        <File Permission="644" Location="Kernel/Config/Files/iPhone_Deprecated.xml"/>
         <File Permission="644" Location="Kernel/Config/Files/iPhone.xml"/>
         <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Checkbox.pm"/>
         <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Date.pm"/>

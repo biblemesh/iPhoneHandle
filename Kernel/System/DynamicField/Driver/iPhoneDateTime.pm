@@ -65,7 +65,7 @@ sub IsIPhoneCapable {
     return 1;
 }
 
-sub EditFieldRender {
+sub IPhoneEditFieldRender {
     my ( $Self, %Param ) = @_;
 
     # take config from field config
@@ -103,7 +103,7 @@ sub EditFieldRender {
     return $Data;
 }
 
-sub EditFieldValueGet {
+sub IPhoneEditFieldValueGet {
     my ( $Self, %Param ) = @_;
 
     my $FieldName = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
@@ -134,7 +134,7 @@ sub EditFieldValueGet {
     return $Value;
 }
 
-sub EditFieldValueValidate {
+sub IPhoneEditFieldValueValidate {
     my ( $Self, %Param ) = @_;
 
     # get the field value from param

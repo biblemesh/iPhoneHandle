@@ -63,21 +63,21 @@ sub IsIPhoneCapable {
     return 0;
 }
 
-sub EditFieldRender {
+sub IPhoneEditFieldRender {
     my ( $Self, %Param ) = @_;
 
     # not supported by iPhone App
     return;
 }
 
-sub EditFieldValueGet {
+sub IPhoneEditFieldValueGet {
     my ( $Self, %Param ) = @_;
 
     # not supported by iPhone App
     return;
 }
 
-sub EditFieldValueValidate {
+sub IPhoneEditFieldValueValidate {
     my ( $Self, %Param ) = @_;
 
     # not supported by iPhone App

@@ -260,17 +260,18 @@ sub IsIPhoneCapable {
         return;
     }
 
+    # verify if function is available
+    return if !$Self->{$DynamicFieldBackend}->can('IsIPhoneCapable');
+
     # call IsIPhoneCapable on the specific backend
-    return $Self->{$DynamicFieldBackend}->IsIPhoneCapable(
-        %Param
-    );
+    return $Self->{$DynamicFieldBackend}->IsIPhoneCapable(%Param);
 }
 
-=item EditFieldRender()
+=item IPhoneEditFieldRender()
 
 creates the field definition to be used in iphone edit masks.
 
-    my $FieldDefinition = $iPhoneBackendObject->EditFieldRender(
+    my $FieldDefinition = $iPhoneBackendObject->IPhoneEditFieldRender(
         DynamicFieldConfig   => $DynamicFieldConfig,      # Complete config of the DynamicField
         Value                => 'Any value',              # Optional
         Mandatory            => 1,                        # 0 or 1,
@@ -355,7 +356,7 @@ creates the field definition to be used in iphone edit masks.
 
 =cut
 
-sub EditFieldRender {
+sub IPhoneEditFieldRender {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
@@ -402,20 +403,21 @@ sub EditFieldRender {
         $Param{UseDefaultValue} = 1;
     }
 
-    # call EditFieldRender on the specific backend
-    my $FieldDefinition = $Self->{$DynamicFieldBackend}->EditFieldRender(
-        %Param
-    );
+    # verify if function is available
+    return if !$Self->{$DynamicFieldBackend}->can('IPhoneEditFieldRender');
+
+    # call IPhoneEditFieldRender on the specific backend
+    my $FieldDefinition = $Self->{$DynamicFieldBackend}->IPhoneEditFieldRender(%Param);
 
     return $FieldDefinition;
 
 }
 
-=item EditFieldValueGet()
+=item IPhoneEditFieldValueGet()
 
 extracts the value of a dynamic field from the param object.
 
-    my $Value = $iPhoneBackendObject->EditFieldValueGet(
+    my $Value = $iPhoneBackendObject->IPhoneEditFieldValueGet(
         DynamicFieldConfig   => $DynamicFieldConfig,    # complete config of the DynamicField
         DynamicField_NameX   => 'DynamicFieldValue'     # Raw field value where, NameX is the name
                                                         #     of the filed
@@ -432,7 +434,7 @@ extracts the value of a dynamic field from the param object.
 
 =cut
 
-sub EditFieldValueGet {
+sub IPhoneEditFieldValueGet {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
@@ -479,15 +481,18 @@ sub EditFieldValueGet {
         return;
     }
 
+    # verify if function is available
+    return if !$Self->{$DynamicFieldBackend}->can('IPhoneEditFieldValueGet');
+
     # return value from the specific backend
-    return $Self->{$DynamicFieldBackend}->EditFieldValueGet(%Param);
+    return $Self->{$DynamicFieldBackend}->IPhoneEditFieldValueGet(%Param);
 }
 
-=item EditFieldValueValidate()
+=item IPhoneEditFieldValueValidate()
 
 validate the current value for the dynamic field
 
-    my $Result = $iPhoneBackendObject->EditFieldValueValidate(
+    my $Result = $iPhoneBackendObject->IPhoneEditFieldValueValidate(
         DynamicFieldConfig   => $DynamicFieldConfig,      # complete config of the DynamicField
         Value                => $$Value                   # The current dynamic field value
         Mandatory            => 1,                        # 0 or 1,
@@ -502,7 +507,7 @@ validate the current value for the dynamic field
 
 =cut
 
-sub EditFieldValueValidate {
+sub IPhoneEditFieldValueValidate {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
@@ -542,8 +547,11 @@ sub EditFieldValueValidate {
         return;
     }
 
+    # verify if function is available
+    return if !$Self->{$DynamicFieldBackend}->can('IPhoneEditFieldValueValidate');
+
     # return validation structure from the specific backend
-    return $Self->{$DynamicFieldBackend}->EditFieldValueValidate(%Param);
+    return $Self->{$DynamicFieldBackend}->IPhoneEditFieldValueValidate(%Param);
 
 }
 

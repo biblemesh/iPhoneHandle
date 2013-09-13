@@ -1,5 +1,5 @@
 # --
-# Kernel/System/DynamicField/iPhone/Backend/Date.pm - Delegate for DynamicField Date backend
+# Kernel/System/DynamicField/Driver/iPhoneDate.pm - Driver for DynamicField Date backend
 # Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -7,7 +7,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::DynamicField::iPhone::Backend::Date;
+package Kernel::System::DynamicField::Driver::iPhoneDate;
 
 use strict;
 use warnings;
@@ -18,15 +18,15 @@ use Kernel::System::Time;
 
 =head1 NAME
 
-Kernel::System::DynamicField::iPhone::Backend::TextArea
+Kernel::System::DynamicField::Driver::iPhoneDate
 
 =head1 SYNOPSIS
 
-DynamicFields Date backend delegate for iPhoneHandle
+DynamicFields Date backend driver for iPhoneHandle
 
 =head1 PUBLIC INTERFACE
 
-This module implements the public interface of L<Kernel::System::DynamicField::iPhone::iPhoneBackend>.
+This module implements the public interface of L<Kernel::System::DynamicField::Backend>.
 Please look there for a detailed reference of the functions.
 
 =over 4
@@ -34,7 +34,7 @@ Please look there for a detailed reference of the functions.
 =item new()
 
 usually, you want to create an instance of this
-by using Kernel::System::DynamicField::iPhone::iPhoneBackend->new();
+by using Kernel::System::DynamicField::Backend->new();
 
 =cut
 

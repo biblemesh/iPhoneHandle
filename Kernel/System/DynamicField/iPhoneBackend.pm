@@ -1,5 +1,5 @@
 # --
-# Kernel/System/DynamicField/iPhone/iPhoneBackend.pm - Interface for DynamicField backends
+# Kernel/System/DynamicField/iPhoneBackend.pm - Interface for DynamicField backends
 # Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -7,7 +7,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::DynamicField::iPhone::iPhoneBackend;
+package Kernel::System::DynamicField::iPhoneBackend;
 
 use strict;
 use warnings;

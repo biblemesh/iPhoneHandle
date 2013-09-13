@@ -1,5 +1,5 @@
 # --
-# Kernel/System/DynamicField/iPhone/Backend/TextArea.pm - Delegate for DynamicField TextArea backend
+# Kernel/System/DynamicField/Driver/iPhoneTextArea.pm - Driver for DynamicField TextArea backend
 # Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -7,7 +7,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::DynamicField::iPhone::Backend::TextArea;
+package Kernel::System::DynamicField::Driver::iPhoneTextArea;
 
 use strict;
 use warnings;
@@ -17,15 +17,15 @@ use Kernel::System::DynamicFieldValue;
 
 =head1 NAME
 
-Kernel::System::DynamicField::iPhone::Backend::TextArea
+Kernel::System::DynamicField::Driver::iPhoneTextArea
 
 =head1 SYNOPSIS
 
-DynamicFields TextArea backend delegate for iPhoneHanle
+DynamicFields TextArea backend driver for iPhoneHanle
 
 =head1 PUBLIC INTERFACE
 
-This module implements the public interface of L<Kernel::System::DynamicField::iPhone::iPhoneBackend>.
+This module implements the public interface of L<Kernel::System::DynamicField::Backend>.
 Please look there for a detailed reference of the functions.
 
 =over 4
@@ -33,7 +33,7 @@ Please look there for a detailed reference of the functions.
 =item new()
 
 usually, you want to create an instance of this
-by using Kernel::System::DynamicField::iPhone::iPhoneBackend->new();
+by using Kernel::System::DynamicField::Backend->new();
 
 =cut
 

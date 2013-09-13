@@ -18,7 +18,7 @@ use Kernel::System::Priority;
 use Kernel::System::SystemAddress;
 use Kernel::System::DynamicField;
 use Kernel::System::DynamicField::Backend;
-use Kernel::System::DynamicField::iPhone::iPhoneBackend;
+use Kernel::System::DynamicField::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
 
 =head1 NAME
@@ -210,7 +210,7 @@ sub new {
     $Self->{SystemAddress}       = Kernel::System::SystemAddress->new(%Param);
     $Self->{DynamicFieldObject}  = Kernel::System::DynamicField->new(%Param);
     $Self->{BackendObject}       = Kernel::System::DynamicField::Backend->new(%Param);
-    $Self->{iPhoneBackendObject} = Kernel::System::DynamicField::iPhone::iPhoneBackend->new(%Param);
+    $Self->{iPhoneBackendObject} = Kernel::System::DynamicField::iPhoneBackend->new(%Param);
 
     return $Self;
 }
@@ -2938,7 +2938,7 @@ sub InitConfigGet {
     $InitConfig{TicketResponsible} = $Self->{ConfigObject}->Get('Ticket::Responsible');
     $InitConfig{DefaultCharset}    = $Self->{ConfigObject}->Get('DefaultCharset');
     $InitConfig{CustomerSearchAutoComplete}
-        = $Self->{ConfigObject}->Get('Ticket::Frontend::CustomerSearchAutoComplete');
+        = $Self->{ConfigObject}->Get('AutoComplete::Agent')->{Default};
     $InitConfig{CurrentTimestamp} = $Self->{TimeObject}->CurrentTimestamp();
     $InitConfig{VersionGet}       = $Self->VersionGet(%Param);
 

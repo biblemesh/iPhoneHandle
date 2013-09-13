@@ -1,5 +1,5 @@
 # --
-# Kernel/System/DynamicField/iPhoneFilter/Backend/Multiselect.pm - Delegate for DynamicField Multiselect backend
+# Kernel/System/DynamicField/Driver/iPhoneMultiselect.pm - Driver for DynamicField Multiselect backend
 # Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -7,7 +7,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::DynamicField::iPhone::Backend::Multiselect;
+package Kernel::System::DynamicField::Driver::iPhoneMultiselect;
 
 use strict;
 use warnings;
@@ -17,15 +17,15 @@ use Kernel::System::DynamicFieldValue;
 
 =head1 NAME
 
-Kernel::System::DynamicField::iPhone::Backend::TextArea
+Kernel::System::DynamicField::Driver::iPhoneMultiselect
 
 =head1 SYNOPSIS
 
-DynamicFields Multiselect backend delegate for IPhoneHandle
+DynamicFields Multiselect backend driver for iPhoneHandle
 
 =head1 PUBLIC INTERFACE
 
-This module implements the public interface of L<Kernel::System::DynamicField::iPhone::iPhoneBackend>.
+This module implements the public interface of L<Kernel::System::DynamicField::Backend>.
 Please look there for a detailed reference of the functions.
 
 =over 4
@@ -33,7 +33,7 @@ Please look there for a detailed reference of the functions.
 =item new()
 
 usually, you want to create an instance of this
-by using Kernel::System::DynamicField::iPhone::iPhoneBackend->new();
+by using Kernel::System::DynamicField::Backend->new();
 
 =cut
 

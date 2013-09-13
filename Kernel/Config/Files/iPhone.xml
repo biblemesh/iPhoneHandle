@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <otrs_config version="1.0" init="Application">
-    <CVS>$Id: iPhone.xml,v 1.15 2012-03-13 02:59:26 cr Exp $</CVS>
-
     <ConfigItem Name="iPhone::DebugLog" Required="1" Valid="1">
         <Description Translatable="1">Allows to enable a special log for all communication between iPhone and otrs.</Description>
         <Group>iPhone</Group>

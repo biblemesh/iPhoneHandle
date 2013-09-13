@@ -1,8 +1,6 @@
 # --
 # Kernel/System/DynamicField/iPhone/Backend/Dropdown.pm - Delegate for DynamicField Dropdown backend
-# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
-# --
-# $Id: Dropdown.pm,v 1.1 2012-02-24 21:55:20 cr Exp $
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -16,9 +14,6 @@ use warnings;
 
 use Kernel::System::DynamicFieldValue;
 use Kernel::System::VariableCheck qw(:all);
-
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.1 $) [1];
 
 =head1 NAME
 
@@ -89,7 +84,7 @@ sub EditFieldRender {
 
     if ( $FieldConfig->{TranslatableValues} ) {
         if ( IsHashRefWithData($PossibleValues) ) {
-            for my $PossibleKey ( keys %{$PossibleValues} ) {
+            for my $PossibleKey ( sort keys %{$PossibleValues} ) {
                 my $OriginalValue = $PossibleValues->{$PossibleKey};
                 $PossibleValues->{$PossibleKey}
                     = $Param{LanguageObject}->Get($OriginalValue) || $OriginalValue;
@@ -179,11 +174,5 @@ This software is part of the OTRS project (L<http://otrs.org/>).
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
-
-=cut
-
-=head1 VERSION
-
-$$
 
 =cut

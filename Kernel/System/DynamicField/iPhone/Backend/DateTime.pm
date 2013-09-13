@@ -1,8 +1,6 @@
 # --
 # Kernel/System/DynamicField/iPhone/Backend/DateTime.pm - Delegate for DynamicField DateTime backend
-# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
-# --
-# $Id: DateTime.pm,v 1.2 2012-03-05 16:29:42 cr Exp $
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -17,9 +15,6 @@ use warnings;
 use Kernel::System::VariableCheck qw(:all);
 use Kernel::System::DynamicFieldValue;
 use Kernel::System::Time;
-
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.2 $) [1];
 
 =head1 NAME
 
@@ -210,11 +205,5 @@ This software is part of the OTRS project (L<http://otrs.org/>).
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
-
-=cut
-
-=head1 VERSION
-
-$$
 
 =cut

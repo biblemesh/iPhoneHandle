@@ -1,8 +1,6 @@
 # --
 # scripts/test/JSONGateway.t - JSON gateway testscript
-# Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
-# --
-# $Id: JSONGateway.t,v 1.3 2013-07-10 14:56:20 mb Exp $
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -71,7 +69,7 @@ my $CallJSONCGI = sub {
     # copy JSON CGI handler
     my $JSONUrl = $URL . '?';
 
-    for my $Item ( keys %JSONParams ) {
+    for my $Item ( sort keys %JSONParams ) {
         $JSONUrl .= "$Item=$JSONParams{$Item};";
     }
     my %Response = $WebUserAgentObject->Request(

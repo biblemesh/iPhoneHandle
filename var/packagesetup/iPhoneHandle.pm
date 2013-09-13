@@ -1,12 +1,10 @@
 # --
 # iPhoneHandle.pm - code to excecute during package installation
-# Copyright (C) 2001-2012 OTRS AG, http://otrs.org/
-# --
-# $Id: iPhoneHandle.pm,v 1.3 2012-03-05 23:25:28 cr Exp $
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package var::packagesetup::iPhoneHandle;
@@ -18,9 +16,6 @@ use Kernel::Config;
 use Kernel::System::SysConfig;
 use Kernel::System::Package;
 use Kernel::System::VariableCheck qw(:all);
-
-use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.3 $) [1];
 
 =head1 NAME
 
@@ -219,14 +214,14 @@ sub _UpdateReleaseFile {
     # if no iPhoneHandle package found and the code install is executed this must be a
     # development scenario
     if ( !$PackageVersion ) {
-        $PackageVersion = 'CVS';
+        $PackageVersion = 'git';
     }
 
     # get home path
     my $Home = $Self->{ConfigObject}->Get('Home');
 
     # create or overwrite RELEASE.iPhoneHandle file
-    if ( open( my $ReleaseFile, '>', "$Home/var/RELEASE.iPhoneHandle" ) ) {
+    if ( open( my $ReleaseFile, '>', "$Home/var/RELEASE.iPhoneHandle" ) ) {    ## no critic
         print $ReleaseFile "PRODUCT = iPhoneHandle\n";
         print $ReleaseFile "VERSION = $PackageVersion";
         close($ReleaseFile);
@@ -364,16 +359,10 @@ sub _MigrateConfigurations {
 
 =head1 TERMS AND CONDITIONS
 
-This Software is part of the OTRS project (http://otrs.org/).
+This software is part of the OTRS project (L<http://otrs.org/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
-the enclosed file COPYING for license information (GPL). If you
-did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
-
-=cut
-
-=head1 VERSION
-
-$Revision: 1.3 $ $Date: 2012-03-05 23:25:28 $
+the enclosed file COPYING for license information (AGPL). If you
+did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut

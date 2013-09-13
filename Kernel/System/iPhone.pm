@@ -1,8 +1,6 @@
 # --
 # Kernel/System/iPhone.pm - all iPhone handle functions
-# Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
-# --
-# $Id: iPhone.pm,v 1.73 2013-01-04 00:21:52 cr Exp $
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -22,9 +20,6 @@ use Kernel::System::DynamicField;
 use Kernel::System::DynamicField::Backend;
 use Kernel::System::DynamicField::iPhone::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
-
-use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.73 $) [1];
 
 =head1 NAME
 
@@ -927,7 +922,7 @@ sub EscalationView {
 
     # do nav bar lookup
     my @States;
-    for my $Filter ( keys %Filters ) {
+    for my $Filter ( sort keys %Filters ) {
         my $Count = $Self->{TicketObject}->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result => 'COUNT',
@@ -1098,7 +1093,7 @@ sub StatusView {
 
     # do nav bar lookup
     my @States;
-    for my $Filter ( keys %Filters ) {
+    for my $Filter ( sort keys %Filters ) {
         my $Count = $Self->{TicketObject}->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result => 'COUNT',
@@ -1322,7 +1317,7 @@ sub LockedView {
 
     # do nav bar lookup
     my @States;
-    for my $Filter ( keys %Filters ) {
+    for my $Filter ( sort keys %Filters ) {
         my $Count = $Self->{TicketObject}->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result => 'COUNT',
@@ -1543,7 +1538,7 @@ sub WatchedView {
 
         # do nav bar lookup
         my @States;
-        for my $Filter ( keys %Filters ) {
+        for my $Filter ( sort keys %Filters ) {
             my $Count = $Self->{TicketObject}->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Result => 'COUNT',
@@ -1773,7 +1768,7 @@ sub ResponsibleView {
 
         # do nav bar lookup
         my @States;
-        for my $Filter ( keys %Filters ) {
+        for my $Filter ( sort keys %Filters ) {
             my $Count = $Self->{TicketObject}->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Result => 'COUNT',
@@ -2091,7 +2086,7 @@ sub TicketList {
             delete $Article{$Key};
         }
 
-        for my $Key ( keys %Article ) {
+        for my $Key ( sort keys %Article ) {
             if ( !defined $Article{$Key} || $Article{$Key} eq '' ) {
                 delete $Article{$Key};
             }
@@ -2236,7 +2231,7 @@ sub TicketGet {
     for my $Key (@Delete) {
         delete $Ticket{$Key};
     }
-    for my $Key ( keys %Ticket ) {
+    for my $Key ( sort keys %Ticket ) {
         if ( !defined $Ticket{$Key} || $Ticket{$Key} eq '' ) {
             delete $Ticket{$Key};
         }
@@ -2398,7 +2393,7 @@ sub ArticleGet {
             delete $Article{$Key};
         }
 
-        for my $Key ( keys %Article ) {
+        for my $Key ( sort keys %Article ) {
             if ( !defined $Article{$Key} || $Article{$Key} eq '' ) {
                 delete $Article{$Key};
             }
@@ -2516,7 +2511,7 @@ sub UsersGet {
     # just show only users with selected custom queue
     if ( $Param{QueueID} && !$Param{AllUsers} ) {
         my @UserIDs = $Self->{TicketObject}->GetSubscribedUserIDsByQueueID(%Param);
-        for ( keys %AllGroupsMembers ) {
+        for ( sort keys %AllGroupsMembers ) {
             my $Hit = 0;
             for my $UID (@UserIDs) {
                 if ( $UID eq $_ ) {
@@ -2543,7 +2538,7 @@ sub UsersGet {
             Result  => 'HASH',
             Cached  => 1,
         );
-        for ( keys %MemberList ) {
+        for ( sort keys %MemberList ) {
             if ( $AllGroupsMembers{$_} ) {
                 $ShownUsers{$_} = $AllGroupsMembers{$_};
             }
@@ -2798,7 +2793,7 @@ sub VersionGet {
     }
     my $PackageName;
     my $PackageVersion;
-    if ( open( my $Product, '<', "$Home/var/RELEASE.iPhoneHandle" ) ) {
+    if ( open( my $Product, '<', "$Home/var/RELEASE.iPhoneHandle" ) ) {    ## no critic
         while (<$Product>) {
 
             # filtering of comment lines
@@ -2909,7 +2904,7 @@ returns a hash reference with initial configuration required by the iPhone app
         CurrentTimestamp           => "2010-10-26 11:53:35",
         VersionGet                 => {
             URL       => "http://otrs.org/",
-            Framework => "2.4.x CVS",
+            Framework => "3.3.x git",
             Version   => "0.9.6",
             Vendor    => "OTRS AG",
             Name      => "iPhoneHandle"
@@ -3004,7 +2999,7 @@ sub _GetTos {
         );
 
         # build selection string
-        for my $QueueID ( keys %Tos ) {
+        for my $QueueID ( sort keys %Tos ) {
             my %QueueData = $Self->{QueueObject}->QueueGet( ID => $QueueID );
 
             # permission check, can we create new tickets in queue
@@ -3037,7 +3032,7 @@ sub _GetNoteTypes {
     my %DefaultNoteTypes = %{ $Self->{Config}->{ArticleTypes} };
 
     my %NoteTypes = $Self->{TicketObject}->ArticleTypeList( Result => 'HASH' );
-    for ( keys %NoteTypes ) {
+    for ( sort keys %NoteTypes ) {
         if ( !$DefaultNoteTypes{ $NoteTypes{$_} } ) {
             delete $NoteTypes{$_};
         }
@@ -3711,7 +3706,7 @@ sub _TicketPhoneNew {
     );
     my $From;
     if (%CustomerUserList) {
-        for ( keys %CustomerUserList ) {
+        for ( sort keys %CustomerUserList ) {
 
             if ( $Param{CustomerUserLogin} eq $_ ) {
                 $From = $CustomerUserList{$_}
@@ -4351,11 +4346,11 @@ sub _TicketCommonActions {
             $Param{Subject} = $Self->{Config}->{Subject},;
         }
 
-        my $result = $Self->_TicketCommonActions(
+        my $Result = $Self->_TicketCommonActions(
             %Param,
             Defaults => 1,
         );
-        return $result;
+        return $Result;
     }
     return $ArticleID;
 }
@@ -5234,11 +5229,5 @@ This software is part of the OTRS project (L<http://otrs.org/>).
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
-
-=cut
-
-=head1 VERSION
-
-$Id: iPhone.pm,v 1.73 2013-01-04 00:21:52 cr Exp $
 
 =cut

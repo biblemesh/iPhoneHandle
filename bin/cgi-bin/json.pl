@@ -1,9 +1,7 @@
 #!/usr/bin/perl
 # --
 # bin/cgi-bin/json.pl - json handle
-# Copyright (C) 2001-2013 OTRS AG, http://otrs.org/
-# --
-# $Id: json.pl,v 1.26 2013-07-10 14:48:52 mb Exp $
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -30,33 +28,31 @@ use lib "$Bin/../..";
 use lib "$Bin/../../Kernel/cpan-lib";
 
 use Kernel::Config;
+use Kernel::System::Auth;
+use Kernel::System::CustomerUser;
+use Kernel::System::DB;
 use Kernel::System::Encode;
 use Kernel::System::Log;
-use Kernel::System::DB;
-use Kernel::System::Main;
-use Kernel::System::Time;
-use Kernel::System::Auth;
-use Kernel::System::User;
 use Kernel::System::Group;
+use Kernel::System::iPhone;
+use Kernel::System::JSON;
+use Kernel::System::LinkObject;
+use Kernel::System::Lock;
+use Kernel::System::Main;
 use Kernel::System::Queue;
 use Kernel::System::Service;
-use Kernel::System::Type;
-use Kernel::System::State;
-use Kernel::System::Lock;
 use Kernel::System::SLA;
-use Kernel::System::CustomerUser;
+use Kernel::System::State;
 use Kernel::System::Ticket;
-use Kernel::System::LinkObject;
-use Kernel::System::JSON;
-use Kernel::System::iPhone;
-
+use Kernel::System::Time;
+use Kernel::System::Type;
+use Kernel::System::User;
 use Kernel::System::Web::Request;
 
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.26 $) [1];
+## nofilter(TidyAll::Plugin::OTRS::Perl::ParamObject)
 
 my $Self = {};
-bless($Self);
+bless( $Self, 'main' );
 print "Content-Type: text/plain; \n";
 print "\n";
 print $Self->Dispatch();
@@ -399,7 +395,7 @@ sub Log {
     my $FH;
 
     # open logfile
-    if ( !open $FH, '>>', $Self->{DebugLogFile} ) {
+    if ( !open $FH, '>>', $Self->{DebugLogFile} ) {    ## no critic
 
         # print error screen
         print STDERR "\n";

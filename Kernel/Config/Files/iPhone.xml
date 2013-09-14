@@ -834,92 +834,105 @@
         </Setting>
     </ConfigItem>
 
-    <ConfigItem Name="DynamicFields::iPhone::Backend###Text" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+    <ConfigItem Name="DynamicFields::Extension::Backend###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="DisplayName" Translatable="1">Text</Item>
+                <Item Key="Module">Kernel::System::DynamicField::iPhoneBackend</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::Extension::Driver::Text###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
+        <Setting>
+            <Hash>
                 <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneText</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldText</Item>
+                <Item Key="Behaviors">
+                    <Hash>
+                        <Item Key="IsIPhoneCapable">1</Item>
+                    </Hash>
+                </Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="DynamicFields::iPhone::Backend###TextArea" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+    <ConfigItem Name="DynamicFields::Extension::Driver::TextArea###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="DisplayName" Translatable="1">Textarea</Item>
                 <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneTextArea</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldText</Item>
+                <Item Key="Behaviors">
+                    <Hash>
+                        <Item Key="IsIPhoneCapable">1</Item>
+                    </Hash>
+                </Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="DynamicFields::iPhone::Backend###Checkbox" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+    <ConfigItem Name="DynamicFields::Extension::Driver::Checkbox###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="DisplayName" Translatable="1">Checkbox</Item>
                 <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneCheckbox</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldCheckbox</Item>
+                <Item Key="Behaviors">
+                    <Hash>
+                        <Item Key="IsIPhoneCapable">1</Item>
+                    </Hash>
+                </Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="DynamicFields::iPhone::Backend###Dropdown" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+    <ConfigItem Name="DynamicFields::Extension::Driver::Dropdown###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="DisplayName" Translatable="1">Dropdown</Item>
                 <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneDropdown</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldDropdown</Item>
+                <Item Key="Behaviors">
+                    <Hash>
+                        <Item Key="IsIPhoneCapable">1</Item>
+                    </Hash>
+                </Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="DynamicFields::iPhone::Backend###DateTime" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+    <!--  Multiselect Dynamic Field is currently not supported by iPhone App -->
+    <ConfigItem Name="DynamicFields::Extension::Driver::DateTime###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="DisplayName" Translatable="1">Date / Time</Item>
                 <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneDateTime</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldDateTime</Item>
+                <Item Key="Behaviors">
+                    <Hash>
+                        <Item Key="IsIPhoneCapable">1</Item>
+                    </Hash>
+                </Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="DynamicFields::iPhone::Backend###Date" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
+    <ConfigItem Name="DynamicFields::Extension::Driver::Date###100-iPhone" Required="1" Valid="1">
+        <Description Translatable="1">Dynamic Fields Extension.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="DisplayName" Translatable="1">Date</Item>
                 <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneDate</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldDateTime</Item>
+                <Item Key="Behaviors">
+                    <Hash>
+                        <Item Key="IsIPhoneCapable">1</Item>
+                    </Hash>
+                </Item>
             </Hash>
         </Setting>
     </ConfigItem>
-
-    <ConfigItem Name="DynamicFields::iPhone::Backend###Multiselect" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField backend registration.</Description>
-        <Group>iPhone</Group>
-        <SubGroup>DynamicFields::Backend::Registration</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="DisplayName" Translatable="1">Multiselect</Item>
-                <Item Key="Module">Kernel::System::DynamicField::Driver::iPhoneMultiselect</Item>
-                <Item Key="ConfigDialog">AdminDynamicFieldMultiselect</Item>
-                <Item Key="ItemSeparator">, </Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-
-
 </otrs_config>

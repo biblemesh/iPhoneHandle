@@ -18,7 +18,6 @@ use Kernel::System::Priority;
 use Kernel::System::SystemAddress;
 use Kernel::System::DynamicField;
 use Kernel::System::DynamicField::Backend;
-use Kernel::System::DynamicField::iPhoneBackend;
 use Kernel::System::VariableCheck qw(:all);
 
 =head1 NAME
@@ -205,12 +204,11 @@ sub new {
         $Self->{$_} = $Param{$_} || die "Got no $_! object";
     }
 
-    $Self->{CheckItemObject}     = Kernel::System::CheckItem->new(%Param);
-    $Self->{PriorityObject}      = Kernel::System::Priority->new(%Param);
-    $Self->{SystemAddress}       = Kernel::System::SystemAddress->new(%Param);
-    $Self->{DynamicFieldObject}  = Kernel::System::DynamicField->new(%Param);
-    $Self->{BackendObject}       = Kernel::System::DynamicField::Backend->new(%Param);
-    $Self->{iPhoneBackendObject} = Kernel::System::DynamicField::iPhoneBackend->new(%Param);
+    $Self->{CheckItemObject}    = Kernel::System::CheckItem->new(%Param);
+    $Self->{PriorityObject}     = Kernel::System::Priority->new(%Param);
+    $Self->{SystemAddress}      = Kernel::System::SystemAddress->new(%Param);
+    $Self->{DynamicFieldObject} = Kernel::System::DynamicField->new(%Param);
+    $Self->{BackendObject}      = Kernel::System::DynamicField::Backend->new(%Param);
 
     return $Self;
 }
@@ -2640,7 +2638,7 @@ sub CustomerSearch {
     my ( $Self, %Param ) = @_;
 
     # get AutoComplete settings form config
-    $Self->{Config} = $Self->{ConfigObject}->Get('Ticket::Frontend::CustomerSearchAutoComplete');
+    $Self->{Config} = $Self->{ConfigObject}->Get('AutoComplete::Agent')->{Default};
 
     my %Customers;
 
@@ -3525,9 +3523,12 @@ sub _GetScreenElements {
         next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+        # skip all dynamic fields that are not designed render in iPhone App
+        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
+            Behavior           => 'IsIPhoneCapable',
         );
+        next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # create $Value as undefined because a user default value could be ''
         my $Value = undef;
@@ -3544,7 +3545,7 @@ sub _GetScreenElements {
             );
         }
 
-        my $FieldDefinition = $Self->{iPhoneBackendObject}->IPhoneEditFieldRender(
+        my $FieldDefinition = $Self->{BackendObject}->IPhoneEditFieldRender(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Value,
             UseDefaultValue    => 1,
@@ -3624,13 +3625,16 @@ sub _TicketPhoneNew {
         next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+        # skip all dynamic fields that are not designed render in iPhone App
+        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
+            Behavior           => 'IsIPhoneCapable',
         );
+        next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $Self->{iPhoneBackendObject}->IPhoneEditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
+            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -3638,7 +3642,7 @@ sub _TicketPhoneNew {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{iPhoneBackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -3796,9 +3800,12 @@ sub _TicketPhoneNew {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
         next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
-        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+        # skip all dynamic fields that are not designed render in iPhone App
+        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
+            Behavior           => 'IsIPhoneCapable',
         );
+        next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # set the value
         my $Success = $Self->{BackendObject}->ValueSet(
@@ -3853,9 +3860,12 @@ sub _TicketPhoneNew {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
 
-            next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+            # skip all dynamic fields that are not designed render in iPhone App
+            my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
+                Behavior           => 'IsIPhoneCapable',
             );
+            next DYNAMICFIELD if !$IsIPhoneCapable;
 
             # set the value
             my $Success = $Self->{BackendObject}->ValueSet(
@@ -4043,13 +4053,16 @@ sub _TicketCommonActions {
         next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+        # skip all dynamic fields that are not designed render in iPhone App
+        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
+            Behavior           => 'IsIPhoneCapable',
         );
+        next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $Self->{iPhoneBackendObject}->IPhoneEditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
+            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4057,7 +4070,7 @@ sub _TicketCommonActions {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{iPhoneBackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -4447,13 +4460,13 @@ sub _TicketCompose {
         next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+        next DYNAMICFIELD if !$Self->{BackendObject}->IsIPhoneCapable(
             DynamicFieldConfig => $DynamicFieldConfig,
         );
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $Self->{iPhoneBackendObject}->IPhoneEditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
+            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4461,7 +4474,7 @@ sub _TicketCompose {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{iPhoneBackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -4746,13 +4759,16 @@ sub _TicketMove {
         next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-        next DYNAMICFIELD if !$Self->{iPhoneBackendObject}->IsIPhoneCapable(
+        # skip all dynamic fields that are not designed render in iPhone App
+        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
+            Behavior           => 'IsIPhoneCapable',
         );
+        next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $Self->{iPhoneBackendObject}->IPhoneEditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
+            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4760,7 +4776,7 @@ sub _TicketMove {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{iPhoneBackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -5151,8 +5167,8 @@ sub _GetComposeDefaults {
     my $Body       = $Data{Body};
     my $Signature  = $Data{Signature};
 
-    my $ResponseFormat =
-        "$Salutation \n $OrigFrom $Wrote: \n $Body \n $Signature \n";
+    my $ResponseFormat
+        = "$Salutation \n $OrigFrom $Wrote: \n $Body \n $Signature \n";
 
     # restore qdata formatting for Output replacement
     $ResponseFormat =~ s/&quot;/"/gi;

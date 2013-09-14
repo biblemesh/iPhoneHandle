@@ -12,7 +12,6 @@ package Kernel::System::DynamicField::Driver::iPhoneDropdown;
 use strict;
 use warnings;
 
-use Kernel::System::DynamicFieldValue;
 use Kernel::System::VariableCheck qw(:all);
 
 =head1 NAME
@@ -30,38 +29,7 @@ Please look there for a detailed reference of the functions.
 
 =over 4
 
-=item new()
-
-usually, you want to create an instance of this
-by using Kernel::System::DynamicField::Backend->new();
-
 =cut
-
-sub new {
-    my ( $Type, %Param ) = @_;
-
-    # allocate new hash for object
-    my $Self = {};
-    bless( $Self, $Type );
-
-    # get needed objects
-    for my $Needed (qw(ConfigObject EncodeObject LogObject MainObject DBObject TimeObject)) {
-        die "Got no $Needed!" if !$Param{$Needed};
-
-        $Self->{$Needed} = $Param{$Needed};
-    }
-
-    # create additional objects
-    $Self->{DynamicFieldValueObject} = Kernel::System::DynamicFieldValue->new( %{$Self} );
-
-    return $Self;
-}
-
-sub IsIPhoneCapable {
-    my ( $Self, %Param ) = @_;
-
-    return 1;
-}
 
 sub IPhoneEditFieldRender {
     my ( $Self, %Param ) = @_;

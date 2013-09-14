@@ -11,14 +11,13 @@
     <Filelist>
         <File Permission="755" Location="bin/cgi-bin/json.pl"/>
         <File Permission="644" Location="Kernel/Config/Files/iPhone.xml"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Checkbox.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Date.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/DateTime.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Dropdown.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Multiselect.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/Text.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/Backend/TextArea.pm"/>
-        <File Permission="644" Location="Kernel/System/DynamicField/iPhone/iPhoneBackend.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneCheckbox.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneDate.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneDateTime.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneDropdown.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneText.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneTextArea.pm"/>
+        <File Permission="644" Location="Kernel/System/DynamicField/iPhoneBackend.pm"/>
         <File Permission="644" Location="scripts/test/iPhoneHandle/JSONGateway.t"/>
         <File Permission="644" Location="var/packagesetup/iPhoneHandle.pm"/>
         <File Permission="644" Location="Kernel/System/iPhone.pm"/>

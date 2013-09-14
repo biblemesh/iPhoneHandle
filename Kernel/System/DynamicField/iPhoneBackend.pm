@@ -32,7 +32,7 @@ DynamicFields backend interface for iPhone
 
 creates the field definition to be used in iphone edit masks.
 
-    my $FieldDefinition = $iPhoneBackendObject->IPhoneEditFieldRender(
+    my $FieldDefinition = $BackendObject->IPhoneEditFieldRender(
         DynamicFieldConfig   => $DynamicFieldConfig,      # Complete config of the DynamicField
         Value                => 'Any value',              # Optional
         Mandatory            => 1,                        # 0 or 1,
@@ -46,7 +46,7 @@ creates the field definition to be used in iphone edit masks.
     Returns:
 
         my $FieldDefinition = {
-            Name           => 'some name',      # Field name
+            Name           => 'some name',      # Field name 'DyanmicField_NameX'
 
             Title          => 'some title',     # Field label (translated if capable)
 
@@ -178,7 +178,7 @@ sub IPhoneEditFieldRender {
 
 extracts the value of a dynamic field from the param object.
 
-    my $Value = $iPhoneBackendObject->IPhoneEditFieldValueGet(
+    my $Value = $BackendObject->IPhoneEditFieldValueGet(
         DynamicFieldConfig   => $DynamicFieldConfig,    # complete config of the DynamicField
         DynamicField_NameX   => 'DynamicFieldValue'     # Raw field value where, NameX is the name
                                                         #     of the filed
@@ -253,7 +253,7 @@ sub IPhoneEditFieldValueGet {
 
 validate the current value for the dynamic field
 
-    my $Result = $iPhoneBackendObject->IPhoneEditFieldValueValidate(
+    my $Result = $BackendObject->IPhoneEditFieldValueValidate(
         DynamicFieldConfig   => $DynamicFieldConfig,      # complete config of the DynamicField
         Value                => $$Value                   # The current dynamic field value
         Mandatory            => 1,                        # 0 or 1,

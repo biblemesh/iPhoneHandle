@@ -3545,7 +3545,7 @@ sub _GetScreenElements {
             );
         }
 
-        my $FieldDefinition = $Self->{BackendObject}->IPhoneEditFieldRender(
+        my $FieldDefinition = $Self->{BackendObject}->IPhoneFieldParameterBuild(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Value,
             UseDefaultValue    => 1,
@@ -3634,7 +3634,7 @@ sub _TicketPhoneNew {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
+            = $Self->{BackendObject}->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -3642,7 +3642,7 @@ sub _TicketPhoneNew {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -4062,7 +4062,7 @@ sub _TicketCommonActions {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
+            = $Self->{BackendObject}->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4070,7 +4070,7 @@ sub _TicketCommonActions {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -4466,7 +4466,7 @@ sub _TicketCompose {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
+            = $Self->{BackendObject}->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4474,7 +4474,7 @@ sub _TicketCompose {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -4768,7 +4768,7 @@ sub _TicketMove {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneEditFieldValueGet(
+            = $Self->{BackendObject}->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4776,7 +4776,7 @@ sub _TicketMove {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneEditFieldValueValidate(
+        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,

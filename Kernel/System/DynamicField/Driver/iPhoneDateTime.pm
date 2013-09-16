@@ -31,7 +31,7 @@ Please look there for a detailed reference of the functions.
 
 =cut
 
-sub IPhoneEditFieldRender {
+sub IPhoneFieldParameterBuild {
     my ( $Self, %Param ) = @_;
 
     # take config from field config
@@ -43,7 +43,7 @@ sub IPhoneEditFieldRender {
 
     # set the field value or default
     if ( $Param{UseDefaultValue} ) {
-        my $TimeDiff = ( defined $FieldConfig->{DefaultValue} ? $FieldConfig->{DefaultValue} : '' );
+        my $TimeDiff = ( defined $FieldConfig->{DefaultValue} ? $FieldConfig->{DefaultValue} : 0 );
 
         # get current system time
         my $SystemTime = $Self->{TimeObject}->SystemTime();
@@ -69,7 +69,7 @@ sub IPhoneEditFieldRender {
     return $Data;
 }
 
-sub IPhoneEditFieldValueGet {
+sub IPhoneFieldValueGet {
     my ( $Self, %Param ) = @_;
 
     my $FieldName = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
@@ -100,7 +100,7 @@ sub IPhoneEditFieldValueGet {
     return $Value;
 }
 
-sub IPhoneEditFieldValueValidate {
+sub IPhoneFieldValueValidate {
     my ( $Self, %Param ) = @_;
 
     # get the field value from param

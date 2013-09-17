@@ -2791,28 +2791,35 @@ sub VersionGet {
     }
     my $PackageName;
     my $PackageVersion;
-    if ( open( my $Product, '<', "$Home/var/RELEASE.iPhoneHandle" ) ) {    ## no critic
-        while (<$Product>) {
+    # read RELEASE file and store it as an array reference
+    my $Product = $Self->{MainObject}->FileRead(
+        Location  => "$Home/var/RELEASE.iPhoneHandle",
+        Result    => "ARRAY",
+    );
 
-            # filtering of comment lines
-            if ( $_ !~ /^#/ ) {
-                if ( $_ =~ /^PRODUCT\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
-                    $PackageName = $1;
-                }
-                elsif ( $_ =~ /^VERSION\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
-                    $PackageVersion = $1;
-                }
-            }
-        }
-        close($Product);
-    }
-    else {
+    # send and error if RELEASE file was not read
+    if (!$Product) {
         $Self->{LogObject}->Log(
             Priority => 'error',
             Message  => "ERROR: Can't read $Home/var/RELEASE.iPhoneHandle! This file is"
                 . " needed by iPhoneHandle, the system will not work without this file.\n",
         );
         return -1;
+    }
+
+    # get PackageName and PackageVersion from RELEASE file
+    for my $Line (@{$Product}) {
+
+        # filtering of comment lines
+        if ( $Line !~ m{\A \#}msx ) {
+            print STDERR "HERE\n"; #TODO Delete Developer Output
+            if ( $Line =~ m{\A PRODUCT \s{0,2} = \s{0,2} (.*) \s{0,2} \z}msxi ) {
+                $PackageName = $1;
+            }
+            elsif ( $Line =~ m{\A VERSION \s{0,2} = \s{0,2} (.*) \s{0,2} \z}msxi ) {
+                $PackageVersion = $1;
+            }
+        }
     }
 
     return {

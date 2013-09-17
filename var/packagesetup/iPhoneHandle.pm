@@ -221,12 +221,13 @@ sub _UpdateReleaseFile {
     my $Home = $Self->{ConfigObject}->Get('Home');
 
     # create or overwrite RELEASE.iPhoneHandle file
-    if ( open( my $ReleaseFile, '>', "$Home/var/RELEASE.iPhoneHandle" ) ) {    ## no critic
-        print $ReleaseFile "PRODUCT = iPhoneHandle\n";
-        print $ReleaseFile "VERSION = $PackageVersion";
-        close($ReleaseFile);
-    }
-    else {
+    my $Content = "PRODUCT = iPhoneHandle\nVERSION = $PackageVersion";
+    my $FileLocation = $Self->{MainObject}->FileWrite(
+        Location  => "$Home/var/RELEASE.iPhoneHandle",
+        Content   => \$Content,
+    );
+
+    if (!$FileLocation) {
         $Self->{LogObject}->Log(
             Priority => 'error',
             Message  => "ERROR: Can't write $Home/var/RELEASE.iPhoneHandle!.\n",

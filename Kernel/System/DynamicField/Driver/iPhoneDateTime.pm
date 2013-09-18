@@ -77,7 +77,7 @@ sub IPhoneFieldValueGet {
     my $Value = $Param{$FieldName};
 
     # time zone translation if needed
-    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
+    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Param{UserTimeZone} && $Value ) {
 
         # covert $Value to a numeric time for convetrsions
         my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
@@ -119,15 +119,17 @@ sub IPhoneFieldValueValidate {
     }
 
     # try to convert value to a SystemTime
-    my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
-        String => $Value,
-    );
+    if ($Value) {
+        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+            String => $Value,
+        );
 
-    if ( !$SystemTime ) {
-        return {
-            ServerError  => 1,
-            ErrorMessage => $ErrorMessage,
-        };
+        if ( !$SystemTime ) {
+            return {
+                ServerError  => 1,
+                ErrorMessage => $ErrorMessage,
+            };
+        }
     }
 
     # create resulting structure

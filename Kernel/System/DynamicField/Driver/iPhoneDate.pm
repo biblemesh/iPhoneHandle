@@ -79,10 +79,12 @@ sub IPhoneFieldValueGet {
     my $Value = $Param{$FieldName};
 
     # remove the time part
-    $Value =~ s{\A (\d{4}-\d{2}-\d{2})  .* \z}{$1}xms;
+    if ($Value) {
+        $Value =~ s{\A (\d{4}-\d{2}-\d{2})  .* \z}{$1}xms;
 
-    # add 0s to the time part
-    $Value .= ' 00:00:00';
+        # add 0s to the time part
+        $Value .= ' 00:00:00';
+    }
 
     return $Value;
 }
@@ -106,15 +108,17 @@ sub IPhoneFieldValueValidate {
     }
 
     # try to convert value to a SystemTime
-    my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
-        String => $Value,
-    );
+    if ($Value) {
+        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+            String => $Value,
+        );
 
-    if ( !$SystemTime ) {
-        return {
-            ServerError  => 1,
-            ErrorMessage => $ErrorMessage,
-        };
+        if ( !$SystemTime ) {
+            return {
+                ServerError  => 1,
+                ErrorMessage => $ErrorMessage,
+            };
+        }
     }
 
     # create resulting structure

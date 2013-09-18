@@ -18,7 +18,12 @@
         <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneText.pm"/>
         <File Permission="644" Location="Kernel/System/DynamicField/Driver/iPhoneTextArea.pm"/>
         <File Permission="644" Location="Kernel/System/DynamicField/iPhoneBackend.pm"/>
+        <File Permission="644" Location="Kernel/System/Web/InterfaceiPhoneHandle.pm"/>
         <File Permission="644" Location="scripts/test/iPhoneHandle/JSONGateway.t"/>
+        <File Permission="644" Location="scripts/test/iPhoneHandle/DynamicField/HasBehavior.t"/>
+        <File Permission="644" Location="scripts/test/iPhoneHandle/DynamicField/iPhoneFieldParameterBuild.t"/>
+        <File Permission="644" Location="scripts/test/iPhoneHandle/DynamicField/iPhoneFieldValueGet.t"/>
+        <File Permission="644" Location="scripts/test/iPhoneHandle/DynamicField/iPhoneFieldValueValidate.t"/>
         <File Permission="644" Location="var/packagesetup/iPhoneHandle.pm"/>
         <File Permission="644" Location="Kernel/System/iPhone.pm"/>
         <!-- the following file is created by the package installer

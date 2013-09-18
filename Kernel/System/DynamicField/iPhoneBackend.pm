@@ -180,12 +180,9 @@ extracts the value of a dynamic field from the param object.
 
     my $Value = $BackendObject->IPhoneFieldValueGet(
         DynamicFieldConfig   => $DynamicFieldConfig,    # complete config of the DynamicField
-        DynamicField_NameX   => 'DynamicFieldValue'     # Raw field value where, NameX is the name
+        DynamicField_NameX   => 'DynamicFieldValue',    # Raw field value where, NameX is the name
                                                         #     of the filed
-        TransformDates       => 1                       # 1 || 0, default 1, to transform the dynamic fields that
-                                                        #   use dates to the user time zone (i.e. Date, DateTime
-                                                        #   dynamic fields)
-        UserTimeZone         => -6
+        UserTimeZone         => -6,
     );
 
     Returns $Value;                                     # depending on each field type e.g.
@@ -255,7 +252,7 @@ validate the current value for the dynamic field
 
     my $Result = $BackendObject->IPhoneFieldValueValidate(
         DynamicFieldConfig   => $DynamicFieldConfig,      # complete config of the DynamicField
-        Value                => $$Value                   # The current dynamic field value
+        Value                => $Value,                   # The current dynamic field value
         Mandatory            => 1,                        # 0 or 1,
     );
 

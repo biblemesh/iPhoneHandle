@@ -12,7 +12,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="iPhone::LogFile" Required="1" Valid="1">
-        <Description Translatable="1">Defines the path and file name for the degug log file. This file will be automatically created by the system, if it doesn't exist.</Description>
+        <Description Translatable="1">Defines the path and file name for the debug log file. This file will be automatically created by the system, if it doesn't exist.</Description>
         <Group>iPhoneHandle</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>

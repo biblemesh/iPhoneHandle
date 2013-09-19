@@ -194,7 +194,7 @@
         </para>
         <note>
             <para>
-                Plase change FQDN and ScriptAlias to match your current environment.
+                Please change FQDN and ScriptAlias to match your current environment.
             </para>
         </note>
         <example>
@@ -224,7 +224,7 @@
     <sect1>
         <title>iPhone::LogFile</title>
         <para>Group: iPhone, Subgroup: Core::Log.</para>
-        <para>Defines the path and file name for the degug log file. This file will be automatically created by the system, if it doesn't exist.</para>
+        <para>Defines the path and file name for the debug log file. This file will be automatically created by the system, if it doesn't exist.</para>
     </sect1>
     <sect1>
         <title>iPhone::Frontend::AgentTicketPhone###TicketType</title>

@@ -2,28 +2,36 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
     "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 
-<book lang='en'>
+<book lang="en">
 
+<!--
+************************************** Head ***********************************************
+-->
 <bookinfo>
-<title>$Name</title>
-<edition>$Description Version $Version</edition>
-
-<copyright>
-<year>$YearStamp</year>
-<holder>$Vendor, $URL</holder>
-</copyright>
-
-<date>$DateStamp</date>
-
-<legalnotice>
-    <para>$License</para>
-    <para>This work is copyrighted by $Vendor, Norsk-Data-Str. 1, 61352 Bad Homburg, Germany.</para>
-    <para>Build Date: $DateStamp</para>
-</legalnotice>
-
+    <title>$Name</title>
+    <edition>$Description Version $Version</edition>
+    <copyright>
+        <year>$YearStamp</year>
+        <holder>$Vendor, $URL</holder>
+    </copyright>
+    <date>$DateStamp</date>
+    <legalnotice>
+        <para>$License</para>
+        <para>
+            This work is copyrighted by $Vendor, Norsk-Data-Str. 1, 61352 Bad Homburg, Germany.
+        </para>
+        <para>Build Date: $DateStamp</para>
+    </legalnotice>
 </bookinfo>
 
-<preface id="preface" >
+<!--
+************************************ Customer part ******************************************
+-->
+
+<!-- ********** -->
+<!-- 1. Preface -->
+<!-- ********** -->
+<preface id="preface">
     <title>Preface</title>
     <para>
         This package adds the necessary framework enable the communication between the OTRS iPhone
@@ -38,6 +46,9 @@
     </para>
 </preface>
 
+<!-- *************** -->
+<!-- 2. Feature List -->
+<!-- *************** -->
 <chapter>
     <title>Feature List</title>
     <section>
@@ -96,54 +107,52 @@
     </section>
 </chapter>
 
+<!-- ******************** -->
+<!-- 3. System Requirements -->
+<!-- ******************** -->
 <chapter>
     <title>System Requirements</title>
     <section>
         <title>Framework</title>
-        <para>The following OTRS Framework is required:</para>
-        <para>
-            $Framework
-        </para>
+        <para>The following OTRS framework is required:</para>
+        <para>$Framework</para>
     </section>
     <section>
         <title>Packages</title>
         <para>The following packages are required:</para>
-        <para>
-            $PackageRequired
-        </para>
+        <para>$PackageRequired</para>
     </section>
     <section>
         <title>Operating System</title>
-        <para>The package can be used with the following operating systems:</para>
-        <para>
-            $OS
-        </para>
+        <para>This package requires one of the following operating systems:</para>
+        <para>$OS</para>
     </section>
     <section>
         <title>Third Party Software</title>
-        <para>The following software is required for the operation of the package:</para>
-        <para>
-            <itemizedlist>
-                <listitem>
-                    <para>None</para>
-                </listitem>
-            </itemizedlist>
-        </para>
+        <para>This third party software is required to use this package:</para>
+        <itemizedlist>
+            <listitem>
+                <para>None.</para>
+            </listitem>
+        </itemizedlist>
     </section>
 </chapter>
 
+<!-- *************** -->
+<!-- 4. Installation -->
+<!-- *************** -->
 <chapter>
     <title>Installation</title>
     <para>
-        The following instructions show how to install the package. There are basically two
-        options: either through the admin interface or via the command line.
+        The following instructions explain how to install the package.
     </para>
     <section>
         <title>Admin Interface</title>
         <para>
-            The package can be installed, updated or uninstalled using the
-            following URL through the admin interface (make sure that the user is in the admin
-            group):
+            Please use the following URL to install the package utilizing the Admin Interface
+            (please note that you need to be in the "admin" group).
+        </para>
+        <para>
             <ulink url="http://localhost/otrs/index.pl?Action=AdminPackageManager">
                 http://localhost/otrs/index.pl?Action=AdminPackageManager
             </ulink>
@@ -152,12 +161,12 @@
     <section>
         <title>Command Line</title>
         <para>
-            If it is not possible to use the admin interface, the following command line tool
-            ("/bin/otrs.PackageManager.pl") can be used.
+            Whenever you cannot use the Admin Interface for whatever reason, you may use the
+            following command line tool ("bin/otrs.PackageManager.pl") instead.
         </para>
         <para>
             <screen>
-                shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
+shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
             </screen>
         </para>
     </section>
@@ -213,6 +222,9 @@
     </section>
 </chapter>
 
+<!-- **************** -->
+<!-- 5. Configuration -->
+<!-- **************** -->
 <chapter>
     <title>Configuration</title>
     <para>The package can be configured via the SysConfig in the Admin Interface. The following configuration options are available:</para>
@@ -224,7 +236,7 @@
     <section>
         <title>iPhone::LogFile.</title>
         <para>Group: iPhoneHandle, Subgroup: Core::Log.</para>
-        <para>Defines the path and file name for the degug log file. This file will be automatically created by the system, if it doesn't exist.</para>
+        <para>Defines the path and file name for the debug log file. This file will be automatically created by the system, if it doesn't exist.</para>
     </section>
     <section>
         <title>iPhone::Frontend::AgentTicketPhone###TicketType.</title>
@@ -678,35 +690,68 @@
     </section>
 </chapter>
 
+<!-- ******** -->
+<!-- 6. Usage -->
+<!-- ******** -->
+<!--
+<chapter>
+    <title>Usage</title>
+    <para></para>
+</chapter>
+ -->
+<!--
+***************************************** Technical part ************************************
+-->
+
+<!-- ********************************* -->
+<!-- 7. Technical Implematation Detail -->
+<!-- ********************************* -->
+<!--
+<chapter>
+    <title>Technical Implementation Details</title>
+    <para></para>
+</chapter>
+ -->
+<!-- *********** -->
+<!-- 8. Filelist -->
+<!-- *********** -->
+<chapter>
+    <title>Filelist</title>
+    <para>This list shows all included files and the referring permissions.</para>
+    <para>$Filelist</para>
+</chapter>
+
+<!-- ******* -->
+<!-- 9. Test -->
+<!-- ******* -->
+<!--
+<chapter>
+    <title>Tests</title>
+    <para></para>
+</chapter>
+ -->
+<!-- ************* -->
+<!-- 10. Changelog -->
+<!-- ************* -->
+<chapter>
+    <title>ChangeLog</title>
+    <para>$ChangeLog</para>
+</chapter>
+
+<!-- ************ -->
+<!-- 11. Contacts -->
+<!-- ************ -->
 <chapter>
     <title>Contacts</title>
-    <para>Persons involved in the the implementation of the package.</para>
+    <para>People who are involved in this implementation.</para>
     <section>
         <title>OTRS AG</title>
         <para>
-            Technical: Manuel Hecht &lt;dev-support@otrs.com&gt;, Phone +49 (0)6172 681988 0
+            Technical: Manuel Hecht
+            <ulink url="mailto:dev-support@otrs.com?subject=$Name">
+                &lt;dev-support@otrs.com&gt;
+            </ulink>, Phone +49 (0)6172 681988 0
         </para>
     </section>
-</chapter>
-
-<chapter>
-    <title>Manifest</title>
-    <para>
-        This Manifest lists all files (with filename and file permissions) which are included in
-        the package.
-    </para>
-    <section>
-        <title>File List</title>
-        <para>
-            $Filelist
-        </para>
-    </section>
-</chapter>
-
-<chapter>
-    <title>List of Changes</title>
-    <para>
-        $ChangeLog
-    </para>
 </chapter>
 </book>

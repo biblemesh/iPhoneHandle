@@ -2,7 +2,7 @@
 <otrs_config version="1.0" init="Application">
     <ConfigItem Name="iPhone::DebugLog" Required="1" Valid="1">
         <Description Translatable="1">Allows to enable a special log for all communication between iPhone and otrs.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -13,7 +13,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::LogFile" Required="1" Valid="1">
         <Description Translatable="1">Defines the path and file name for the degug log file. This file will be automatically created by the system, if it doesn't exist.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
             <String Regex="">/tmp/iPhone.log</String>
@@ -22,7 +22,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###TicketType" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket type in the new phone ticket screen on the iPhone interface (Ticket::Type needs to be activated).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -33,7 +33,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###Service" Required="0" Valid="1">
         <Description Translatable="1">Sets the service in the new phone ticket screen of the iPhone interface (Ticket::Service needs to be activated).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -44,7 +44,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###Owner" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket owner in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -55,7 +55,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###Responsible" Required="0" Valid="1">
         <Description Translatable="1">Sets the responsible agent of the ticket in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -66,7 +66,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###CustomerID" Required="0" Valid="1">
         <Description Translatable="1">Sets the customer id in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -77,7 +77,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###State" Required="0" Valid="1">
         <Description Translatable="1">Allows to set a new ticket state in the new phone ticket ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -88,7 +88,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###StateDefault" Required="0" Valid="1">
         <Description Translatable="1">Sets the default next state for new phone tickets in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <String Regex="">open</String>
@@ -96,7 +96,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###PriorityDefault" Required="0" Valid="1">
         <Description Translatable="1">Defines the default ticket priority in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <String Regex="">3 normal</String>
@@ -104,7 +104,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###ArticleTypeDefault" Required="1" Valid="1">
         <Description Translatable="1">Defines the default type of the ticket in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <String Regex="">phone</String>
@@ -112,7 +112,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###SenderType" Required="1" Valid="1">
         <Description Translatable="1">Sets the default sender type for new phone ticket in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <String Regex="">customer</String>
@@ -120,7 +120,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###TimeUnits" Required="0" Valid="1">
         <Description Translatable="1">Sets the time units in the new phone ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -132,7 +132,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###HistoryType" Required="1" Valid="1">
         <Description Translatable="1">Defines the history type for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <String Regex="">PhoneCallCustomer</String>
@@ -140,7 +140,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###HistoryComment" Required="1" Valid="1">
         <Description Translatable="1">Defines the history comment for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -148,7 +148,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Permission" Required="1" Valid="1">
         <Description Translatable="1">Required permissions to use the ticket note screen in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">note</String>
@@ -156,7 +156,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketPhone###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewPhone</SubGroup>
         <Setting>
             <Hash>
@@ -166,7 +166,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###RequiredLock" Required="0" Valid="1">
         <Description Translatable="1">Defines if a ticket lock is required in the ticket note screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -177,7 +177,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###TicketType" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket type in the ticket note screen of the iPhone interface (Ticket::Type needs to be activated).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -189,7 +189,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Service" Required="0" Valid="1">
         <Description Translatable="1">Sets the service in the ticket note screen of the iPhone interface (Ticket::Service needs to be activated).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -200,7 +200,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Owner" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket owner in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -211,7 +211,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Responsible" Required="0" Valid="1">
         <Description Translatable="1">Sets the responsible agent of the ticket in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -222,7 +222,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###State" Required="0" Valid="1">
         <Description Translatable="1">If a note is added by an agent, sets the state of a ticket in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -233,7 +233,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###StateType" Required="1" Valid="1">
         <Description Translatable="1">Defines the next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Array>
@@ -246,7 +246,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###StateDefault" Required="0" Valid="0">
         <Description Translatable="1">Defines the default next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">open</String>
@@ -254,7 +254,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Note" Required="0" Valid="1">
         <Description Translatable="1">Allows adding notes in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -265,7 +265,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Subject" Required="0" Valid="1">
         <Description Translatable="1">Sets the default subject for notes added in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">Note</String>
@@ -273,7 +273,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Body" Required="0" Valid="1">
         <Description Translatable="1">Sets the default body text for notes added in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <TextArea></TextArea>
@@ -281,7 +281,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###ArticleTypeDefault" Required="0" Valid="1">
         <Description Translatable="1">Defines the default type of the note in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">note-internal</String>
@@ -289,7 +289,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###ArticleTypes" Required="0" Valid="1">
         <Description Translatable="1">Specify the different note types, that you want to use in your system.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Hash>
@@ -301,7 +301,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Priority" Required="0" Valid="0">
         <Description Translatable="1">Shows the ticket priority options in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -312,7 +312,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###PriorityDefault" Required="0" Valid="0">
         <Description Translatable="1">Defines the default ticket priority in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">3 normal</String>
@@ -320,7 +320,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###Title" Required="0" Valid="1">
         <Description Translatable="1">Shows the title fields in the ticket note screen of the iphone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -331,7 +331,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###TimeUnits" Required="0" Valid="1">
         <Description Translatable="1">Sets the time units in the ticket note screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -342,7 +342,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###HistoryType" Required="0" Valid="1">
         <Description Translatable="1">Defines the history type for the ticket note screen action, which gets used for ticket history in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">AddNote</String>
@@ -350,7 +350,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###HistoryComment" Required="0" Valid="1">
         <Description Translatable="1">Defines the history comment for the ticket note screen action, which gets used for ticket history in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <String Regex="">%%Note</String>
@@ -358,7 +358,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketNote###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewNote</SubGroup>
         <Setting>
             <Hash>
@@ -368,7 +368,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Permission" Required="1" Valid="1">
         <Description Translatable="1">Required permissions to use the close ticket screen in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">close</String>
@@ -376,7 +376,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###RequiredLock" Required="0" Valid="1">
         <Description Translatable="1">Defines if a ticket lock is required in the close ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -387,7 +387,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###TicketType" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket type in the close ticket screen of the iPhone interface (Ticket::Type needs to be activated).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -398,7 +398,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Service" Required="0" Valid="1">
         <Description Translatable="1">Sets the service in the close ticket screen of the iPhone interface (Ticket::Service needs to be activated).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -409,7 +409,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Owner" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket owner in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -420,7 +420,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Responsible" Required="0" Valid="1">
         <Description Translatable="1">Sets the responsible agent of the ticket in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -431,7 +431,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###State" Required="0" Valid="1">
         <Description Translatable="1">If a note is added by an agent, sets the state of a ticket in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -442,7 +442,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###StateType" Required="1" Valid="1">
         <Description Translatable="1">Defines the next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Array>
@@ -452,7 +452,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###StateDefault" Required="0" Valid="1">
         <Description Translatable="1">Defines the default next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">closed successful</String>
@@ -460,7 +460,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Note" Required="0" Valid="1">
         <Description Translatable="1">Allows adding notes in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -471,7 +471,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Subject" Required="0" Valid="1">
         <Description Translatable="1">Sets the default subject for notes added in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">Close</String>
@@ -479,7 +479,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Body" Required="0" Valid="1">
         <Description Translatable="1">Sets the default body text for notes added in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <TextArea></TextArea>
@@ -487,7 +487,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###ArticleTypeDefault" Required="0" Valid="1">
         <Description Translatable="1">Defines the default type of the note in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">note-internal</String>
@@ -495,7 +495,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###ArticleTypes" Required="0" Valid="1">
         <Description Translatable="1">Specifies the different note types that will be used in the system.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Hash>
@@ -507,7 +507,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Priority" Required="0" Valid="0">
         <Description Translatable="1">Shows the ticket priority options in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -518,7 +518,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###PriorityDefault" Required="0" Valid="0">
         <Description Translatable="1">Defines the default ticket priority in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">3 normal</String>
@@ -526,7 +526,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###Title" Required="0" Valid="1">
         <Description Translatable="1">Shows the title fields in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -537,7 +537,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###TimeUnits" Required="0" Valid="1">
         <Description Translatable="1">Sets the time units in the close ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -548,7 +548,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###HistoryType" Required="0" Valid="1">
         <Description Translatable="1">Defines the history type for the close ticket screen action, which gets used for ticket history in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">AddNote</String>
@@ -556,7 +556,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###HistoryComment" Required="0" Valid="1">
         <Description Translatable="1">Defines the history comment for the close ticket screen action, which gets used for ticket history in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <String Regex="">%%Close</String>
@@ -564,7 +564,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketClose###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the ticket close screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewClose</SubGroup>
         <Setting>
             <Hash>
@@ -574,7 +574,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###Permission" Required="1" Valid="1">
         <Description Translatable="1">Required permissions to use the ticket compose screen in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <String Regex="">compose</String>
@@ -582,7 +582,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###RequiredLock" Required="0" Valid="1">
         <Description Translatable="1">Defines if a ticket lock is required in the ticket compose screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -593,7 +593,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###State" Required="1" Valid="1">
         <Description Translatable="1">If a note is added by an agent, sets the state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -604,7 +604,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###StateDefault" Required="0" Valid="1">
         <Description Translatable="1">Defines the default next state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <String Regex="">open</String>
@@ -612,7 +612,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###StateType" Required="1" Valid="1">
         <Description Translatable="1">Defines the next possible states after composing / answering a ticket in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Array>
@@ -625,7 +625,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::ComposeAddCustomerAddress" Required="1" Valid="1">
         <Description Translatable="1">Adds customers email addresses to recipients in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -636,7 +636,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::ComposeReplaceSenderAddress" Required="1" Valid="1">
         <Description Translatable="1">Replaces the original sender with current customer's email address on compose answer in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -647,7 +647,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::ComposeExcludeCcRecipients" Required="1" Valid="1">
         <Description Translatable="1">Uses Cc recipients in reply Cc list on compose an email answer in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -658,7 +658,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###TimeUnits" Required="0" Valid="1">
         <Description Translatable="1">Sets the time units in the ticket compose screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -669,7 +669,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketCompose###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
             <Hash>
@@ -679,7 +679,7 @@
 
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###Permission" Required="1" Valid="1">
         <Description Translatable="1">Required permissions to use the move ticket screen in the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <String Regex="">compose</String>
@@ -687,7 +687,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###RequiredLock" Required="0" Valid="1">
         <Description Translatable="1">Defines if a ticket lock is required in the move ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -698,7 +698,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###Owner" Required="0" Valid="1">
         <Description Translatable="1">Sets the ticket owner in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -709,7 +709,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###State" Required="0" Valid="1">
         <Description Translatable="1">Allows to set a new ticket state in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -720,7 +720,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###StateType" Required="1" Valid="1">
         <Description Translatable="1">Defines the next state of a ticket after being moved to another queue, in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Array>
@@ -731,7 +731,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###StateDefault" Required="0" Valid="1">
         <Description Translatable="1">Defines the default next state of a ticket after adding a note, in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <String Regex="">open</String>
@@ -739,7 +739,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###Priority" Required="0" Valid="0">
         <Description Translatable="1">Shows the ticket priority options in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Option SelectedID="0">
@@ -750,7 +750,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###PriorityDefault" Required="0" Valid="0">
         <Description Translatable="1">Defines the default ticket priority in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <String Regex="">3 normal</String>
@@ -758,7 +758,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###TimeUnits" Required="0" Valid="1">
         <Description Translatable="1">Sets the time units in the move ticket screen of the iPhone interface.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Option SelectedID="1">
@@ -769,7 +769,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the ticket move screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
         <Setting>
             <Hash>
@@ -779,7 +779,7 @@
 
     <ConfigItem Name="iPhone::API::Object###ConfigObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -787,7 +787,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###TimeObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -795,7 +795,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###LogObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -803,7 +803,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###DBObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -811,7 +811,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###TicketObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex="">(MoveList|MoveTicket)</String>
@@ -819,7 +819,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###CustomObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -827,7 +827,7 @@
     </ConfigItem>
     <ConfigItem Name="iPhone::API::Object###iPhoneObject" Required="1" Valid="1">
         <Description Translatable="1">Configure access restrictions to objects of iPhone handle.</Description>
-        <Group>iPhone</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>API</SubGroup>
         <Setting>
             <String Regex=""></String>
@@ -836,7 +836,7 @@
 
     <ConfigItem Name="DynamicFields::Extension::Backend###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
@@ -846,7 +846,7 @@
     </ConfigItem>
     <ConfigItem Name="DynamicFields::Extension::Driver::Text###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
@@ -861,7 +861,7 @@
     </ConfigItem>
     <ConfigItem Name="DynamicFields::Extension::Driver::TextArea###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
@@ -876,7 +876,7 @@
     </ConfigItem>
     <ConfigItem Name="DynamicFields::Extension::Driver::Checkbox###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
@@ -891,7 +891,7 @@
     </ConfigItem>
     <ConfigItem Name="DynamicFields::Extension::Driver::Dropdown###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
@@ -907,7 +907,7 @@
     <!--  Multiselect Dynamic Field is currently not supported by iPhone App -->
     <ConfigItem Name="DynamicFields::Extension::Driver::DateTime###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>
@@ -922,7 +922,7 @@
     </ConfigItem>
     <ConfigItem Name="DynamicFields::Extension::Driver::Date###100-iPhone" Required="1" Valid="1">
         <Description Translatable="1">Dynamic Fields Extension.</Description>
-        <Group>DynamicFields</Group>
+        <Group>iPhoneHandle</Group>
         <SubGroup>DynamicFields::Extension::Registration</SubGroup>
         <Setting>
             <Hash>

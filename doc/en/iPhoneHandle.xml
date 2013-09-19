@@ -215,475 +215,466 @@
 
 <chapter>
     <title>Configuration</title>
-    <para>The following configuration options can or need to be changed via SysConfig.</para>
+    <para>The package can be configured via the SysConfig in the Admin Interface. The following configuration options are available:</para>
     <section>
-        <title>iPhone::DebugLog</title>
-        <para>Group: iPhone, Subgroup: Core::Log.</para>
-        <para>Allows to enable a special log for all communication between iPhone and OTRS.</para>
+        <title>iPhone::DebugLog.</title>
+        <para>Group: iPhoneHandle, Subgroup: Core::Log.</para>
+        <para>Allows to enable a special log for all communication between iPhone and otrs.</para>
     </section>
     <section>
-        <title>iPhone::LogFile</title>
-        <para>Group: iPhone, Subgroup: Core::Log.</para>
-        <para>Defines the path and file name for the debug log file. This file will be automatically created by the system, if it doesn't exist.</para>
+        <title>iPhone::LogFile.</title>
+        <para>Group: iPhoneHandle, Subgroup: Core::Log.</para>
+        <para>Defines the path and file name for the degug log file. This file will be automatically created by the system, if it doesn't exist.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###TicketType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>Sets the ticket type of new phone tickets in the iPhone interface (Ticket::Type needs to be activated).</para>
+        <title>iPhone::Frontend::AgentTicketPhone###TicketType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the ticket type in the new phone ticket screen on the iPhone interface (Ticket::Type needs to be activated).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###Service</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>Sets the service of new phone tickets in the iPhone interface (Ticket::Service needs to be activated).</para>
+        <title>iPhone::Frontend::AgentTicketPhone###Service.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the service in the new phone ticket screen of the iPhone interface (Ticket::Service needs to be activated).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###Owner</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###Owner.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Sets the ticket owner in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###Responsible</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>Sets the responsible agent of the ticket in the new phone ticket screen of the iPhone interface..</para>
+        <title>iPhone::Frontend::AgentTicketPhone###Responsible.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the responsible agent of the ticket in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###CustomerID</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>Sets the customer id in the new phone ticket screen of the iPhone interface..</para>
+        <title>iPhone::Frontend::AgentTicketPhone###CustomerID.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the customer id in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###State</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###State.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Allows to set a new ticket state in the new phone ticket ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###StateDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###StateDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Sets the default next state for new phone tickets in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###PriorityDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###PriorityDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Defines the default ticket priority in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###ArticleTypeDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###ArticleTypeDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Defines the default type of the ticket in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###SenderType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###SenderType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Sets the default sender type for new phone ticket in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###TimeUnits</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###TimeUnits.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Sets the time units in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###TicketFreeText</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketPhone###TicketFreeTime</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketPhone###ArticleFreeText</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketPhone###HistoryType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###HistoryType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Defines the history type for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###HistoryComment</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###HistoryComment.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Defines the history comment for the new phone ticket screen action, which gets used for ticket history in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketPhone###DynamicField</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
-        <para>Dynamic fields shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
-    </section>
-
-    <section>
-        <title>iPhone::Frontend::AgentTicketNote###Permission</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Permission.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Required permissions to use the ticket note screen in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###RequiredLock</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketPhone###DynamicField.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Dynamic fields shown in the new phone ticket screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
+    </section>
+    <section>
+        <title>iPhone::Frontend::AgentTicketNote###RequiredLock.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines if a ticket lock is required in the ticket note screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###TicketType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###TicketType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the ticket type in the ticket note screen of the iPhone interface (Ticket::Type needs to be activated).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Service</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Service.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the service in the ticket note screen of the iPhone interface (Ticket::Service needs to be activated).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Owner</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Owner.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the ticket owner in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Responsible</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Responsible.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the responsible agent of the ticket in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###State</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###State.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>If a note is added by an agent, sets the state of a ticket in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###StateType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###StateType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines the next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###StateDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###StateDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines the default next state of a ticket after adding a note, in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Note</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Note.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Allows adding notes in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Subject</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Subject.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the default subject for notes added in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Body</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Body.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the default body text for notes added in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###ArticleTypeDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###ArticleTypeDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines the default type of the note in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###ArticleTypes</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###ArticleTypes.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Specify the different note types, that you want to use in your system.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Priority</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Priority.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Shows the ticket priority options in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###PriorityDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###PriorityDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines the default ticket priority in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###Title</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###Title.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Shows the title fields in the ticket note screen of the iphone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###TimeUnits</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###TimeUnits.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Sets the time units in the ticket note screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###TicketFreeText</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketNote###TicketFreeTime</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketNote###ArticleFreeText</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketNote###HistoryType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###HistoryType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines the history type for the ticket note screen action, which gets used for ticket history in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###HistoryComment</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###HistoryComment.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Defines the history comment for the ticket note screen action, which gets used for ticket history in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketNote###DynamicField</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
+        <title>iPhone::Frontend::AgentTicketNote###DynamicField.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewNote.</para>
         <para>Dynamic fields shown in the ticket note screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
     </section>
-
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Permission</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Permission.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Required permissions to use the close ticket screen in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###RequiredLock</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###RequiredLock.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines if a ticket lock is required in the close ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###TicketType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###TicketType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the ticket type in the close ticket screen of the iPhone interface (Ticket::Type needs to be activated).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Service</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Service.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the service in the close ticket screen of the iPhone interface (Ticket::Service needs to be activated).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Owner</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Owner.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the ticket owner in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Responsible</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Responsible.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the responsible agent of the ticket in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###State</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###State.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>If a note is added by an agent, sets the state of a ticket in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###StateType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###StateType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines the next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###StateDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###StateDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines the default next state of a ticket after adding a note, in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Note</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Note.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Allows adding notes in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Subject</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Subject.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the default subject for notes added in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Body</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Body.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the default body text for notes added in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###ArticleTypeDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###ArticleTypeDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines the default type of the note in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###ArticleTypes</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###ArticleTypes.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Specifies the different note types that will be used in the system.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Priority</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Priority.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Shows the ticket priority options in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###PriorityDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###PriorityDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines the default ticket priority in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###Title</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###Title.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Shows the title fields in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###TimeUnits</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###TimeUnits.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Sets the time units in the close ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###TicketFreeText</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketClose###TicketFreeTime</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketClose###ArticleFreeText</title>
-        <para>Group: Z_iPhone_Deprecated, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketClose###HistoryType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###HistoryType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines the history type for the close ticket screen action, which gets used for ticket history in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###HistoryComment</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###HistoryComment.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Defines the history comment for the close ticket screen action, which gets used for ticket history in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketClose###DynamicField</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
+        <title>iPhone::Frontend::AgentTicketClose###DynamicField.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewClose.</para>
         <para>Dynamic fields shown in the ticket close screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
     </section>
-
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###Permission</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::AgentTicketCompose###Permission.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Required permissions to use the ticket compose screen in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###RequiredLock</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::AgentTicketCompose###RequiredLock.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Defines if a ticket lock is required in the ticket compose screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###State</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::AgentTicketCompose###State.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>If a note is added by an agent, sets the state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###StateDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::AgentTicketCompose###StateDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Defines the default next state of a ticket if it is composed / answered in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###StateType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::AgentTicketCompose###StateType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Defines the next possible states after composing / answering a ticket in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###ComposeAddCustomerAddress</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::ComposeAddCustomerAddress.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Adds customers email addresses to recipients in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###ComposeReplaceSenderAddress</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::ComposeReplaceSenderAddress.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Replaces the original sender with current customer's email address on compose answer in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###ComposeExcludeCcRecipients</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::ComposeExcludeCcRecipients.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Uses Cc recipients in reply Cc list on compose an email answer in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###TimeUnits</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose</para>
+        <title>iPhone::Frontend::AgentTicketCompose###TimeUnits.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Sets the time units in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketCompose###TicketFreeText</title>
-        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketCompose###TicketFreeTime</title>
-        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketCompose###ArticleFreeText</title>
-        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketCompose###DynamicField</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
+        <title>iPhone::Frontend::AgentTicketCompose###DynamicField.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewCompose.</para>
         <para>Dynamic fields shown in the ticket compose screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
     </section>
-
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###Permission</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###Permission.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Required permissions to use the move ticket screen in the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###RequiredLock</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###RequiredLock.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Defines if a ticket lock is required in the move ticket screen of the iPhone interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###Owner</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###Owner.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Sets the ticket owner in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###State</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###State.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Allows to set a new ticket state in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###StateType</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###StateType.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Defines the next state of a ticket after being moved to another queue, in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###StateDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###StateDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Defines the default next state of a ticket after adding a note, in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###Priority</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###Priority.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Shows the ticket priority options in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###PriorityDefault</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###PriorityDefault.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Defines the default ticket priority in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###TimeUnits</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove</para>
+        <title>iPhone::Frontend::AgentTicketMove###TimeUnits.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Sets the time units in the move ticket screen of the iPhone interface.</para>
     </section>
     <section>
-        <title>iPhone::Frontend::AgentTicketMove###TicketFreeText</title>
-        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketMove###TicketFreeTime</title>
-        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketMove###ArticleFreeText</title>
-        <para>Group: Z_iPhone_Deprecated,  Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
-        <para>DEPRECATED! This setting is not used any more and will be removed in a future version of OTRS.</para>
-    </section>
-    <section>
-        <title>iPhone::Frontend::AgentTicketMove###DynamicField</title>
-        <para>Group: iPhone, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
+        <title>iPhone::Frontend::AgentTicketMove###DynamicField.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Dynamic fields shown in the ticket move screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###ConfigObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###TimeObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###LogObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###DBObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###TicketObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###CustomObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>iPhone::API::Object###iPhoneObject.</title>
+        <para>Group: iPhoneHandle, Subgroup: API.</para>
+        <para>Configure access restrictions to objects of iPhone handle.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Backend###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Driver::Text###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Driver::TextArea###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Driver::Checkbox###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Driver::Dropdown###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Driver::DateTime###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
+    </section>
+    <section>
+        <title>DynamicFields::Extension::Driver::Date###100-iPhone.</title>
+        <para>Group: iPhoneHandle, Subgroup: DynamicFields::Extension::Registration.</para>
+        <para>Dynamic Fields Extension.</para>
     </section>
 </chapter>
 

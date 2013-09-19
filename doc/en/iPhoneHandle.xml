@@ -34,15 +34,17 @@
 <preface id="preface">
     <title>Preface</title>
     <para>
-        This package adds the necessary framework enable the communication between the OTRS iPhone
-        App and the OTRS system.
+        This package adds the necessary framework to enable the communication between the OTRS
+        iPhone App and the OTRS system.
     </para>
     <para>
         It is necessary to first install the iPhoneHandle package before setup the iPhone App.
     </para>
     <para>
         If you have questions regarding this package, please contact your support team
-        (support@otrs.com) for more information.
+        <ulink url="mailto:support@otrs.com?subject=$Name">
+            &lt;support@otrs.com&gt;
+        </ulink> for more information.
     </para>
 </preface>
 
@@ -178,24 +180,20 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
         <title>In OTRS web application</title>
         <para>
             As soon as the iPhoneHandle Module has been installed, a new group of settings
-            &quot;iPhone&quot; is automatically generated. access them via &quot;sysconfig&quot;.
+            &quot;iPhone&quot; is automatically generated. access them via &quot;SysConfig&quot;.
             this group of settings controls the behavior of iPhone ticket action screens as well as
             some debug options of the package itself.
         </para>
         <para>
-            Another group of settings &quot;Z_iPhone_Deprecated&quot; is also added, this settings
-            contain information about old configurations needed to upgrade from version 1.0.x
-            to 1.1.x.
-        </para>
-        <para>
-            Is recommended to review all this settings and change them if necessary to match the
+            It is recommended to review all this settings and change them if necessary to match the
             current OTRS configuration.
         </para>
     </section>
     <section>
         <title>In the iPhone application</title>
         <para>
-            Download and install OTRS App from iTunes Store or App Store application in your iPhone or iPod Touch.
+            Download and install OTRS App from iTunes Store or App Store application in your iPhone
+            or iPod Touch.
         </para>
         <para>
             Add a new OTRS account in the OTRS App Account Manager. The URL must be
@@ -209,7 +207,7 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
         <example>
             <title>URL example: FQDN = localhost, ScriptAlias = otrs</title>
             <para>
-                http://localhost/otrs/json.pl.
+                "http://localhost/otrs/json.pl".
             </para>
         </example>
         <para>
@@ -704,7 +702,7 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
 -->
 
 <!-- ********************************* -->
-<!-- 7. Technical Implematation Detail -->
+<!-- 7. Technical Implementation Detail -->
 <!-- ********************************* -->
 <!--
 <chapter>
@@ -724,12 +722,34 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
 <!-- ******* -->
 <!-- 9. Test -->
 <!-- ******* -->
-<!--
 <chapter>
     <title>Tests</title>
-    <para></para>
+    <section>
+        <title>Unit tests</title>
+        <para>
+            To ensure the quality of the module, several so-called unit tests were created, to test
+            the functionalities of this module. These unit tests can be run via command line.
+        </para>
+        <para>
+            ATTENTION: Please never run unit tests on a productive system, since the added test data
+            to the system will no longer be removed. Always use a test system.
+        </para>
+        <para>Run the package specific unit tests</para>
+        <para>
+            To run only the unit test which will be delivered with this package, use the following
+            command on the command line:
+        </para>
+        <screen>
+            shell> perl bin/otrs.UnitTest.pl -d iPhoneHandle
+        </screen>
+        <para>Run all available unit tests</para>
+        <para>
+            To run all available unit tests, use the following command on the command line:
+        </para>
+        <screen>shell> perl bin/otrs.UnitTest.pl</screen>
+    </section>
 </chapter>
- -->
+
 <!-- ************* -->
 <!-- 10. Changelog -->
 <!-- ************* -->

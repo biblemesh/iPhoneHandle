@@ -229,7 +229,7 @@ for my $Test (@Tests) {
 
     # set known behaviors
     BEHAVIOR:
-    for my $Behavior ( qw(IsIPhoneCapable) ) {
+    for my $Behavior (qw(IsIPhoneCapable)) {
 
         # to store the config (also for each behavior)
         my %Config;

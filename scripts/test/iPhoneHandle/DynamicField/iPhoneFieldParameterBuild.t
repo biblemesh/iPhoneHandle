@@ -255,7 +255,7 @@ my @Tests = (
     {
         Name   => 'DynamicField Checkbox EN',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Checkbox},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Checkbox},
             Value                => 1,
             Mandatory            => 0,
             UseDefaultValue      => 0,
@@ -272,13 +272,13 @@ my @Tests = (
                 0 => 'Unchecked',
                 1 => 'Checked',
             },
-            Default   => 1,
+            Default => 1,
         },
     },
     {
         Name   => 'DynamicField Checkbox ES',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Checkbox},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Checkbox},
             Value                => 0,
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -295,13 +295,13 @@ my @Tests = (
                 0 => 'Unchecked',
                 1 => 'Checked',
             },
-            Default   => 0,
+            Default => 0,
         },
     },
     {
         Name   => 'DynamicField Dropdown EN',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Dropdown},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Dropdown},
             Value                => 2,
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -318,13 +318,13 @@ my @Tests = (
                 1 => 'Priority',
                 2 => 'State',
             },
-            Default   => 2,
+            Default => 2,
         },
     },
     {
         Name   => 'DynamicField Dropdown ES',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Dropdown},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Dropdown},
             Value                => 2,
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -342,13 +342,13 @@ my @Tests = (
                 1  => 'Prioridad',
                 2  => 'Estado',
             },
-            Default   => 2,
+            Default => 2,
         },
     },
     {
         Name   => 'DynamicField Multiselect',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Multiselect},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Multiselect},
             Value                => 2,
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -360,7 +360,7 @@ my @Tests = (
     {
         Name   => 'DynamicField DateTime EN',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{DateTime},
+            DynamicFieldConfig   => $DynamicFieldConfigs{DateTime},
             Value                => '2013/08/21 13:46',
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -368,18 +368,18 @@ my @Tests = (
             LanguageObject       => $EnLanguageObject
         },
         ExpectedResults => {
-            Name => 'DynamicField_DateTimeField',
-            Title => 'Owner',
-            Datatype => 'DateTime',
-            Viewtype => 'Picker',
+            Name      => 'DynamicField_DateTimeField',
+            Title     => 'Owner',
+            Datatype  => 'DateTime',
+            Viewtype  => 'Picker',
             Mandatory => 1,
-            Default => '2013/08/21 13:46',
+            Default   => '2013/08/21 13:46',
         },
     },
     {
         Name   => 'DynamicField DateTime ES',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{DateTime},
+            DynamicFieldConfig   => $DynamicFieldConfigs{DateTime},
             Value                => '2013/08/21 13:46',
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -387,18 +387,18 @@ my @Tests = (
             LanguageObject       => $EsLanguageObject
         },
         ExpectedResults => {
-            Name => 'DynamicField_DateTimeField',
-            Title => 'Propietario',
-            Datatype => 'DateTime',
-            Viewtype => 'Picker',
+            Name      => 'DynamicField_DateTimeField',
+            Title     => 'Propietario',
+            Datatype  => 'DateTime',
+            Viewtype  => 'Picker',
             Mandatory => 1,
-            Default => '2013/08/21 13:46',
+            Default   => '2013/08/21 13:46',
         },
     },
     {
         Name   => 'DynamicField Date EN',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Date},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Date},
             Value                => '2013/08/21 13:46',
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -406,18 +406,18 @@ my @Tests = (
             LanguageObject       => $EnLanguageObject
         },
         ExpectedResults => {
-            Name => 'DynamicField_DateField',
-            Title => 'Owner',
-            Datatype => 'Date',
-            Viewtype => 'Picker',
+            Name      => 'DynamicField_DateField',
+            Title     => 'Owner',
+            Datatype  => 'Date',
+            Viewtype  => 'Picker',
             Mandatory => 1,
-            Default => '2013/08/21 13:46',
+            Default   => '2013/08/21 13:46',
         },
     },
     {
         Name   => 'DynamicField Date ES',
         Config => {
-            DynamicFieldConfig => $DynamicFieldConfigs{Date},
+            DynamicFieldConfig   => $DynamicFieldConfigs{Date},
             Value                => '2013/08/21 13:46',
             Mandatory            => 1,
             UseDefaultValue      => 1,
@@ -425,12 +425,12 @@ my @Tests = (
             LanguageObject       => $EsLanguageObject
         },
         ExpectedResults => {
-            Name => 'DynamicField_DateField',
-            Title => 'Propietario',
-            Datatype => 'Date',
-            Viewtype => 'Picker',
+            Name      => 'DynamicField_DateField',
+            Title     => 'Propietario',
+            Datatype  => 'Date',
+            Viewtype  => 'Picker',
             Mandatory => 1,
-            Default => '2013/08/21 13:46',
+            Default   => '2013/08/21 13:46',
         },
     },
 );
@@ -445,14 +445,14 @@ for my $Test (@Tests) {
         $Self->IsDeeply(
             $FieldDefinition,
             $Test->{ExpectedResults},
-             "$Test->{Name} IPhoneFieldParameterBuild() :"
+            "$Test->{Name} IPhoneFieldParameterBuild() :"
         );
     }
     else {
         $Self->Is(
             $FieldDefinition,
             undef,
-             "$Test->{Name} IPhoneFieldParameterBuild() :"
+            "$Test->{Name} IPhoneFieldParameterBuild() :"
         );
 
     }

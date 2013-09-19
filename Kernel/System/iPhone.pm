@@ -2791,14 +2791,15 @@ sub VersionGet {
     }
     my $PackageName;
     my $PackageVersion;
+
     # read RELEASE file and store it as an array reference
     my $Product = $Self->{MainObject}->FileRead(
-        Location  => "$Home/var/RELEASE.iPhoneHandle",
-        Result    => "ARRAY",
+        Location => "$Home/var/RELEASE.iPhoneHandle",
+        Result   => "ARRAY",
     );
 
     # send and error if RELEASE file was not read
-    if (!$Product) {
+    if ( !$Product ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
             Message  => "ERROR: Can't read $Home/var/RELEASE.iPhoneHandle! This file is"
@@ -2808,11 +2809,10 @@ sub VersionGet {
     }
 
     # get PackageName and PackageVersion from RELEASE file
-    for my $Line (@{$Product}) {
+    for my $Line ( @{$Product} ) {
 
         # filtering of comment lines
         if ( $Line !~ m{\A \#}msx ) {
-            print STDERR "HERE\n"; #TODO Delete Developer Output
             if ( $Line =~ m{\A PRODUCT \s{0,2} = \s{0,2} (.*) \s{0,2} \z}msxi ) {
                 $PackageName = $1;
             }

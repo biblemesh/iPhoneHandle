@@ -464,7 +464,7 @@ sub _Log {
     my $FH;
 
     # open logfile
-    if ( !open $FH, '>>', $Self->{DebugLogFile} ) {    ## no critic
+    if ( !open $FH, '>>', $Self->{DebugLogFile} ) {
 
         # print error screen
         print STDERR "\n";

@@ -206,9 +206,7 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
         </note>
         <example>
             <title>URL example: FQDN = localhost, ScriptAlias = otrs</title>
-            <para>
-                "http://localhost/otrs/json.pl".
-            </para>
+            <screen>http://localhost/otrs/json.pl</screen>
         </example>
         <para>
             You should use same User and Password in OTRS web application

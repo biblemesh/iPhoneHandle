@@ -722,6 +722,7 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
 <!-- ******* -->
 <chapter>
     <title>Tests</title>
+    <para>This module has been tested on the current state of the art in quality.</para>
     <section>
         <title>Unit Tests</title>
         <para>

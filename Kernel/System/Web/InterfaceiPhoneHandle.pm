@@ -312,6 +312,15 @@ sub Run {
         }
     }
 
+    # cleanup params iPhone application does not send empty values, but same name as parameter as:
+    # TicketID => 'TicketID', this values will need to be set as empty, see bug#9752
+    PARAMNAME:
+    for my $ParamName ( sort keys %Param ) {
+        next PARAMNAME if !$Param{$ParamName};
+        next PARAMNAME if $Param{$ParamName} ne "$ParamName";
+        $Param{$ParamName} = '';
+    }
+
     # execute iPhoneObject methods
     if ( $Object eq 'CustomObject' || $Object eq 'iPhoneObject' ) {
 

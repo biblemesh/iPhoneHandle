@@ -2426,6 +2426,7 @@ Get a Hash reference to all possible services based on a Ticket or Queue and Cus
         3 => "Service A::SubService 1",
         2 => "Service B"
     ],
+
 =cut
 
 sub ServicesGet {
@@ -2460,6 +2461,7 @@ Get a Hash reference to all possible SLAs based on a Service
         1 => "SLA Gold for Service A",
         3 => "SLA Silver for Service A",
     ],
+
 =cut
 
 sub SLAsGet {
@@ -2494,6 +2496,7 @@ the "My Queues" list
         1    => "OTRS Admin (root@localhost)",
         1138 => "Amy Allen (Aayla) "
     ],
+
 =cut
 
 sub UsersGet {
@@ -2568,6 +2571,7 @@ Get a Hash reference to all possible states based on a Ticket or Queue
         9  => "merged",
         10 => "closed with workaround",
     ],
+
 =cut
 
 sub NextStatesGet {
@@ -2600,6 +2604,7 @@ Get a Hash reference to all possible priorities
         4 => "4 high",
         5 => "5 very high",
     ],
+
 =cut
 
 sub PrioritiesGet {
@@ -2632,6 +2637,7 @@ parameter, use "*" for all.
         Ray   => '"Ray Park" <rp@sw.com>',
         David => '"David Prowse" <dp@sw.com>',
     ],
+
 =cut
 
 sub CustomerSearch {
@@ -2684,6 +2690,7 @@ The result is the TicketID for Action Phone or ArticleID for the other actions
     # a result could be
 
     @Result = ( 224 );
+
 =cut
 
 sub ScreenActions {

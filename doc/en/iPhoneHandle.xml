@@ -275,6 +275,11 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
         <para>Defines the default ticket priority in the new phone ticket screen of the iPhone interface.</para>
     </section>
     <section>
+        <title>iPhone::Frontend::AgentTicketPhone###Body.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
+        <para>Sets the default body text for notes added in the new phone ticket screen of the iPhone interface.</para>
+    </section>
+    <section>
         <title>iPhone::Frontend::AgentTicketPhone###ArticleTypeDefault.</title>
         <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewPhone.</para>
         <para>Defines the default type of the ticket in the new phone ticket screen of the iPhone interface.</para>

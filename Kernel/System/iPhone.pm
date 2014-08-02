@@ -3380,7 +3380,7 @@ sub _GetScreenElements {
             Min       => 1,
             Max       => 20_000,
             Mandatory => 1,
-            Default   => '',
+            Default   => $Self->{Config}->{Body} || '',
         };
         push @ScreenElements, $BodyElements;
     }

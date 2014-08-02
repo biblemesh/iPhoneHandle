@@ -1,2 +1,12 @@
 .project
 .includepath
+
+# OTRSCodePolicy
+.tidyall.d
+perltidy.LOG.old
+bin/otrs.CodePolicy.pl
+TidyAll
+Kernel/cpan-lib/Pod/Strip.pm
+scripts/install-git-hooks.pl
+scripts/uninstall-git-hooks.pl
+OTRSCodePolicy*

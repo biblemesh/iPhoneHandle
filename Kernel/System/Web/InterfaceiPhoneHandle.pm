@@ -12,27 +12,15 @@ package Kernel::System::Web::InterfaceiPhoneHandle;
 use strict;
 use warnings;
 
-use Kernel::Config;
-use Kernel::System::Auth;
-use Kernel::System::CustomerUser;
-use Kernel::System::DB;
-use Kernel::System::Encode;
-use Kernel::System::Log;
-use Kernel::System::Group;
-use Kernel::System::iPhone;
-use Kernel::System::JSON;
-use Kernel::System::LinkObject;
-use Kernel::System::Lock;
-use Kernel::System::Main;
-use Kernel::System::Queue;
-use Kernel::System::Service;
-use Kernel::System::SLA;
-use Kernel::System::State;
-use Kernel::System::Ticket;
-use Kernel::System::Time;
-use Kernel::System::Type;
-use Kernel::System::User;
-use Kernel::System::Web::Request;
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::Auth',
+    'Kernel::System::JSON',
+    'Kernel::System::Log',
+    'Kernel::System::Time',
+    'Kernel::System::User',
+    'Kernel::System::Web::Request',
+);
 
 =head1 NAME
 
@@ -67,36 +55,17 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # create common objects
-    $Self->{ConfigObject} = Kernel::Config->new();
-    $Self->{LogObject}    = Kernel::System::Log->new(
-        LogPrefix => 'OTRS-iPhoneHandle',
-        %{$Self},
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::System::Log' => {
+            LogPrefix => 'OTRS-iPhoneHandle',
+        },
+        'Kernel::System::Web::Request' => {
+            WebRequest => $Param{WebRequest} || 0,
+        },
     );
-    $Self->{EncodeObject} = Kernel::System::Encode->new( %{$Self} );
-    $Self->{MainObject}   = Kernel::System::Main->new( %{$Self} );
-    $Self->{TimeObject}   = Kernel::System::Time->new( %{$Self} );
-    $Self->{ParamObject}  = Kernel::System::Web::Request->new(
-        %{$Self},
-        WebRequest => $Param{WebRequest} || 0,
-    );
-    $Self->{DBObject}           = Kernel::System::DB->new( %{$Self} );
-    $Self->{UserObject}         = Kernel::System::User->new( %{$Self} );
-    $Self->{GroupObject}        = Kernel::System::Group->new( %{$Self} );
-    $Self->{QueueObject}        = Kernel::System::Queue->new( %{$Self} );
-    $Self->{ServiceObject}      = Kernel::System::Service->new( %{$Self} );
-    $Self->{TypeObject}         = Kernel::System::Type->new( %{$Self} );
-    $Self->{StateObject}        = Kernel::System::State->new( %{$Self} );
-    $Self->{LockObject}         = Kernel::System::Lock->new( %{$Self} );
-    $Self->{SLAObject}          = Kernel::System::SLA->new( %{$Self} );
-    $Self->{CustomerUserObject} = Kernel::System::CustomerUser->new( %{$Self} );
-    $Self->{TicketObject}       = Kernel::System::Ticket->new( %{$Self} );
-    $Self->{LinkObject}         = Kernel::System::LinkObject->new( %{$Self} );
-    $Self->{JSONObject}         = Kernel::System::JSON->new( %{$Self} );
-    $Self->{iPhoneObject}       = Kernel::System::iPhone->new( %{$Self} );
 
     # get log filename
-    $Self->{DebugLogFile} = $Self->{ConfigObject}->Get('iPhone::LogFile') || '';
+    $Self->{DebugLogFile} = $Kernel::OM->Get('Kernel::Config')->Get('iPhone::LogFile') || '';
 
     return $Self;
 }
@@ -127,22 +96,28 @@ Or:
 sub Run {
     my ($Self) = @_;
 
+    # get param object
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
+
     # set common variables
-    my $User   = $Self->{ParamObject}->GetParam( Param => 'User' )     || '';
-    my $Pw     = $Self->{ParamObject}->GetParam( Param => 'Password' ) || '';
-    my $Object = $Self->{ParamObject}->GetParam( Param => 'Object' )   || '';
-    my $Method = $Self->{ParamObject}->GetParam( Param => 'Method' )   || '';
-    my $Data   = $Self->{ParamObject}->GetParam( Param => 'Data' );
-    my $ParamScalar = $Self->{JSONObject}->Decode( Data => $Data );
+    my $User            = $ParamObject->GetParam( Param => 'User' )     || '';
+    my $Pw              = $ParamObject->GetParam( Param => 'Password' ) || '';
+    my $RequestedObject = $ParamObject->GetParam( Param => 'Object' )   || '';
+    my $Method          = $ParamObject->GetParam( Param => 'Method' )   || '';
+    my $Data            = $ParamObject->GetParam( Param => 'Data' );
+    my $ParamScalar = $Kernel::OM->Get('Kernel::System::JSON')->Decode( Data => $Data );
 
     my %Param;
     if ($ParamScalar) {
         %Param = %{$ParamScalar};
     }
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # inbound log
-    if ( $Self->{ConfigObject}->Get('iPhone::DebugLog') ) {
-        my $Message = 'User=' . $User . '&Password=****' . '&Object=' . $Object
+    if ( $ConfigObject->Get('iPhone::DebugLog') ) {
+        my $Message = 'User=' . $User . '&Password=****' . '&Object=' . $RequestedObject
             . '&Method=' . $Method . '&Data=' . $Data;
 
         $Self->_Log(
@@ -152,9 +127,9 @@ sub Run {
     }
 
     # check needed
-    if ( !$User || !$Object || !$Method ) {
+    if ( !$User || !$RequestedObject || !$Method ) {
         my $Message = "Need User, Object and Method!";
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $Message,
         );
@@ -167,18 +142,18 @@ sub Run {
         );
     }
 
-    # agent auth
+    # agent Auth
     my %ParamFixed;
     if (1) {
-        my $AuthObject = Kernel::System::Auth->new( %{$Self} );
-        my $UserLogin = $AuthObject->Auth( User => $User, Pw => $Pw );
+        my $UserLogin = $Kernel::OM->Get('Kernel::System::Auth')->Auth( User => $User, Pw => $Pw );
 
         if ( !$UserLogin ) {
             my $Message = "Auth for user $User failed!";
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'notice',
                 Message  => $Message,
             );
+
             return $Self->_Result(
                 {
                     Success      => 0,
@@ -188,10 +163,11 @@ sub Run {
         }
 
         # set user id
-        my $UserID = $Self->{UserObject}->UserLookup(
+        my $UserID = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
             UserLogin => $UserLogin,
         );
         if ( !$UserID ) {
+
             return $Self->_Result(
                 {
                     Success      => 0,
@@ -203,11 +179,11 @@ sub Run {
         $ParamFixed{UserID} = $UserID;
     }
 
-    # system auth
+    # system Auth
     # This code is not needed and has to be removed!
     else {
-        my $RequiredUser     = $Self->{ConfigObject}->Get('SOAP::User');
-        my $RequiredPassword = $Self->{ConfigObject}->Get('SOAP::Password');
+        my $RequiredUser     = $ConfigObject->Get('SOAP::User');
+        my $RequiredPassword = $ConfigObject->Get('SOAP::Password');
 
         if (
             !defined $RequiredUser
@@ -215,28 +191,65 @@ sub Run {
             || !defined $RequiredPassword || !length $RequiredPassword
             )
         {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'notice',
                 Message  => 'SOAP::User or SOAP::Password is empty, SOAP access denied!',
             );
+
             return $Self->_Result();
         }
 
         if ( $User ne $RequiredUser || $Pw ne $RequiredPassword ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'notice',
                 Message  => "Auth for user $User failed!",
             );
+
             return $Self->_Result();
         }
     }
 
-    if ( !$Self->{$Object} && $Object ne 'CustomObject' ) {
-        my $Message = "No such Object $Object!";
-        $Self->{LogObject}->Log(
+    # change to ObjectManager implies that there are no created objects in $Self
+    #     the following is a list of objects that could be originally created
+    #     object manager will handle the creation of this objects on the fly
+    #
+    # not listed objects will not be created, the behavior should be similar than in previous
+    #     versions where the object is not created in and it does not exists in $Self
+    my %ObjectAlias = (
+        ConfigObject       => 'Kernel::Config',
+        LogObject          => 'Kernel::System::Log',
+        EncodeObject       => 'Kernel::System::Encode',
+        MainObject         => 'Kernel::System::Main',
+        TimeObject         => 'Kernel::System::Time',
+        DBObject           => 'Kernel::System::DB',
+        UserObject         => 'Kernel::System::User',
+        GroupObject        => 'Kernel::System::Group',
+        QueueObject        => 'Kernel::System::Queue',
+        ServiceObject      => 'Kernel::System::Service',
+        TypeObject         => 'Kernel::System::Type',
+        StateObject        => 'Kernel::System::State',
+        LockObject         => 'Kernel::System::Lock',
+        SLAObject          => 'Kernel::System::SLA',
+        CustomerUserObject => 'Kernel::System::CustomerUser',
+        TicketObject       => 'Kernel::System::Ticket',
+        LinkObject         => 'Kernel::System::LinkObject',
+        CustomObject       => 'Kernel::System::iPhone',
+        iPhoneObject       => 'Kernel::System::iPhone',
+    );
+
+    my $LocalObject;
+    if ( $ObjectAlias{$RequestedObject} ) {
+        $LocalObject = $Kernel::OM->Get( $ObjectAlias{$RequestedObject} );
+    }
+
+    # check if object was created
+    if ( !$LocalObject ) {
+        my $Message = "No such Object $RequestedObject!";
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $Message,
         );
+
         return $Self->_Result(
             {
                 Success      => 0,
@@ -245,17 +258,14 @@ sub Run {
         );
     }
 
-    # check if method exists in objects other than 'CustomObject'
-    if (
-        ( $Self->{$Object} && !$Self->{$Object}->can($Method) )
-        && !$Self->can($Method)
-        )
-    {
-        my $Message = "No such method '$Method' in '$Object'!";
-        $Self->{LogObject}->Log(
+    # check if method exists in objects
+    if ( !$LocalObject->can($Method) && !$Self->can($Method) ) {
+        my $Message = "No such method '$Method' in '$RequestedObject'!";
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $Message,
         );
+
         return $Self->_Result(
             {
                 Success      => 0,
@@ -263,33 +273,17 @@ sub Run {
             },
         );
     }
-    elsif ( $Object eq 'CustomObject' ) {
 
-        # check if method exists in iPhoneObject
-        if ( !$Self->{iPhoneObject}->can($Method) ) {
-            my $Message = "No such method '$Method' in '$Object'!";
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => $Message,
-            );
-            return $Self->_Result(
-                {
-                    Success      => 0,
-                    ErrorMessage => $Message,
-                },
-            );
-        }
-    }
-
-    # object white list
-    my $ObjectWhiteList = $Self->{ConfigObject}->Get('iPhone::API::Object');
+    # check object white list
+    my $ObjectWhiteList = $ConfigObject->Get('iPhone::API::Object');
     if ($ObjectWhiteList) {
-        if ( !defined $ObjectWhiteList->{$Object} ) {
-            my $Message = "No access to '$Object'!";
-            $Self->{LogObject}->Log(
+        if ( !defined $ObjectWhiteList->{$RequestedObject} ) {
+            my $Message = "No access to '$RequestedObject'!";
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $Message,
             );
+
             return $Self->_Result(
                 {
                     Success      => 0,
@@ -297,12 +291,17 @@ sub Run {
                 },
             );
         }
-        if ( $ObjectWhiteList->{$Object} && $Method !~ /$ObjectWhiteList->{$Object}/ ) {
-            my $Message = "No access method '$Method()' from '$Object'!";
-            $Self->{LogObject}->Log(
+        if (
+            $ObjectWhiteList->{$RequestedObject}
+            && $Method !~ m{$ObjectWhiteList->{$RequestedObject}}
+            )
+        {
+            my $Message = "No access method '$Method()' from '$RequestedObject'!";
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $Message,
             );
+
             return $Self->_Result(
                 {
                     Success      => 0,
@@ -321,24 +320,13 @@ sub Run {
         $Param{$ParamName} = '';
     }
 
-    # execute iPhoneObject methods
-    if ( $Object eq 'CustomObject' || $Object eq 'iPhoneObject' ) {
+    # execute object methods
+    my @Result = $LocalObject->$Method(
+        %Param,
+        %ParamFixed,
+    );
 
-        my @Result = $Self->{iPhoneObject}->$Method(
-            %Param,
-            %ParamFixed,
-        );
-        return $Self->_Result( \@Result );
-    }
-
-    # execute other object methods
-    else {
-        my @Result = $Self->{$Object}->$Method(
-            %Param,
-            %ParamFixed,
-        );
-        return $Self->_Result( \@Result );
-    }
+    return $Self->_Result( \@Result );
 }
 
 =item _Result()
@@ -352,8 +340,8 @@ encodes the result as a JSON object
 OR:
     my $Result = $InterfaceAgent->_Result(
         Success => 1,                    # Optional
-        Data    => $ArrayHashRef         # Optional, Mandatory if Succcess is 1
-        Message => 'some errror message' # Optional
+        Data    => $ArrayHashRef         # Optional, Mandatory if Success is 1
+        Message => 'some error message' # Optional
     );
 
 Returns JSON representation of:
@@ -362,9 +350,9 @@ Returns JSON representation of:
         Data    => $ArrayOfHashesRef,
     }
 
-Or JSON represetation of:
+Or JSON representation of:
     $Result = {
-        Result       => 'failes',
+        Result       => 'failed',
         Message => 'some message',
     }
 
@@ -374,6 +362,9 @@ sub _Result {
     my ( $Self, $Result ) = @_;
 
     my %ResultProtocol;
+
+    # get log object
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
 
     if ($Result) {
 
@@ -385,13 +376,14 @@ sub _Result {
             if ( defined @{$Result}[0] && @{$Result}[0] eq -1 ) {
                 $ResultProtocol{Result} = 'failed';
 
-                # get last loged error and set is as the error message
+                # get last logged error and set is as the error message
+                KEY:
                 for my $Key (qw(error notice)) {
-                    $ResultProtocol{Message} = $Self->{LogObject}->GetLogEntry(
+                    $ResultProtocol{Message} = $LogObject->GetLogEntry(
                         Type => $Key,
                         What => 'Message',
                     );
-                    last if $ResultProtocol{Message};
+                    last KEY if $ResultProtocol{Message};
                 }
             }
 
@@ -416,36 +408,37 @@ sub _Result {
                 $ResultProtocol{Result} = 'failed',
                     $ResultProtocol{Message}
                     = $Result->{ErrorMessage}
-                    || 'Unknown Error, plase contact system administrator to check OTRS Logs!';
+                    || 'Unknown Error, please contact system administrator to check OTRS Logs!';
             }
         }
 
-        # success fallback if result is not an ARRAY or HASH
+        # success fall-back if result is not an ARRAY or HASH
         else {
             $ResultProtocol{Result} = 'successful';
             $ResultProtocol{Data}   = $Result;
         }
     }
 
-    # failed fallback if there was no response
+    # failed fall-back if there was no response
     else {
         $ResultProtocol{Result} = 'failed';
 
-        # get last loged error and set is as the error message
+        # get last logged error and set is as the error message
+        KEY:
         for my $Key (qw(error notice)) {
-            $ResultProtocol{Message} = $Self->{LogObject}->GetLogEntry(
+            $ResultProtocol{Message} = $LogObject->GetLogEntry(
                 Type => $Key,
                 What => 'Message',
             );
-            last if $ResultProtocol{Message};
+            last KEY if $ResultProtocol{Message};
         }
     }
 
     # set result to a variable for easy log output
-    my $JSONResult = $Self->{JSONObject}->Encode( Data => \%ResultProtocol );
+    my $JSONResult = $Kernel::OM->Get('Kernel::System::JSON')->Encode( Data => \%ResultProtocol );
 
     # outbound log
-    if ( $Self->{ConfigObject}->Get('iPhone::DebugLog') ) {
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('iPhone::DebugLog') ) {
 
         $Self->_Log(
             Direction => 'Outbound',
@@ -472,7 +465,7 @@ sub _Log {
 
     my $FH;
 
-    # open logfile
+    # open log file
     if ( !open $FH, '>>', $Self->{DebugLogFile} ) {
 
         # print error screen
@@ -483,11 +476,12 @@ sub _Log {
     }
 
     # write log file
-    print $FH '[' . $Self->{TimeObject}->CurrentTimestamp() . ']';
+    print $FH '[' . $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp() . ']';
     print $FH "[Debug] [$Param{Direction}] $Param{Message}\n";
 
     # close file handle
     close $FH;
+
     return 1;
 }
 

@@ -29,6 +29,9 @@ use lib "$Bin/../../Kernel/cpan-lib";
 
 # load iPhone Handle web interface
 use Kernel::System::Web::InterfaceiPhoneHandle();
+use Kernel::System::ObjectManager;
+
+local $Kernel::OM = Kernel::System::ObjectManager->new();
 
 # create new object
 my $Interface = Kernel::System::Web::InterfaceiPhoneHandle->new();

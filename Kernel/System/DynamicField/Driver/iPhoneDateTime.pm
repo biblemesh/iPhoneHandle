@@ -14,6 +14,11 @@ use warnings;
 
 use Kernel::System::VariableCheck qw(:all);
 
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::Time',
+);
+
 =head1 NAME
 
 Kernel::System::DynamicField::Driver::iPhoneDateTime
@@ -45,14 +50,16 @@ sub IPhoneFieldParameterBuild {
     if ( $Param{UseDefaultValue} ) {
         my $TimeDiff = ( defined $FieldConfig->{DefaultValue} ? $FieldConfig->{DefaultValue} : 0 );
 
+        # get time object
+        my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+
         # get current system time
-        my $SystemTime = $Self->{TimeObject}->SystemTime();
+        my $SystemTime = $TimeObject->SystemTime();
 
         # get time string + $Time diff
-        $Value = $Self->{TimeObject}->SystemTime2TimeStamp(
+        $Value = $TimeObject->SystemTime2TimeStamp(
             SystemTime => $SystemTime + $TimeDiff,
         );
-
     }
     $Value = $Param{Value} if defined $Param{Value};
 
@@ -77,24 +84,35 @@ sub IPhoneFieldValueGet {
     my $Value = $Param{$FieldName};
 
     # time zone translation if needed
-    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Param{UserTimeZone} && $Value ) {
+    if (
+        $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser')
+        && $Param{UserTimeZone}
+        && $Value
+        )
+    {
 
-        # covert $Value to a numeric time for convetrsions
-        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'] );
+
+        # covert $Value to a numeric time for conversions
+        my $SystemTime = $Kernel::OM->Get('Kernel::System::Time')->TimeStamp2SystemTime(
             String => $Value,
         );
 
-        # create a time object for thes user (because of the time zone)
-        $Self->{UserTimeObject} = Kernel::System::Time->new(
-            %{$Self},
-            UserTimeZone => $Param{UserTimeZone},
+        # create a time object for the user (because of the time zone)
+        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'], );
+        $Kernel::OM->ObjectParamAdd(
+            'Kernel::System::Time' => {
+                UserTimeZone => $Param{UserTimeZone},
+            },
         );
 
         # subtract the user time zone from the current value
         $SystemTime = $SystemTime - ( $Param{UserTimeZone} * 3600 );
 
         # convert numeric value again to string
-        $Value = $Self->{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
+        $Value = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
+            SystemTime => $SystemTime,
+        );
     }
 
     return $Value;
@@ -120,7 +138,7 @@ sub IPhoneFieldValueValidate {
 
     # try to convert value to a SystemTime
     if ($Value) {
-        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+        my $SystemTime = $Kernel::OM->Get('Kernel::System::Time')->TimeStamp2SystemTime(
             String => $Value,
         );
 
@@ -145,19 +163,25 @@ sub _TransformDateSelection {
     my ( $Self, %Param ) = @_;
 
     # time zone translation if needed
-    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
-        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
+
+        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'] );
+        my $SystemTime = $Kernel::OM->Get('Kernel::System::Time')->TimeStamp2SystemTime(
             String => $Param{TimeStamp},
         );
         $SystemTime = $SystemTime - ( $Self->{UserTimeZone} * 3600 );
 
-        $Self->{UserTimeObject} = Kernel::System::Time->new(
-            %{$Self},
-            UserTimeZone => $Param{UserTimeZone},
+        # create a time object for the user (because of the time zone)
+        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'] );
+        $Kernel::OM->ObjectParamAdd(
+            'Kernel::System::Time' => {
+                UserTimeZone => $Param{UserTimeZone},
+            },
         );
 
-        $Param{TimeStamp}
-            = $Self->{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
+        $Param{TimeStamp} = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
+            SystemTime => $SystemTime,
+        );
     }
     return $Param{TimeStamp};
 }

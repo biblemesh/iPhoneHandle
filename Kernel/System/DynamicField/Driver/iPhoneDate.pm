@@ -14,6 +14,10 @@ use warnings;
 
 use Kernel::System::VariableCheck qw(:all);
 
+our @ObjectDependencies = (
+    'Kernel::System::Time'
+);
+
 =head1 NAME
 
 Kernel::System::DynamicField::Driver::iPhoneDate
@@ -43,13 +47,20 @@ sub IPhoneFieldParameterBuild {
 
     # set the field value or default
     if ( $Param{UseDefaultValue} ) {
-        my $TimeDiff = ( defined $FieldConfig->{DefaultValue} ? $FieldConfig->{DefaultValue} : '' );
+        my $TimeDiff = $FieldConfig->{DefaultValue} // 0;
+
+        if ( $TimeDiff eq '' ) {
+            $TimeDiff = 0;
+        }
+
+        # get time object
+        my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
 
         # get current system time
-        my $SystemTime = $Self->{TimeObject}->SystemTime();
+        my $SystemTime = $TimeObject->SystemTime();
 
         # get time string + $Time diff
-        $Value = $Self->{TimeObject}->SystemTime2TimeStamp(
+        $Value = $TimeObject->SystemTime2TimeStamp(
             SystemTime => $SystemTime + $TimeDiff,
         );
 
@@ -109,7 +120,7 @@ sub IPhoneFieldValueValidate {
 
     # try to convert value to a SystemTime
     if ($Value) {
-        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+        my $SystemTime = $Kernel::OM->Get('Kernel::System::Time')->TimeStamp2SystemTime(
             String => $Value,
         );
 

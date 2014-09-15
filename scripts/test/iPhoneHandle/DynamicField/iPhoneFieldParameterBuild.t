@@ -7,28 +7,19 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
+## no critic (Modules::RequireExplicitPackage)
 use strict;
 use warnings;
 use utf8;
 use vars (qw($Self));
 
-use Kernel::System::DynamicField::Backend;
-use Kernel::System::UnitTest::Helper;
+use Kernel::Language;
 use Kernel::System::VariableCheck qw(:all);
 
-my $HelperObject = Kernel::System::UnitTest::Helper->new(
-    %$Self,
-    UnitTestObject => $Self,
-);
-
-my $DFBackendObject = Kernel::System::DynamicField::Backend->new( %{$Self} );
-
 my $EnLanguageObject = Kernel::Language->new(
-    %{$Self},
     UserLanguage => 'en',
 );
 my $EsLanguageObject = Kernel::Language->new(
-    %{$Self},
     UserLanguage => 'es',
 );
 
@@ -434,6 +425,8 @@ my @Tests = (
         },
     },
 );
+
+my $DFBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
 # execute tests
 for my $Test (@Tests) {

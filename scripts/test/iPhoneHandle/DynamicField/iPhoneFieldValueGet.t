@@ -7,31 +7,19 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
+## no critic (Modules::RequireExplicitPackage)
 use strict;
 use warnings;
 use utf8;
 use vars (qw($Self));
 
-use Kernel::Config;
-use Kernel::System::DynamicField::Backend;
-use Kernel::System::UnitTest::Helper;
 use Kernel::System::VariableCheck qw(:all);
 
-my $HelperObject = Kernel::System::UnitTest::Helper->new(
-    %$Self,
-    UnitTestObject => $Self,
-);
-
-my $ConfigObject = Kernel::Config->new();
+my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
 $ConfigObject->Set(
     Key   => 'TimeZoneUser',
     Value => 1
-);
-
-my $DFBackendObject = Kernel::System::DynamicField::Backend->new(
-    %{$Self},
-    ConfigObject => $ConfigObject
 );
 
 # theres is not really needed to add the dynamic fields for this test, we can define a static
@@ -263,6 +251,8 @@ my @Tests = (
         ExpectedResult => '2013-08-21 00:00:00',
     },
 );
+
+my $DFBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
 # execute tests
 for my $Test (@Tests) {

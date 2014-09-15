@@ -1,5 +1,5 @@
 # --
-# scripts/test/JSONGateway.t - JSON gateway testscript
+# scripts/test/JSONGateway.t - JSON gateway test script
 # Copyright (C) 2001-2014 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -7,34 +7,23 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
+## no critic (Modules::RequireExplicitPackage)
 use strict;
 use warnings;
 use utf8;
 use vars (qw($Self));
 
-use Kernel::Config;
-use Kernel::System::JSON;
-use Kernel::System::UnitTest::Helper;
 use Kernel::System::VariableCheck qw(IsArrayRefWithData IsHashRefWithData IsStringWithData);
-use Kernel::System::WebUserAgent;
 
-# helper object
-my $HelperObject = Kernel::System::UnitTest::Helper->new(
-    %{$Self},
-    UnitTestObject             => $Self,
-    RestoreSystemConfiguration => 1,
-);
-
-# create other objects
-my $ConfigObject       = Kernel::Config->new();
-my $JSONObject         = Kernel::System::JSON->new( %{$Self} );
-my $WebUserAgentObject = Kernel::System::WebUserAgent->new( %{$Self} );
+# get config object
+my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
 # get remote host with some precautions for certain unit test systems
 my $Host;
-my $FQDN = $Self->{ConfigObject}->Get('FQDN');
 
-# try to resolve fqdn host
+my $FQDN = $ConfigObject->Get('FQDN');
+
+# try to resolve FQDN host
 if ( $FQDN ne 'yourhost.example.com' && gethostbyname($FQDN) ) {
     $Host = $FQDN;
 }
@@ -44,18 +33,18 @@ if ( !$Host && gethostbyname('localhost') ) {
     $Host = 'localhost';
 }
 
-# use hardcoded localhost ip address
+# use hard-coded localhost IP address
 if ( !$Host ) {
     $Host = '127.0.0.1';
 }
 
-# prepare webservice config
+# prepare config
 my $URL =
-    $Self->{ConfigObject}->Get('HttpType')
+    $ConfigObject->Get('HttpType')
     . '://'
     . $Host
     . '/'
-    . $Self->{ConfigObject}->Get('ScriptAlias')
+    . $ConfigObject->Get('ScriptAlias')
     . 'json.pl';
 
 my $CallJSONCGI = sub {
@@ -72,7 +61,8 @@ my $CallJSONCGI = sub {
     for my $Item ( sort keys %JSONParams ) {
         $JSONUrl .= "$Item=$JSONParams{$Item};";
     }
-    my %Response = $WebUserAgentObject->Request(
+
+    my %Response = $Kernel::OM->Get('Kernel::System::WebUserAgent')->Request(
         URL => $JSONUrl,
     );
 
@@ -84,6 +74,9 @@ my $CallJSONCGI = sub {
 
     return $Response{Content};
 };
+
+#get helper object
+my $HelperObject = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
 # create test user
 my $User = $HelperObject->TestUserCreate(
@@ -247,6 +240,9 @@ my @Tests = (
     },
 
 );
+
+# get JSON object
+my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
 
 for my $Test (@Tests) {
     my $JSONResponse = $CallJSONCGI->(

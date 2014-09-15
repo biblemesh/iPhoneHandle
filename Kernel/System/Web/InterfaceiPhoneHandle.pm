@@ -405,8 +405,8 @@ sub _Result {
 
             # otherwise is an error
             elsif ( defined $Result->{Success} && !$Result->{Success} ) {
-                $ResultProtocol{Result} = 'failed',
-                    $ResultProtocol{Message}
+                $ResultProtocol{Result} = 'failed';
+                $ResultProtocol{Message}
                     = $Result->{ErrorMessage}
                     || 'Unknown Error, please contact system administrator to check OTRS Logs!';
             }
@@ -466,7 +466,7 @@ sub _Log {
     my $FH;
 
     # open log file
-    if ( !open $FH, '>>', $Self->{DebugLogFile} ) {
+    if ( !open $FH, '>>', $Self->{DebugLogFile} ) {    ##no critic
 
         # print error screen
         print STDERR "\n";

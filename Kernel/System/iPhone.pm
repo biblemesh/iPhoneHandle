@@ -13,12 +13,29 @@ use strict;
 use warnings;
 
 use Kernel::Language;
-use Kernel::System::CheckItem;
-use Kernel::System::Priority;
-use Kernel::System::SystemAddress;
-use Kernel::System::DynamicField;
-use Kernel::System::DynamicField::Backend;
+use Kernel::System::Time;
 use Kernel::System::VariableCheck qw(:all);
+
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::CheckItem',
+    'Kernel::System::CustomerUser',
+    'Kernel::System::DB',
+    'Kernel::System::DynamicField',
+    'Kernel::System::DynamicField::Backend',
+    'Kernel::System::Group',
+    'Kernel::System::Lock',
+    'Kernel::System::Log',
+    'Kernel::System::Main',
+    'Kernel::System::Priority',
+    'Kernel::System::Queue',
+    'Kernel::System::State',
+    'Kernel::System::SystemAddress',
+    'Kernel::System::TemplateGenerator',
+    'Kernel::System::Ticket',
+    'Kernel::System::Time',
+    'Kernel::System::User',
+);
 
 =head1 NAME
 
@@ -38,153 +55,9 @@ All iPhone functions.
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Time;
-    use Kernel::System::Main;
-    use Kernel::System::DB;
-    use Kernel::System::User;
-    use Kernel::System::Group;
-    use Kernel::System::Queue;
-    use Kernel::System::Service;
-    use Kernel::System::Type;
-    use Kernel::System::State;
-    use Kernel::System::Lock;
-    use Kernel::System::SLA;
-    use Kernel::System::CustomerUser;
-    use Kernel::System::Ticket;
-    use Kernel::System::LinkObject;
-    use Kernel::System::iPhone;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $TimeObject = Kernel::System::Time->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-    );
-    my $DBObject = Kernel::System::DB->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-    );
-    my $UserObject = Kernel::System::User->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-        TimeObject   => $TimeObject,
-        DBObject     => $DBObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $GroupObject = Kernel::System::Group->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $QueueObject = Kernel::System::Queue->new(
-        ConfigObject        => $ConfigObject,
-        LogObject           => $LogObject,
-        DBObject            => $DBObject,
-        MainObject          => $MainObject,
-        EncodeObject        => $EncodeObject,
-        GroupObject         => $GroupObject, # if given
-        CustomerGroupObject => $CustomerGroupObject, # if given
-    );
-    my $ServiceObject = Kernel::System::Service->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-    );
-    my $TypeObject = Kernel::System::Type->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $StateObject = Kernel::System::State->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $LockObject = Kernel::System::Lock->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $SLAObject = Kernel::System::SLA->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-    );
-    my $CustomerUserObject = Kernel::System::CustomerUser->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $TicketObject = Kernel::System::Ticket->new(
-        ConfigObject       => $ConfigObject,
-        LogObject          => $LogObject,
-        DBObject           => $DBObject,
-        MainObject         => $MainObject,
-        TimeObject         => $TimeObject,
-        EncodeObject       => $EncodeObject,
-        GroupObject        => $GroupObject,        # if given
-        CustomerUserObject => $CustomerUserObject, # if given
-        QueueObject        => $QueueObject,        # if given
-    );
-    my $LinkObject = Kernel::System::LinkObject->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        TimeObject   => $TimeObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $iPhoneObject = Kernel::System::iPhone->new(
-        ConfigObject       => $ConfigObject,
-        LogObject          => $LogObject,
-        DBObject           => $DBObject,
-        MainObject         => $MainObject,
-        TimeObject         => $TimeObject,
-        EncodeObject       => $EncodeObject,
-        GroupObject        => $GroupObject,
-        CustomerUserObject => $CustomerUserObject,
-        QueueObject        => $QueueObject,
-        UserObject         => $UserObject,
-        QueueObject        => $QueueObject,
-        ServiceObject      => $ServiceObject,
-        TypeObject         => $TypeObject,
-        StateObject        => $StateObject,
-        LockObject         => $LockObject,
-        SLAObject          => $SLAObject,
-        TicketObject       => $TicketObject,
-        LinkObject         => $LinkObject,
-    );
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM = Kernel::System::ObjectManager->new();
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::iPhone');
 
 =cut
 
@@ -195,36 +68,21 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # check needed objects
-    for (
-        qw(ConfigObject UserObject GroupObject QueueObject ServiceObject TypeObject
-        StateObject LockObject SLAObject CustomerUserObject TicketObject LinkObject )
-        )
-    {
-        $Self->{$_} = $Param{$_} || die "Got no $_! object";
-    }
-
-    $Self->{CheckItemObject}    = Kernel::System::CheckItem->new(%Param);
-    $Self->{PriorityObject}     = Kernel::System::Priority->new(%Param);
-    $Self->{SystemAddress}      = Kernel::System::SystemAddress->new(%Param);
-    $Self->{DynamicFieldObject} = Kernel::System::DynamicField->new(%Param);
-    $Self->{BackendObject}      = Kernel::System::DynamicField::Backend->new(%Param);
-
     return $Self;
 }
 
 =item ScreenConfig()
-Get fields defintion for each screen (Phone, Note, Close, Compose or Move)
+Get fields definition for each screen (Phone, Note, Close, Compose or Move)
 
 Phone   (New phone ticket)
 Note    (Add a note to a Ticket)
-Close   (Close a tcket)
+Close   (Close a ticket)
 Compose (Reply or response a ticket)
 Move    (Change ticket queue)
 
 Note, Close, Compose and Move, requires TicketID argument
 
-The fields that are returned depend on the Screen Argument and on the Settings in sysconfig for the iPhone
+The fields that are returned depend on the Screen Argument and on the Settings in SysConfig for the iPhone
 as well as on general settings.
 
     my @Result = $iPhoneObject->ScreenConfig(
@@ -466,7 +324,11 @@ as well as on general settings.
 sub ScreenConfig {
     my ( $Self, %Param ) = @_;
 
-    $Self->{LanguageObject} = Kernel::Language->new( %{$Self}, UserLanguage => $Param{Language} );
+    my $LanguageObject = Kernel::Language->new( UserLanguage => $Param{Language} );
+    $Param{LanguageObject} = $LanguageObject;
+
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # ------------------------------------------------------------ #
     # New Phone Ticket Screen
@@ -474,10 +336,10 @@ sub ScreenConfig {
 
     if ( $Param{Screen} eq 'Phone' ) {
 
-        # get screen configuration options for iphone from sysconfig
-        $Self->{Config} = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketPhone');
+        # get screen configuration options for iPhone from SysConfig
+        $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketPhone');
         my %Config = (
-            Title    => $Self->{LanguageObject}->Get('New Phone Ticket'),
+            Title    => $LanguageObject->Get('New Phone Ticket'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -495,11 +357,11 @@ sub ScreenConfig {
     # ------------------------------------------------------------ #
     if ( $Param{Screen} eq 'Note' ) {
 
-        # get screen configuration options for iphone from sysconfig
-        $Self->{Config} = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketNote');
+        # get screen configuration options for iPhone from SysConfig
+        $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketNote');
 
         my %Config = (
-            Title    => $Self->{LanguageObject}->Get('Add Note'),
+            Title    => $LanguageObject->Get('Add Note'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -520,11 +382,11 @@ sub ScreenConfig {
 
     if ( $Param{Screen} eq 'Close' ) {
 
-        # get screen configuration options for iphone from sysconfig
-        $Self->{Config} = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketClose');
+        # get screen configuration options for iPhone from SysConfig
+        $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketClose');
 
         my %Config = (
-            Title    => $Self->{LanguageObject}->Get('Close'),
+            Title    => $LanguageObject->Get('Close'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -544,11 +406,11 @@ sub ScreenConfig {
 
     if ( $Param{Screen} eq 'Compose' ) {
 
-        # get screen configuration options for iphone from sysconfig
-        $Self->{Config} = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketCompose');
+        # get screen configuration options for iPhone from SysConfig
+        $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketCompose');
 
         my %Config = (
-            Title    => $Self->{LanguageObject}->Get('Compose'),
+            Title    => $LanguageObject->Get('Compose'),
             Elements => $Self->_GetScreenElements(%Param) || '',
             Actions  => {
                 Object     => 'CustomObject',
@@ -571,11 +433,11 @@ sub ScreenConfig {
     # ------------------------------------------------------------ #
     if ( $Param{Screen} eq 'Move' ) {
 
-        # get screen configuration options for iphone from sysconfig
-        $Self->{Config} = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketMove');
+        # get screen configuration options for iPhone from SysConfig
+        $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketMove');
 
         my %Config = (
-            Title    => $Self->{LanguageObject}->Get('Move'),
+            Title    => $LanguageObject->Get('Move'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -594,7 +456,7 @@ sub ScreenConfig {
 
 =item Badges()
 
-Get Badges ticket counts for Watched, Locked and Reposible for tickets
+Get Badges ticket counts for Watched, Locked and Responsible for tickets
 
     my @Result = $iPhoneObject->Badges(
         UserID          => 1,
@@ -626,16 +488,19 @@ sub Badges {
 
     my @Data;
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # locked
     if (1) {
-        my $Count = $Self->{TicketObject}->TicketSearch(
+        my $Count = $TicketObject->TicketSearch(
             Result     => 'COUNT',
             Locks      => ['lock'],
             OwnerIDs   => [ $Param{UserID} ],
             UserID     => 1,
             Permission => 'ro',
         );
-        my $CountNew = $Self->{TicketObject}->TicketSearch(
+        my $CountNew = $TicketObject->TicketSearch(
             Result     => 'COUNT',
             Locks      => ['lock'],
             OwnerIDs   => [ $Param{UserID} ],
@@ -655,16 +520,19 @@ sub Badges {
         };
     }
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # responsible
-    if ( $Self->{ConfigObject}->Get('Ticket::Responsible') ) {
-        my $Count = $Self->{TicketObject}->TicketSearch(
+    if ( $ConfigObject->Get('Ticket::Responsible') ) {
+        my $Count = $TicketObject->TicketSearch(
             Result         => 'COUNT',
             StateType      => 'Open',
             ResponsibleIDs => [ $Param{UserID} ],
             UserID         => 1,
             Permission     => 'ro',
         );
-        my $CountNew = $Self->{TicketObject}->TicketSearch(
+        my $CountNew = $TicketObject->TicketSearch(
             Result         => 'COUNT',
             StateType      => 'Open',
             ResponsibleIDs => [ $Param{UserID} ],
@@ -686,21 +554,22 @@ sub Badges {
     }
 
     # watched
-    if ( $Self->{ConfigObject}->Get('Ticket::Watcher') ) {
+    if ( $ConfigObject->Get('Ticket::Watcher') ) {
 
         # check access
         my $AccessOk = 1;
         my @Groups;
-        if ( $Self->{ConfigObject}->Get('Ticket::WatcherGroup') ) {
-            @Groups = @{ $Self->{ConfigObject}->Get('Ticket::WatcherGroup') };
+        if ( $ConfigObject->Get('Ticket::WatcherGroup') ) {
+            @Groups = @{ $ConfigObject->Get('Ticket::WatcherGroup') };
         }
         if (@Groups) {
             my $Access = 0;
+            GROUP:
             for my $Group (@Groups) {
-                next if !$Param{"UserIsGroup[$Group]"};
+                next GROUP if !$Param{"UserIsGroup[$Group]"};
                 if ( $Param{"UserIsGroup[$Group]"} eq 'Yes' ) {
                     $Access = 1;
-                    last;
+                    last GROUP;
                 }
             }
 
@@ -713,13 +582,13 @@ sub Badges {
         if ($AccessOk) {
 
             # find watched tickets
-            my $Count = $Self->{TicketObject}->TicketSearch(
+            my $Count = $TicketObject->TicketSearch(
                 Result       => 'COUNT',
                 WatchUserIDs => [ $Param{UserID} ],
                 UserID       => 1,
                 Permission   => 'ro',
             );
-            my $CountNew = $Self->{TicketObject}->TicketSearch(
+            my $CountNew = $TicketObject->TicketSearch(
                 Result       => 'COUNT',
                 WatchUserIDs => [ $Param{UserID} ],
                 TicketFlag   => {
@@ -745,7 +614,7 @@ sub Badges {
 
 =item EscalationView()
 
-Get the number of tickets on estalation status by state type or last customer article information from
+Get the number of tickets on escalation status by state type or last customer article information from
 each ticket in escalation status within a filter, if the "Filter" argument is specified.
 
     my @Result = $iPhoneObject->EscalationView(
@@ -848,18 +717,21 @@ each ticket in escalation status within a filter, if the "Filter" argument is sp
 sub EscalationView {
     my ( $Self, %Param ) = @_;
 
-    my ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = $Self->{TimeObject}->SystemTime2Date(
-        SystemTime => $Self->{TimeObject}->SystemTime() + 60 * 60 * 24 * 7,
+    # get time object
+    my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+
+    my ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = $TimeObject->SystemTime2Date(
+        SystemTime => $TimeObject->SystemTime() + 60 * 60 * 24 * 7,
     );
     my $TimeStampNextWeek = "$Year-$Month-$Day 23:59:59";
 
-    ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = $Self->{TimeObject}->SystemTime2Date(
-        SystemTime => $Self->{TimeObject}->SystemTime() + 60 * 60 * 24,
+    ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = $TimeObject->SystemTime2Date(
+        SystemTime => $TimeObject->SystemTime() + 60 * 60 * 24,
     );
     my $TimeStampTomorrow = "$Year-$Month-$Day 23:59:59";
 
-    ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = $Self->{TimeObject}->SystemTime2Date(
-        SystemTime => $Self->{TimeObject}->SystemTime(),
+    ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = $TimeObject->SystemTime2Date(
+        SystemTime => $TimeObject->SystemTime(),
     );
     my $TimeStampToday = "$Year-$Month-$Day 23:59:59";
 
@@ -900,32 +772,36 @@ sub EscalationView {
         },
     );
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # do shown tickets lookup
     my $Limit = $Param{Limit} || 100;
     if ( $Param{Filter} ) {
-        my @ViewableTickets = $Self->{TicketObject}->TicketSearch(
+        my @ViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{ $Param{Filter} }->{Search} },
             Limit  => $Limit,
             Result => 'ARRAY',
         );
         my @List;
+        TICKETID:
         for my $TicketID (@ViewableTickets) {
-            next if !$TicketID;
+            next TICKETID if !$TicketID;
             my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
-            next if !%Article;
+            next TICKETID if !%Article;
             push @List, \%Article;
         }
         return @List;
     }
 
-    # do nav bar lookup
+    # do NavBar lookup
     my @States;
     for my $Filter ( sort keys %Filters ) {
-        my $Count = $Self->{TicketObject}->TicketSearch(
+        my $Count = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result => 'COUNT',
         );
-        my $CountNew = $Self->{TicketObject}->TicketSearch(
+        my $CountNew = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result     => 'COUNT',
             TicketFlag => {
@@ -979,7 +855,7 @@ ticket in each status within an specified filter, if the "Filter" argument is sp
         UserID  => 1,
         Filter  => "Open",
 
-        #Limit (optional) set to 100 by default, if not spcified
+        #Limit (optional) set to 100 by default, if not specified
         Limit   => 50,
 
         # OrderBy and SortBy (optional)
@@ -1071,32 +947,36 @@ sub StatusView {
         },
     );
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # do shown tickets lookup
     my $Limit = $Param{Limit} || 100;
     if ( $Param{Filter} ) {
-        my @ViewableTickets = $Self->{TicketObject}->TicketSearch(
+        my @ViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{ $Param{Filter} }->{Search} },
             Limit  => $Limit,
             Result => 'ARRAY',
         );
         my @List;
         for my $TicketID (@ViewableTickets) {
-            next if !$TicketID;
+            TICKETID:
+            next TICKETID if !$TicketID;
             my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
-            next if !%Article;
+            next TICKETID if !%Article;
             push @List, \%Article;
         }
         return @List;
     }
 
-    # do nav bar lookup
+    # do NavBar lookup
     my @States;
     for my $Filter ( sort keys %Filters ) {
-        my $Count = $Self->{TicketObject}->TicketSearch(
+        my $Count = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result => 'COUNT',
         );
-        my $CountNew = $Self->{TicketObject}->TicketSearch(
+        my $CountNew = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result     => 'COUNT',
             TicketFlag => {
@@ -1161,7 +1041,7 @@ the "Filter" argument is specified.
         UserID  => 1,
         Filter  => "New",
 
-        #Limit (optional) set to 100 by default, if not spcified
+        #Limit (optional) set to 100 by default, if not specified
         Limit   => 50,
 
         # OrderBy and SortBy (optional)
@@ -1286,24 +1166,28 @@ sub LockedView {
         },
     );
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # do shown tickets lookup
     my $Limit = $Param{Limit} || 100;
     if ( $Param{Filter} ) {
-        my @ViewableTickets = $Self->{TicketObject}->TicketSearch(
+        my @ViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{ $Param{Filter} }->{Search} },
             Limit  => $Limit,
             Result => 'ARRAY',
         );
         my @List;
         for my $TicketID (@ViewableTickets) {
-            next if !$TicketID;
+            TICKETID:
+            next TICKETID if !$TicketID;
             my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
-            next if !%Article;
+            next TICKETID if !%Article;
             push @List, \%Article;
         }
 
         if ( !@List ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "There are no locked tickets under $Param{Filter} filter "
                     . "category",
@@ -1313,14 +1197,14 @@ sub LockedView {
         return @List;
     }
 
-    # do nav bar lookup
+    # do NavBar lookup
     my @States;
     for my $Filter ( sort keys %Filters ) {
-        my $Count = $Self->{TicketObject}->TicketSearch(
+        my $Count = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result => 'COUNT',
         );
-        my $CountNew = $Self->{TicketObject}->TicketSearch(
+        my $CountNew = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Result     => 'COUNT',
             TicketFlag => {
@@ -1343,7 +1227,7 @@ sub LockedView {
 =item WatchedView()
 
 Get the number of watched tickets by status type (all, new, reminder, reminder reached ) or last
-custmer article information from each watched ticket in each status within an specified filter, if
+customer article information from each watched ticket in each status within an specified filter, if
 the "Filter" argument is specified.
 
     my @Result = $iPhoneObject->WatchedView(
@@ -1385,7 +1269,7 @@ the "Filter" argument is specified.
         UserID  => 1,
         Filter  => "New",
 
-        #Limit (optional) set to 100 by default, if not spcified
+        #Limit (optional) set to 100 by default, if not specified
         Limit   => 50,
 
         # OrderBy and SortBy (optional)
@@ -1507,25 +1391,29 @@ sub WatchedView {
         },
     );
 
-    if ( $Self->{ConfigObject}->Get('Ticket::Watcher') ) {
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Watcher') ) {
+
+        # get ticket object
+        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
         # do shown tickets lookup
         my $Limit = $Param{Limit} || 100;
         if ( $Param{Filter} ) {
-            my @ViewableTickets = $Self->{TicketObject}->TicketSearch(
+            my @ViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{ $Param{Filter} }->{Search} },
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
             my @List;
             for my $TicketID (@ViewableTickets) {
-                next if !$TicketID;
+                TICKETID:
+                next TICKETID if !$TicketID;
                 my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
-                next if !%Article;
+                next TICKETID if !%Article;
                 push @List, \%Article;
             }
             if ( !@List ) {
-                $Self->{LogObject}->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "There are no watched tickets under $Param{Filter} filter "
                         . "category",
@@ -1534,14 +1422,14 @@ sub WatchedView {
             return @List;
         }
 
-        # do nav bar lookup
+        # do NavBar lookup
         my @States;
         for my $Filter ( sort keys %Filters ) {
-            my $Count = $Self->{TicketObject}->TicketSearch(
+            my $Count = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Result => 'COUNT',
             );
-            my $CountNew = $Self->{TicketObject}->TicketSearch(
+            my $CountNew = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Result     => 'COUNT',
                 TicketFlag => {
@@ -1560,7 +1448,7 @@ sub WatchedView {
         }
         return @States;
     }
-    $Self->{LogObject}->Log(
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
         Message  => 'Ticket watcher feature is not enable in system configuration '
             . 'Please contact admin',
@@ -1614,7 +1502,7 @@ specified.
         UserID  => 1,
         Filter  => "New",
 
-        #Limit (optional) set to 100 by default, if not spcified
+        #Limit (optional) set to 100 by default, if not specified
         Limit   => 50,
 
         # OrderBy and SortBy (optional)
@@ -1737,25 +1625,29 @@ sub ResponsibleView {
         },
     );
 
-    if ( $Self->{ConfigObject}->Get('Ticket::Responsible') ) {
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Responsible') ) {
+
+        # get ticket object
+        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
         # do shown tickets lookup
         my $Limit = $Param{Limit} || 100;
         if ( $Param{Filter} ) {
-            my @ViewableTickets = $Self->{TicketObject}->TicketSearch(
+            my @ViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{ $Param{Filter} }->{Search} },
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
             my @List;
+            TICKETID:
             for my $TicketID (@ViewableTickets) {
-                next if !$TicketID;
+                next TICKETID if !$TicketID;
                 my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
-                next if !%Article;
+                next TICKETID if !%Article;
                 push @List, \%Article;
             }
             if ( !@List ) {
-                $Self->{LogObject}->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "There are no responsible for tickets under $Param{Filter} filter "
                         . "category",
@@ -1764,14 +1656,14 @@ sub ResponsibleView {
             return @List;
         }
 
-        # do nav bar lookup
+        # do NavBar lookup
         my @States;
         for my $Filter ( sort keys %Filters ) {
-            my $Count = $Self->{TicketObject}->TicketSearch(
+            my $Count = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Result => 'COUNT',
             );
-            my $CountNew = $Self->{TicketObject}->TicketSearch(
+            my $CountNew = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Result     => 'COUNT',
                 TicketFlag => {
@@ -1790,7 +1682,7 @@ sub ResponsibleView {
         }
         return @States;
     }
-    $Self->{LogObject}->Log(
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
         Message  => 'Ticket responsible feature is not enable in system configuration '
             . 'Please contact admin',
@@ -1837,7 +1729,7 @@ specified.
         UserID   => 1,
         QueueID  => 4,
 
-        #Limit (optional) set to 100 by default, if not spcified
+        #Limit (optional) set to 100 by default, if not specified
         Limit    => 50,
 
         # OrderBy and SortBy (optional)
@@ -1903,17 +1795,21 @@ specified.
 sub QueueView {
     my ( $Self, %Param ) = @_;
 
-    my @ViewableLockIDs = $Self->{LockObject}->LockViewableLock( Type => 'ID' );
+    my @ViewableLockIDs
+        = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
 
-    my @ViewableStateIDs = $Self->{StateObject}->StateGetStatesByType(
+    my @ViewableStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
         Type   => 'Viewable',
         Result => 'ID',
     );
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # do shown tickets lookup
     my $Limit = $Param{Limit} || 100;
     if ( $Param{QueueID} ) {
-        my @ViewableTickets = $Self->{TicketObject}->TicketSearch(
+        my @ViewableTickets = $TicketObject->TicketSearch(
 
             OrderBy    => $Param{OrderBy},
             SortBy     => $Param{SortBy},
@@ -1926,25 +1822,30 @@ sub QueueView {
             Result     => 'ARRAY',
         );
         my @List;
+        TICKETID:
         for my $TicketID (@ViewableTickets) {
-            next if !$TicketID;
+            next TICKETID if !$TicketID;
             my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
-            next if !%Article;
+            next TICKETID if !%Article;
             push @List, \%Article;
         }
         return @List;
     }
 
-    my %AllQueues = $Self->{QueueObject}->QueueList( Valid => 0 );
+    # get queue object
+    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+
+    my %AllQueues = $QueueObject->QueueList( Valid => 0 );
 
     my @Queues;
     my %QueueSum;
+    QUEUEID:
     for my $QueueID ( sort keys %AllQueues ) {
-        my %Queue = $Self->{QueueObject}->QueueGet(
+        my %Queue = $QueueObject->QueueGet(
             ID => $QueueID,
         );
 
-        my $Count = $Self->{TicketObject}->TicketSearch(
+        my $Count = $TicketObject->TicketSearch(
             StateIDs => \@ViewableStateIDs,
             LockIDs  => \@ViewableLockIDs,
             QueueIDs => [$QueueID],
@@ -1954,9 +1855,9 @@ sub QueueView {
             Result     => 'COUNT',
             Limit      => 1000,
         );
-        next if !$Count;
+        next QUEUEID if !$Count;
 
-        my $CountNew = $Self->{TicketObject}->TicketSearch(
+        my $CountNew = $TicketObject->TicketSearch(
             StateIDs => \@ViewableStateIDs,
             LockIDs  => \@ViewableLockIDs,
             QueueIDs => [$QueueID],
@@ -2058,13 +1959,16 @@ sub TicketList {
         5 => '#ff505e',
     );
 
-    my %Article = $Self->{TicketObject}->ArticleLastCustomerArticle(
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    my %Article = $TicketObject->ArticleLastCustomerArticle(
         TicketID => $Param{TicketID},
     );
     if (%Article) {
         $Article{PriorityColor} = $Color{ $Article{PriorityID} };
 
-        my %TicketFlag = $Self->{TicketObject}->TicketFlagGet(
+        my %TicketFlag = $TicketObject->TicketFlagGet(
             TicketID => $Param{TicketID},
             UserID   => $Param{UserID},
         );
@@ -2148,14 +2052,17 @@ Get information of a ticket
 sub TicketGet {
     my ( $Self, %Param ) = @_;
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # permission check
-    my $Access = $Self->{TicketObject}->TicketPermission(
+    my $Access = $TicketObject->TicketPermission(
         Type     => 'ro',
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID}
     );
     if ( !$Access ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "You need ro permissions!",
         );
@@ -2170,11 +2077,11 @@ sub TicketGet {
         5 => '#ff505e',
     );
 
-    my %Ticket = $Self->{TicketObject}->TicketGet(%Param);
+    my %Ticket = $TicketObject->TicketGet(%Param);
 
     $Ticket{PriorityColor} = $Color{ $Ticket{PriorityID} };
 
-    my %TicketFlag = $Self->{TicketObject}->TicketFlagGet(
+    my %TicketFlag = $TicketObject->TicketFlagGet(
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID},
     );
@@ -2185,10 +2092,11 @@ sub TicketGet {
 
         # check if ticket need to be marked as seen
         my $ArticleAllSeen = 1;
-        my @Index = $Self->{TicketObject}->ArticleIndex( TicketID => $Ticket{TicketID} );
+        my @Index = $TicketObject->ArticleIndex( TicketID => $Ticket{TicketID} );
         if ( IsArrayRefWithData( \@Index ) ) {
+            ARTICLEID:
             for my $ArticleID (@Index) {
-                my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+                my %ArticleFlag = $TicketObject->ArticleFlagGet(
                     ArticleID => $ArticleID,
                     UserID    => $Param{UserID},
                 );
@@ -2196,13 +2104,13 @@ sub TicketGet {
                 # last if article was not shown
                 if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
                     $ArticleAllSeen = 0;
-                    last;
+                    last ARTICLEID;
                 }
             }
 
             # mark ticket as seen if all article are shown
             if ($ArticleAllSeen) {
-                $Self->{TicketObject}->TicketFlagSet(
+                $TicketObject->TicketFlagSet(
                     TicketID => $Ticket{TicketID},
                     Key      => 'Seen',
                     Value    => 1,
@@ -2213,7 +2121,7 @@ sub TicketGet {
     }
 
     # add accounted time
-    my $AccountedTime = $Self->{TicketObject}->TicketAccountedTimeGet(%Param);
+    my $AccountedTime = $TicketObject->TicketAccountedTimeGet(%Param);
     if ( defined $AccountedTime ) {
         $Ticket{AccountedTime} = $AccountedTime;
     }
@@ -2311,15 +2219,18 @@ Get information from an article
 sub ArticleGet {
     my ( $Self, %Param ) = @_;
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # permission check
-    my %Article = $Self->{TicketObject}->ArticleGet(%Param);
-    my $Access  = $Self->{TicketObject}->TicketPermission(
+    my %Article = $TicketObject->ArticleGet(%Param);
+    my $Access  = $TicketObject->TicketPermission(
         Type     => 'ro',
         TicketID => $Article{TicketID},
         UserID   => $Param{UserID}
     );
     if ( !$Access ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "You need ro permissions!",
         );
@@ -2329,7 +2240,7 @@ sub ArticleGet {
     if (%Article) {
 
         # check if article is seen
-        my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+        my %ArticleFlag = $TicketObject->ArticleFlagGet(
             ArticleID => $Param{ArticleID},
             UserID    => $Param{UserID},
         );
@@ -2338,7 +2249,7 @@ sub ArticleGet {
         }
 
         # mark shown article as seen
-        $Self->{TicketObject}->ArticleFlagSet(
+        $TicketObject->ArticleFlagSet(
             ArticleID => $Param{ArticleID},
             Key       => 'Seen',
             Value     => 1,
@@ -2347,10 +2258,11 @@ sub ArticleGet {
 
         # check if ticket need to be marked as seen
         my $ArticleAllSeen = 1;
-        my @Index = $Self->{TicketObject}->ArticleIndex( TicketID => $Article{TicketID} );
+        my @Index = $TicketObject->ArticleIndex( TicketID => $Article{TicketID} );
         if ( IsArrayRefWithData( \@Index ) ) {
+            ARTICEID:
             for my $ArticleID (@Index) {
-                my %ArticleFlag = $Self->{TicketObject}->ArticleFlagGet(
+                my %ArticleFlag = $TicketObject->ArticleFlagGet(
                     ArticleID => $ArticleID,
                     UserID    => $Param{UserID},
                 );
@@ -2358,13 +2270,13 @@ sub ArticleGet {
                 # last if article was not shown
                 if ( !$ArticleFlag{Seen} && !$ArticleFlag{seen} ) {
                     $ArticleAllSeen = 0;
-                    last;
+                    last ARTICLEID;
                 }
             }
 
             # mark ticket as seen if all article are shown
             if ($ArticleAllSeen) {
-                $Self->{TicketObject}->TicketFlagSet(
+                $TicketObject->TicketFlagSet(
                     TicketID => $Article{TicketID},
                     Key      => 'Seen',
                     Value    => 1,
@@ -2374,7 +2286,7 @@ sub ArticleGet {
         }
 
         # add accounted time
-        my $AccountedTime = $Self->{TicketObject}->ArticleAccountedTimeGet(%Param);
+        my $AccountedTime = $TicketObject->ArticleAccountedTimeGet(%Param);
         if ( defined $AccountedTime ) {
             $Article{AccountedTime} = $AccountedTime;
         }
@@ -2402,7 +2314,7 @@ sub ArticleGet {
 
         return %Article;
     }
-    $Self->{LogObject}->Log(
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
         Message  => 'No Articles found in this ticket',
     );
@@ -2436,7 +2348,7 @@ sub ServicesGet {
 
     # get service
     if ( ( $Param{QueueID} || $Param{TicketID} ) && $Param{CustomerUserID} ) {
-        %Service = $Self->{TicketObject}->TicketServiceList(
+        %Service = $Kernel::OM->Get('Kernel::System::Ticket')->TicketServiceList(
             %Param,
             Action => $Param{Action},
             UserID => $Param{UserID},
@@ -2469,9 +2381,9 @@ sub SLAsGet {
 
     my %SLA = ();
 
-    # get sla
+    # get SLA
     if ( $Param{ServiceID} ) {
-        %SLA = $Self->{TicketObject}->TicketSLAList(
+        %SLA = $$Kernel::OM->Get('Kernel::System::Ticket')->TicketSLAList(
             %Param,
             Action => $Param{Action},
             UserID => $Param{UserID},
@@ -2481,7 +2393,7 @@ sub SLAsGet {
 }
 
 =item UsersGet()
-Get a Hash reference to all users that have rights on a Queue or the ssers that have that queue in
+Get a Hash reference to all users that have rights on a Queue or the users that have that queue in
 the "My Queues" list
 
     my $Result = $iPhoneObject->UsersGet(
@@ -2504,14 +2416,15 @@ sub UsersGet {
 
     # get users
     my %ShownUsers       = ();
-    my %AllGroupsMembers = $Self->{UserObject}->UserList(
+    my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
         Type  => 'Long',
         Valid => 1,
     );
 
     # just show only users with selected custom queue
     if ( $Param{QueueID} && !$Param{AllUsers} ) {
-        my @UserIDs = $Self->{TicketObject}->GetSubscribedUserIDsByQueueID(%Param);
+        my @UserIDs
+            = $Kernel::OM->Get('Kernel::System::Ticket')->GetSubscribedUserIDsByQueueID(%Param);
         for ( sort keys %AllGroupsMembers ) {
             my $Hit = 0;
             for my $UID (@UserIDs) {
@@ -2526,14 +2439,16 @@ sub UsersGet {
     }
 
     # show all system users
-    if ( $Self->{ConfigObject}->Get('Ticket::ChangeOwnerToEveryone') ) {
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ChangeOwnerToEveryone') ) {
         %ShownUsers = %AllGroupsMembers;
     }
 
     # show all users who are rw in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Self->{QueueObject}->GetQueueGroupID( QueueID => $Param{QueueID} );
-        my %MemberList = $Self->{GroupObject}->GroupMemberList(
+        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID(
+            QueueID => $Param{QueueID},
+        );
+        my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->GroupMemberList(
             GroupID => $GID,
             Type    => 'rw',
             Result  => 'HASH',
@@ -2579,7 +2494,7 @@ sub NextStatesGet {
 
     my %NextStates = ();
     if ( $Param{QueueID} || $Param{TicketID} ) {
-        %NextStates = $Self->{TicketObject}->StateList(
+        %NextStates = $Kernel::OM->Get('Kernel::System::Ticket')->StateList(
             %Param,
             Action => $Param{Action},
             UserID => $Param{UserID},
@@ -2613,7 +2528,7 @@ sub PrioritiesGet {
     my %Priorities = ();
 
     # get priority
-    %Priorities = $Self->{TicketObject}->PriorityList(
+    %Priorities = $Kernel::OM->Get('Kernel::System::Ticket')->PriorityList(
         %Param,
         Action => $Param{Action},
         UserID => $Param{UserID},
@@ -2644,13 +2559,13 @@ sub CustomerSearch {
     my ( $Self, %Param ) = @_;
 
     # get AutoComplete settings form config
-    $Self->{Config} = $Self->{ConfigObject}->Get('AutoComplete::Agent')->{Default};
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get('AutoComplete::Agent')->{Default};
 
     my %Customers;
 
-    # search only if the search string is at least as long as the Minimum Query Lenght
+    # search only if the search string is at least as long as the Minimum Query Length
     if ( length( $Param{Search} ) >= $Self->{Config}->{MinQueryLength} ) {
-        %Customers = $Self->{CustomerUserObject}->CustomerSearch(
+        %Customers = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerSearch(
             Search => $Param{Search},
         );
     }
@@ -2662,7 +2577,7 @@ Performs a ticket action (Actions include Phone, Note, Close, Compose or Move)
 
 Phone   (New phone ticket)
 Note    (Add a note to a Ticket)
-Close   (Close a tcket)
+Close   (Close a ticket)
 Compose (Reply or response a ticket)
 Move    (Change ticket queue)
 
@@ -2674,7 +2589,7 @@ The result is the TicketID for Action Phone or ArticleID for the other actions
         Action              => "Phone",
         Subject             => "iPhone Ticket",
         CustomerID          => "otrs",
-        Body                => "My fisrt iPhone ticket",
+        Body                => "My first iPhone ticket",
         CustomerUserLogin   => "Aayla",
         TimeUnits           => 123,
         QueueID             => 3,
@@ -2696,18 +2611,24 @@ The result is the TicketID for Action Phone or ArticleID for the other actions
 sub ScreenActions {
     my ( $Self, %Param ) = @_;
 
-    my %UserPreferences = $Self->{UserObject}->GetPreferences( UserID => $Param{UserID} );
-    $Self->{UserTimeZone} = $UserPreferences{UserTimeZone};
+    my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+        UserID => $Param{UserID},
+    );
+    my $UserTimeZone = $UserPreferences{UserTimeZone};
 
-    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Self->{UserTimeZone} ) {
-        $Self->{UserTimeObject} = Kernel::System::Time->new( %{$Self} );
+    my $UserTimeObject;
+
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser') && $UserTimeZone ) {
+        $UserTimeObject = Kernel::System::Time->new( UserTimeZone => $UserTimeZone );
     }
     else {
-        $Self->{UserTimeObject} = $Self->{TimeObject};
-        $Self->{UserTimeZone}   = '';
+        $UserTimeObject = $Kernel::OM->Get('Kernel::System::Time');
+        $UserTimeZone   = '';
     }
 
-    $Param{UserTimeZone} = $Self->{UserTimeZone};
+    # set common parameters to be passes to helper functions
+    $Param{UserTimeZone}   = $UserTimeZone;
+    $Param{UserTimeObject} = $UserTimeObject;
 
     if ( $Param{Action} ) {
         my $Result;
@@ -2739,7 +2660,7 @@ sub ScreenActions {
             }
             return -1;
         }
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Action undefined! expected Phone, Note, Close, Compose or Move, '
                 . 'but ' . $Param{Action} . ' found',
@@ -2747,7 +2668,7 @@ sub ScreenActions {
         return -1;
     }
     else {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'No Action given! Please contact the admin.',
         );
@@ -2777,19 +2698,22 @@ sub VersionGet {
     my ( $Self, %Param ) = @_;
 
     if ( !$Param{UserID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'No UserID given! Please contact the admin.',
         );
         return -1;
     }
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # get home path
-    my $Home = $Self->{ConfigObject}->Get('Home');
+    my $Home = $ConfigObject->Get('Home');
 
     # load RELEASE file
     if ( -e !"$Home/var/RELEASE.iPhoneHandle" ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "ERROR: $Home/var/RELEASE.iPhoneHandle does not exist! This file is"
                 . " needed by iPhoneHandle, the system will not work without this file.\n",
@@ -2800,14 +2724,14 @@ sub VersionGet {
     my $PackageVersion;
 
     # read RELEASE file and store it as an array reference
-    my $Product = $Self->{MainObject}->FileRead(
+    my $Product = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
         Location => "$Home/var/RELEASE.iPhoneHandle",
         Result   => "ARRAY",
     );
 
     # send and error if RELEASE file was not read
     if ( !$Product ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "ERROR: Can't read $Home/var/RELEASE.iPhoneHandle! This file is"
                 . " needed by iPhoneHandle, the system will not work without this file.\n",
@@ -2834,7 +2758,7 @@ sub VersionGet {
         Version   => $PackageVersion,
         Vendor    => 'OTRS AG',
         URL       => 'http://otrs.org/',
-        Framework => $Self->{ConfigObject}->Get('Version'),
+        Framework => $ConfigObject->Get('Version'),
     };
 }
 
@@ -2856,7 +2780,7 @@ sub CustomerIDGet {
 
     # check for parameters
     if ( !$Param{CustomerUserID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need CustomerUserID!',
         );
@@ -2865,7 +2789,7 @@ sub CustomerIDGet {
     my $CustomerID;
 
     # get customer data
-    my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
+    my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
         User => $Param{CustomerUserID},
     );
     if ( %CustomerUserData && $CustomerUserData{UserCustomerID} ) {
@@ -2895,14 +2819,14 @@ returns an array with article id's or '' if ticket has no articles
 sub ArticleIndex {
     my ( $Self, %Param ) = @_;
 
-    my @Index = $Self->{TicketObject}->ArticleIndex(%Param);
+    my @Index = $Kernel::OM->Get('Kernel::System::Ticket')->ArticleIndex(%Param);
 
     return @Index;
 }
 
 =item InitConfigGet()
 
-returns a hash reference with initial configuration required by the iPhone app
+returns a hash reference with initial configuration required by the iPhone App
 
     my $Result = $iPhoneObject->InitConfigGet(
         UserID => 1,
@@ -2937,21 +2861,24 @@ sub InitConfigGet {
     my ( $Self, %Param ) = @_;
 
     if ( !$Param{UserID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'No UserID given! Please contact the admin.',
         );
         return -1;
     }
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     my %InitConfig;
 
-    $InitConfig{TicketWatcher}     = $Self->{ConfigObject}->Get('Ticket::Watcher');
-    $InitConfig{TicketResponsible} = $Self->{ConfigObject}->Get('Ticket::Responsible');
-    $InitConfig{DefaultCharset}    = $Self->{ConfigObject}->Get('DefaultCharset');
+    $InitConfig{TicketWatcher}     = $ConfigObject->Get('Ticket::Watcher');
+    $InitConfig{TicketResponsible} = $ConfigObject->Get('Ticket::Responsible');
+    $InitConfig{DefaultCharset}    = $ConfigObject->Get('DefaultCharset');
     $InitConfig{CustomerSearchAutoComplete}
-        = $Self->{ConfigObject}->Get('AutoComplete::Agent')->{Default};
-    $InitConfig{CurrentTimestamp} = $Self->{TimeObject}->CurrentTimestamp();
+        = $ConfigObject->Get('AutoComplete::Agent')->{Default};
+    $InitConfig{CurrentTimestamp} = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
     $InitConfig{VersionGet}       = $Self->VersionGet(%Param);
 
     return \%InitConfig;
@@ -2965,7 +2892,7 @@ sub _GetTypes {
     my %Type = ();
 
     # get type
-    %Type = $Self->{TicketObject}->TicketTypeList(
+    %Type = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTypeList(
         %Param,
         Action => $Param{Action},
         UserID => $Param{UserID},
@@ -2976,17 +2903,20 @@ sub _GetTypes {
 sub _GetTos {
     my ( $Self, %Param ) = @_;
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # check own selection
     my %NewTos = ();
-    if ( $Self->{ConfigObject}->{'Ticket::Frontend::NewQueueOwnSelection'} ) {
-        %NewTos = %{ $Self->{ConfigObject}->{'Ticket::Frontend::NewQueueOwnSelection'} };
+    if ( $ConfigObject->{'Ticket::Frontend::NewQueueOwnSelection'} ) {
+        %NewTos = %{ $ConfigObject->{'Ticket::Frontend::NewQueueOwnSelection'} };
     }
     else {
 
         # SelectionType Queue or SystemAddress?
         my %Tos = ();
-        if ( $Self->{ConfigObject}->Get('Ticket::Frontend::NewQueueSelectionType') eq 'Queue' ) {
-            %Tos = $Self->{TicketObject}->MoveList(
+        if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') eq 'Queue' ) {
+            %Tos = $Kernel::OM->Get('Kernel::System::Ticket')->MoveList(
                 Type    => 'create',
                 Action  => $Param{Action},
                 QueueID => $Param{QueueID},
@@ -2994,7 +2924,7 @@ sub _GetTos {
             );
         }
         else {
-            %Tos = $Self->{DBObject}->GetTableData(
+            %Tos = $Kernel::OM->Get('Kernel::System::DB')->GetTableData(
                 Table => 'system_address',
                 What  => 'queue_id, id',
                 Valid => 1,
@@ -3003,7 +2933,7 @@ sub _GetTos {
         }
 
         # get create permission queues
-        my %UserGroups = $Self->{GroupObject}->GroupMemberList(
+        my %UserGroups = $Kernel::OM->Get('Kernel::System::Group')->GroupMemberList(
             UserID => $Param{UserID},
             Type   => 'create',
             Result => 'HASH',
@@ -3011,21 +2941,23 @@ sub _GetTos {
         );
 
         # build selection string
+        QUEUEID:
         for my $QueueID ( sort keys %Tos ) {
-            my %QueueData = $Self->{QueueObject}->QueueGet( ID => $QueueID );
+            my %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet( ID => $QueueID );
 
             # permission check, can we create new tickets in queue
-            next if !$UserGroups{ $QueueData{GroupID} };
+            next QUEUEID if !$UserGroups{ $QueueData{GroupID} };
 
-            my $String = $Self->{ConfigObject}->Get('Ticket::Frontend::NewQueueSelectionString')
+            my $String = $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionString')
                 || '<Realname> <<Email>> - Queue: <Queue>';
             $String =~ s/<Queue>/$QueueData{Name}/g;
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
-            if ( $Self->{ConfigObject}->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
+            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
             {
-                my %SystemAddressData = $Self->{SystemAddress}->SystemAddressGet(
+                my %SystemAddressData
+                    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
-                );
+                    );
                 $String =~ s/<Realname>/$SystemAddressData{Realname}/g;
                 $String =~ s/<Email>/$SystemAddressData{Name}/g;
             }
@@ -3043,7 +2975,7 @@ sub _GetNoteTypes {
 
     my %DefaultNoteTypes = %{ $Self->{Config}->{ArticleTypes} };
 
-    my %NoteTypes = $Self->{TicketObject}->ArticleTypeList( Result => 'HASH' );
+    my %NoteTypes = $Kernel::OM->Get('Kernel::System::Ticket')->ArticleTypeList( Result => 'HASH' );
     for ( sort keys %NoteTypes ) {
         if ( !$DefaultNoteTypes{ $NoteTypes{$_} } ) {
             delete $NoteTypes{$_};
@@ -3057,8 +2989,14 @@ sub _GetScreenElements {
 
     my @ScreenElements;
 
+    # use language object from the param
+    my $LanguageObject = $Param{LanguageObject};
+
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     if ( $Self->{Config}->{Title} ) {
-        my %TicketData = $Self->{TicketObject}->TicketGet(
+        my %TicketData = $TicketObject->TicketGet(
             TicketID => $Param{TicketID},
             UserID   => $Param{UserID},
         );
@@ -3069,7 +3007,7 @@ sub _GetScreenElements {
 
         my $TitleElements = {
             Name      => 'Title',
-            Title     => $Self->{LanguageObject}->Get('Title'),
+            Title     => $LanguageObject->Get('Title'),
             Datatype  => 'Text',
             ViewType  => 'Input',
             Min       => 1,
@@ -3080,11 +3018,14 @@ sub _GetScreenElements {
         push @ScreenElements, $TitleElements;
     }
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # type
-    if ( $Self->{ConfigObject}->Get('Ticket::Type') && $Self->{Config}->{TicketType} ) {
+    if ( $ConfigObject->Get('Ticket::Type') && $Self->{Config}->{TicketType} ) {
         my $TypeElements = {
             Name     => 'TypeID',
-            Title    => $Self->{LanguageObject}->Get('Type'),
+            Title    => $LanguageObject->Get('Type'),
             Datatype => 'Text',
             Viewtype => 'Picker',
             Options  => {
@@ -3105,7 +3046,7 @@ sub _GetScreenElements {
     if ( $Param{Screen} eq 'Phone' ) {
         my $CustomerElements = {
             Name           => 'CustomerUserLogin',
-            Title          => $Self->{LanguageObject}->Get('From customer'),
+            Title          => $LanguageObject->Get('From customer'),
             Datatype       => 'Text',
             Viewtype       => 'AutoCompletion',
             DynamicOptions => {
@@ -3145,7 +3086,7 @@ sub _GetScreenElements {
         }
         my $QueueElements = {
             Name     => 'QueueID',
-            Title    => $Self->{LanguageObject}->Get($Title),
+            Title    => $LanguageObject->Get($Title),
             Datatype => 'Text',
             Viewtype => 'Picker',
             Options  => {
@@ -3163,10 +3104,10 @@ sub _GetScreenElements {
     }
 
     # service
-    if ( $Self->{ConfigObject}->Get('Ticket::Service') && $Self->{Config}->{Service} ) {
+    if ( $ConfigObject->Get('Ticket::Service') && $Self->{Config}->{Service} ) {
         my $ServiceElements = {
             Name           => 'ServiceID',
-            Title          => $Self->{LanguageObject}->Get('Service'),
+            Title          => $LanguageObject->Get('Service'),
             Datatype       => 'Text',
             Viewtype       => 'Picker',
             DynamicOptions => {
@@ -3186,11 +3127,11 @@ sub _GetScreenElements {
         push @ScreenElements, $ServiceElements;
     }
 
-    # sla
-    if ( $Self->{ConfigObject}->Get('Ticket::Service') && $Self->{Config}->{Service} ) {
+    # SLA
+    if ( $ConfigObject->Get('Ticket::Service') && $Self->{Config}->{Service} ) {
         my $SLAElements = {
             Name           => 'SLAID',
-            Title          => $Self->{LanguageObject}->Get('SLA'),
+            Title          => $LanguageObject->Get('SLA'),
             Datatype       => 'Text',
             Viewtype       => 'Picker',
             DynamicOptions => {
@@ -3223,7 +3164,7 @@ sub _GetScreenElements {
 
         my $OwnerElements = {
             Name           => 'OwnerID',
-            Title          => $Self->{LanguageObject}->Get($Title),
+            Title          => $LanguageObject->Get($Title),
             Datatype       => 'Text',
             Viewtype       => 'Picker',
             DynamicOptions => {
@@ -3243,10 +3184,10 @@ sub _GetScreenElements {
     }
 
     # responsible
-    if ( $Self->{ConfigObject}->Get('Ticket::Responsible') && $Self->{Config}->{Responsible} ) {
+    if ( $ConfigObject->Get('Ticket::Responsible') && $Self->{Config}->{Responsible} ) {
         my $ResponsibleElements = {
             Name           => 'ResponsibleID',
-            Title          => $Self->{LanguageObject}->Get('Responsible'),
+            Title          => $LanguageObject->Get('Responsible'),
             Datatype       => 'Text',
             Viewtype       => 'Picker',
             DynamicOptions => {
@@ -3278,7 +3219,7 @@ sub _GetScreenElements {
 
         my $ComposeFromElements = {
             Name      => 'From',
-            Title     => $Self->{LanguageObject}->Get('From'),
+            Title     => $LanguageObject->Get('From'),
             Datatype  => 'Text',
             Viewtype  => 'Input',
             Min       => 1,
@@ -3291,7 +3232,7 @@ sub _GetScreenElements {
 
         my $ComposeToElements = {
             Name      => 'To',
-            Title     => $Self->{LanguageObject}->Get('To'),
+            Title     => $LanguageObject->Get('To'),
             Datatype  => 'Text',
             Viewtype  => 'EMail',
             Min       => 1,
@@ -3303,7 +3244,7 @@ sub _GetScreenElements {
 
         my $ComposeCcElements = {
             Name      => 'Cc',
-            Title     => $Self->{LanguageObject}->Get('Cc'),
+            Title     => $LanguageObject->Get('Cc'),
             Datatype  => 'Text',
             Viewtype  => 'EMail',
             Min       => 1,
@@ -3315,7 +3256,7 @@ sub _GetScreenElements {
 
         my $ComposeBccElements = {
             Name      => 'Bcc',
-            Title     => $Self->{LanguageObject}->Get('Bcc'),
+            Title     => $LanguageObject->Get('Bcc'),
             Datatype  => 'Text',
             Viewtype  => 'EMail',
             Min       => 1,
@@ -3327,7 +3268,7 @@ sub _GetScreenElements {
 
         my $SubjectElements = {
             Name      => 'Subject',
-            Title     => $Self->{LanguageObject}->Get('Subject'),
+            Title     => $LanguageObject->Get('Subject'),
             Datatype  => 'Text',
             Viewtype  => 'Input',
             Min       => 1,
@@ -3339,7 +3280,7 @@ sub _GetScreenElements {
 
         my $BodyElements = {
             Name      => 'Body',
-            Title     => $Self->{LanguageObject}->Get('Text'),
+            Title     => $LanguageObject->Get('Text'),
             Datatype  => 'Text',
             Viewtype  => 'TextArea',
             Min       => 1,
@@ -3354,12 +3295,12 @@ sub _GetScreenElements {
     if ( $Param{Screen} ne 'Compose' ) {
         my $DefaultSubject = '';
         if ( $Self->{Config}->{Subject} ) {
-            $DefaultSubject = $Self->{LanguageObject}->Get( $Self->{Config}->{Subject} )
+            $DefaultSubject = $LanguageObject->Get( $Self->{Config}->{Subject} )
         }
 
         my $SubjectElements = {
             Name      => 'Subject',
-            Title     => $Self->{LanguageObject}->Get('Subject'),
+            Title     => $LanguageObject->Get('Subject'),
             Datatype  => 'Text',
             Viewtype  => 'Input',
             Min       => 1,
@@ -3374,7 +3315,7 @@ sub _GetScreenElements {
     if ( $Param{Screen} ne 'Compose' ) {
         my $BodyElements = {
             Name      => 'Body',
-            Title     => $Self->{LanguageObject}->Get('Text'),
+            Title     => $LanguageObject->Get('Text'),
             Datatype  => 'Text',
             Viewtype  => 'TextArea',
             Min       => 1,
@@ -3389,7 +3330,7 @@ sub _GetScreenElements {
     if ( $Self->{Config}->{CustomerID} ) {
         my $CustomerElements = {
             Name      => 'CustomerID',
-            Title     => $Self->{LanguageObject}->Get('CustomerID'),
+            Title     => $LanguageObject->Get('CustomerID'),
             Datatype  => 'Text',
             Viewtype  => 'Input',
             Min       => 1,
@@ -3410,13 +3351,13 @@ sub _GetScreenElements {
 
         my $DefaultArticleTypeID;
         if ($DefaultArticleType) {
-            $DefaultArticleTypeID = $Self->{TicketObject}->ArticleTypeLookup(
+            $DefaultArticleTypeID = $TicketObject->ArticleTypeLookup(
                 ArticleType => $DefaultArticleType,
             );
         }
         my $NoteElements = {
             Name     => 'ArticleTypeID',
-            Title    => $Self->{LanguageObject}->Get('Note type'),
+            Title    => $LanguageObject->Get('Note type'),
             Datatype => 'Text',
             Viewtype => 'Picker',
             Options  => {
@@ -3441,7 +3382,7 @@ sub _GetScreenElements {
         if ($DefaultState) {
 
             # can't use StateLookup for 2.4 framework compatibility
-            my %State = $Self->{StateObject}->StateGet(
+            my %State = $Kernel::OM->Get('Kernel::System::State')->StateGet(
                 Name => $DefaultState,
             );
 
@@ -3452,7 +3393,7 @@ sub _GetScreenElements {
 
         my $StateElements = {
             Name           => 'StateID',
-            Title          => $Self->{LanguageObject}->Get('Next Ticket State'),
+            Title          => $LanguageObject->Get('Next Ticket State'),
             Datatype       => 'Text',
             Viewtype       => 'Picker',
             DynamicOptions => {
@@ -3475,7 +3416,7 @@ sub _GetScreenElements {
     if ( $Param{Screen} eq 'Phone' || $Param{Screen} eq 'Compose' ) {
         my $PendingDateElements = {
             Name      => 'PendingDate',
-            Title     => $Self->{LanguageObject}->Get('Pending Date (for pending* states)'),
+            Title     => $LanguageObject->Get('Pending Date (for pending* states)'),
             Datatype  => 'DateTime',
             Viewtype  => 'Picker',
             Mandatory => 0,
@@ -3494,14 +3435,14 @@ sub _GetScreenElements {
 
         my $DefaultPriorityID;
         if ($DefaultPriority) {
-            $DefaultPriorityID = $Self->{PriorityObject}->PriorityLookup(
+            $DefaultPriorityID = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
                 Priority => $DefaultPriority,
             );
         }
 
         my $PriorityElements = {
             Name           => 'PriorityID',
-            Title          => $Self->{LanguageObject}->Get('Priority'),
+            Title          => $LanguageObject->Get('Priority'),
             Datatype       => 'Text',
             Viewtype       => 'Picker',
             DynamicOptions => {
@@ -3521,14 +3462,19 @@ sub _GetScreenElements {
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
 
     # get the dynamic fields for ticket object
-    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
     # get user preferences
-    my %UserPreferences = $Self->{UserObject}->GetPreferences( UserID => $Param{UserID} );
+    my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+        UserID => $Param{UserID},
+    );
+
+    # get dynamic field backend object
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -3538,7 +3484,7 @@ sub _GetScreenElements {
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
         # skip all dynamic fields that are not designed render in iPhone App
-        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
+        my $IsIPhoneCapable = $DynamicFieldBackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsIPhoneCapable',
         );
@@ -3553,21 +3499,21 @@ sub _GetScreenElements {
         }
 
         if ( $Param{TicketID} && $DynamicFieldConfig->{ObjectType} eq 'Ticket' ) {
-            $Value = $Self->{BackendObject}->ValueGet(
+            $Value = $DynamicFieldBackendObject->ValueGet(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ObjectID           => $Param{TicketID},
             );
         }
 
-        my $FieldDefinition = $Self->{BackendObject}->IPhoneFieldParameterBuild(
+        my $FieldDefinition = $DynamicFieldBackendObject->IPhoneFieldParameterBuild(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Value,
             UseDefaultValue    => 1,
-            LanguageObject     => $Self->{LanguageObject},
+            LanguageObject     => $LanguageObject,
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
-        # check if the FieldDefinition is defined and cotain data, otherwise an undef variable in
+        # check if the FieldDefinition is defined and contain data, otherwise an undef variable in
         # this point will cause a NULL element in the ARRAY and will cause iPhone App to crash
         if ( IsHashRefWithData($FieldDefinition) ) {
             push @ScreenElements, $FieldDefinition;
@@ -3577,16 +3523,16 @@ sub _GetScreenElements {
     # time units
     if ( $Self->{Config}->{TimeUnits} ) {
         my $Mandatory;
-        if ( $Self->{ConfigObject}->Get('Ticket::Frontend::NeedAccountedTime') ) {
+        if ( $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime') ) {
             $Mandatory = 1;
         }
         else {
             $Mandatory = 0;
         }
-        my $TimeUnitsMeasure  = $Self->{ConfigObject}->Get('Ticket::Frontend::TimeUnits');
+        my $TimeUnitsMeasure  = $ConfigObject->Get('Ticket::Frontend::TimeUnits');
         my $TimeUnitsElements = {
             Name      => 'TimeUnits',
-            Title     => $Self->{LanguageObject}->Get("Time units $TimeUnitsMeasure"),
+            Title     => $LanguageObject->Get("Time units $TimeUnitsMeasure"),
             Datatype  => 'Numeric',
             Viewtype  => 'Input',
             Min       => 1,
@@ -3602,35 +3548,47 @@ sub _GetScreenElements {
 sub _TicketPhoneNew {
     my ( $Self, %Param ) = @_;
 
-    $Self->{Config} = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketPhone');
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketPhone');
 
     my %StateData = ();
+
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     if ( $Param{StateID} ) {
-        %StateData = $Self->{TicketObject}->{StateObject}->StateGet(
+        %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             ID => $Param{StateID},
         );
     }
 
+    my $UserTimeZone = $Param{UserTimeZone} || '';
+
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{PendingDate},
+            TimeStamp      => $Param{PendingDate},
+            UserTimeZone   => $UserTimeZone,
+            UserTimeObject => $Param{UserTimeObject},
         );
     }
-
-    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
 
     # get the dynamic fields for ticket object
-    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
     my %DynamicFieldValues;
+
+    # get dynamic field backend object
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -3640,7 +3598,7 @@ sub _TicketPhoneNew {
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
         # skip all dynamic fields that are not designed render in iPhone App
-        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
+        my $IsIPhoneCapable = $DynamicFieldBackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsIPhoneCapable',
         );
@@ -3648,7 +3606,7 @@ sub _TicketPhoneNew {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneFieldValueGet(
+            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -3656,14 +3614,14 @@ sub _TicketPhoneNew {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
+        my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
             );
@@ -3676,7 +3634,7 @@ sub _TicketPhoneNew {
             my $ErrorMessage = $ValidationResult->{ErrorMessage}
                 || "Dynamic field $DynamicFieldConfig->{Label} invalid";
 
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $ErrorMessage,
             );
@@ -3687,27 +3645,30 @@ sub _TicketPhoneNew {
     my $CustomerUser = $Param{CustomerUserLogin};
     my $CustomerID = $Param{CustomerID} || '';
 
-    # rewrap body if exists
-    if ( $Self->{ConfigObject}->Get('Frontend::RichText') && $Param{Body} ) {
+    # re-wrap body if exists
+    if ( $ConfigObject->Get('Frontend::RichText') && $Param{Body} ) {
         $Param{Body}
-            =~ s/(^>.+|.{4,$Self->{ConfigObject}->Get('Ticket::Frontend::TextAreaNote')})(?:\s|\z)/$1\n/gm;
+            =~ s/(^>.+|.{4,$ConfigObject->Get('Ticket::Frontend::TextAreaNote')})(?:\s|\z)/$1\n/gm;
     }
+
+    # get time object
+    my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
 
     # check pending date
     if ( $StateData{TypeName} && $StateData{TypeName} =~ /^pending/i ) {
-        if ( !$Self->{TimeObject}->TimeStamp2SystemTime( String => $Param{PendingDate} ) ) {
-            $Self->{LogObject}->Log(
+        if ( !$TimeObject->TimeStamp2SystemTime( String => $Param{PendingDate} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
             );
             return;
         }
         if (
-            $Self->{TimeObject}->TimeStamp2SystemTime( String => $Param{PendingDate} )
-            < $Self->{TimeObject}->SystemTime()
+            $TimeObject->TimeStamp2SystemTime( String => $Param{PendingDate} )
+            < $TimeObject->SystemTime()
             )
         {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
             );
@@ -3715,11 +3676,14 @@ sub _TicketPhoneNew {
         }
     }
 
+    # get customer user  object
+    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+
     #get customer info
-    my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
+    my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
         User => $CustomerUser,
     );
-    my %CustomerUserList = $Self->{CustomerUserObject}->CustomerSearch(
+    my %CustomerUserList = $CustomerUserObject->CustomerSearch(
         UserLogin => $CustomerUser,
     );
     my $From;
@@ -3738,11 +3702,14 @@ sub _TicketPhoneNew {
         $From = $CustomerUser;
     }
 
+    # get check item object
+    my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
+
     # check email address
     for my $Email ( Mail::Address->parse( $CustomerUserData{UserEmail} ) ) {
-        if ( !$Self->{CheckItemObject}->CheckEmail( Address => $Email->address() ) ) {
-            my $ServerError = $Self->{CheckItemObject}->CheckError();
-            $Self->{LogObject}->Log(
+        if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
+            my $ServerError = $CheckItemObject->CheckError();
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Error on field \"From\"  \n $ServerError",
             );
@@ -3750,33 +3717,33 @@ sub _TicketPhoneNew {
         }
     }
     if ( !$Param{CustomerUserLogin} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'From invalid: From is empty',
         );
         return;
     }
     if ( !$Param{Subject} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Subject invalid: Subject is empty',
         );
         return;
     }
     if ( !$Param{QueueID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Destination invalid: Destination queue is empty',
         );
         return;
     }
     if (
-        $Self->{ConfigObject}->Get('Ticket::Service')
+        $ConfigObject->Get('Ticket::Service')
         && $Param{SLAID}
         && !$Param{ServiceID}
         )
     {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Service invalid: no service selected',
         );
@@ -3784,7 +3751,7 @@ sub _TicketPhoneNew {
     }
 
     # create new ticket, do db insert
-    my $TicketID = $Self->{TicketObject}->TicketCreate(
+    my $TicketID = $TicketObject->TicketCreate(
         Title        => $Param{Subject},
         QueueID      => $Param{QueueID},
         Subject      => $Param{Subject},
@@ -3800,7 +3767,7 @@ sub _TicketPhoneNew {
         UserID       => $Param{UserID},
     );
     if ( !$TicketID ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Error: No ticket created! Please contact admin',
         );
@@ -3815,14 +3782,14 @@ sub _TicketPhoneNew {
         next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
         # skip all dynamic fields that are not designed render in iPhone App
-        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
+        my $IsIPhoneCapable = $DynamicFieldBackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsIPhoneCapable',
         );
         next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # set the value
-        my $Success = $Self->{BackendObject}->ValueSet(
+        my $Success = $DynamicFieldBackendObject->ValueSet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $TicketID,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
@@ -3837,9 +3804,10 @@ sub _TicketPhoneNew {
     if ( $Param{OwnerID} ) {
         $NoAgentNotify = 1;
     }
-    my $QueueName = $Self->{QueueObject}->QueueLookup( QueueID => $Param{QueueID} );
+    my $QueueName
+        = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup( QueueID => $Param{QueueID} );
 
-    my $ArticleID = $Self->{TicketObject}->ArticleCreate(
+    my $ArticleID = $TicketObject->ArticleCreate(
         NoAgentNotify => $NoAgentNotify,
         TicketID      => $TicketID,
         ArticleType   => $Self->{Config}->{ArticleTypeDefault},
@@ -3850,8 +3818,8 @@ sub _TicketPhoneNew {
         Body          => $Param{Body},
         MimeType      => $MimeType,
 
-        # iphone must send info in current charset
-        Charset          => $Self->{ConfigObject}->Get('DefaultCharset'),
+        # iPhone must send info in current charset
+        Charset          => $ConfigObject->Get('DefaultCharset'),
         UserID           => $Param{UserID},
         HistoryType      => $Self->{Config}->{HistoryType},
         HistoryComment   => $Self->{Config}->{HistoryComment} || '%%',
@@ -3875,14 +3843,14 @@ sub _TicketPhoneNew {
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
 
             # skip all dynamic fields that are not designed render in iPhone App
-            my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
+            my $IsIPhoneCapable = $DynamicFieldBackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsIPhoneCapable',
             );
             next DYNAMICFIELD if !$IsIPhoneCapable;
 
             # set the value
-            my $Success = $Self->{BackendObject}->ValueSet(
+            my $Success = $DynamicFieldBackendObject->ValueSet(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ObjectID           => $ArticleID,
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
@@ -3892,14 +3860,14 @@ sub _TicketPhoneNew {
 
         # set owner (if new user id is given)
         if ( $Param{OwnerID} ) {
-            $Self->{TicketObject}->TicketOwnerSet(
+            $TicketObject->TicketOwnerSet(
                 TicketID  => $TicketID,
                 NewUserID => $Param{OwnerID},
                 UserID    => $Param{UserID},
             );
 
             # set lock
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $TicketID,
                 Lock     => 'lock',
                 UserID   => $Param{UserID},
@@ -3908,7 +3876,7 @@ sub _TicketPhoneNew {
 
         # else set owner to current agent but do not lock it
         else {
-            $Self->{TicketObject}->TicketOwnerSet(
+            $TicketObject->TicketOwnerSet(
                 TicketID           => $TicketID,
                 NewUserID          => $Param{UserID},
                 SendNoNotification => 1,
@@ -3918,7 +3886,7 @@ sub _TicketPhoneNew {
 
         # set responsible (if new user id is given)
         if ( $Param{ResponsibleID} ) {
-            $Self->{TicketObject}->TicketResponsibleSet(
+            $TicketObject->TicketResponsibleSet(
                 TicketID  => $TicketID,
                 NewUserID => $Param{ResponsibleID},
                 UserID    => $Param{UserID},
@@ -3927,7 +3895,7 @@ sub _TicketPhoneNew {
 
         # time accounting
         if ( $Param{TimeUnits} ) {
-            $Self->{TicketObject}->TicketAccountTime(
+            $TicketObject->TicketAccountTime(
                 TicketID  => $TicketID,
                 ArticleID => $ArticleID,
                 TimeUnit  => $Param{TimeUnits},
@@ -3935,10 +3903,12 @@ sub _TicketPhoneNew {
             );
         }
 
-        # should i set an unlock?
-        my %StateData = $Self->{StateObject}->StateGet( ID => $Param{StateID} );
+        # should I set an unlock?
+        my %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
+            ID => $Param{StateID}
+        );
         if ( $StateData{TypeName} =~ /^close/i ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $TicketID,
                 Lock     => 'unlock',
                 UserID   => $Param{UserID},
@@ -3949,7 +3919,7 @@ sub _TicketPhoneNew {
         elsif ( $StateData{TypeName} =~ /^pending/i ) {
 
             # set pending time
-            $Self->{TicketObject}->TicketPendingTimeSet(
+            $TicketObject->TicketPendingTimeSet(
                 UserID   => $Param{UserID},
                 TicketID => $TicketID,
                 String   => $Param{PendingDate},
@@ -3958,7 +3928,7 @@ sub _TicketPhoneNew {
         return int $TicketID;
     }
     else {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Error: no article was created! Please contact the admin',
         );
@@ -3969,20 +3939,26 @@ sub _TicketPhoneNew {
 sub _TicketCommonActions {
     my ( $Self, %Param ) = @_;
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     $Self->{Config}
-        = $Self->{ConfigObject}->Get( 'iPhone::Frontend::AgentTicket' . $Param{Action} );
+        = $ConfigObject->Get( 'iPhone::Frontend::AgentTicket' . $Param{Action} );
 
     my %StateData = ();
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     if ( $Param{StateID} ) {
-        %StateData = $Self->{TicketObject}->{StateObject}->StateGet(
+        %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             ID => $Param{StateID},
         );
     }
 
     # check needed stuff
     if ( !$Param{TicketID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'No TicketID is given! Please contact the admin.',
         );
@@ -3990,7 +3966,7 @@ sub _TicketCommonActions {
     }
 
     # check permissions
-    my $Access = $Self->{TicketObject}->TicketPermission(
+    my $Access = $TicketObject->TicketPermission(
         Type     => $Self->{Config}->{Permission},
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID},
@@ -3998,38 +3974,38 @@ sub _TicketCommonActions {
 
     # error screen, don't show ticket
     if ( !$Access ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "You need $Self->{Config}->{Permission} permissions!",
         );
         return;
     }
 
-    my %Ticket = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
+    my %Ticket = $TicketObject->TicketGet( TicketID => $Param{TicketID} );
 
     # get lock state
     if ( $Self->{Config}->{RequiredLock} ) {
-        my $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
+        my $Locked = $TicketObject->TicketLockGet( TicketID => $Param{TicketID} );
 
         if ( !$Locked ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'lock',
                 UserID   => $Param{UserID},
             );
-            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+            my $Success = $TicketObject->TicketOwnerSet(
                 TicketID  => $Param{TicketID},
                 UserID    => $Param{UserID},
                 NewUserID => $Param{UserID},
             );
         }
         else {
-            my $AccessOk = $Self->{TicketObject}->OwnerCheck(
+            my $AccessOk = $TicketObject->OwnerCheck(
                 TicketID => $Param{TicketID},
                 OwnerID  => $Param{UserID},
             );
             if ( !$AccessOk ) {
-                $Self->{LogObject}->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => 'Sorry, you need to be the owner to do this action! '
                         . 'Please change the owner first.',
@@ -4039,26 +4015,31 @@ sub _TicketCommonActions {
         }
     }
 
+    my $UserTimeZone = $Param{UserTimeZone} || '';
+
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{PendingDate},
+            TimeStamp      => $Param{PendingDate},
+            UserTimeZone   => $UserTimeZone,
+            UserTimeObject => $Param{UserTimeObject},
         );
     }
-
-    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
 
     # get the dynamic fields for ticket object
-    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
     my %DynamicFieldValues;
+
+    # get dynamic field backend object
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -4068,7 +4049,7 @@ sub _TicketCommonActions {
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
         # skip all dynamic fields that are not designed render in iPhone App
-        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
+        my $IsIPhoneCapable = $DynamicFieldBackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsIPhoneCapable',
         );
@@ -4076,7 +4057,7 @@ sub _TicketCommonActions {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneFieldValueGet(
+            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4084,14 +4065,14 @@ sub _TicketCommonActions {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
+        my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
             );
@@ -4104,7 +4085,7 @@ sub _TicketCommonActions {
             my $ErrorMessage = $ValidationResult->{ErrorMessage}
                 || "Dynamic field $DynamicFieldConfig->{Label} invalid";
 
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $ErrorMessage,
             );
@@ -4112,27 +4093,30 @@ sub _TicketCommonActions {
         }
     }
 
-    # rewrap body if no rich text is used
+    # re-wrap body if no rich text is used
     if ( $Param{Body} ) {
-        my $Size = $Self->{ConfigObject}->Get('Ticket::Frontend::TextAreaNote') || 70;
+        my $Size = $ConfigObject->Get('Ticket::Frontend::TextAreaNote') || 70;
         $Param{Body} =~ s/(^>.+|.{4,$Size})(?:\s|\z)/$1\n/gm;
     }
 
+    # get time object
+    my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+
     # check pending date
     if ( $StateData{TypeName} && $StateData{TypeName} =~ /^pending/i ) {
-        if ( !$Self->{TimeObject}->TimeStamp2SystemTime( String => $Param{PendingDate} ) ) {
-            $Self->{LogObject}->Log(
+        if ( !$TimeObject->TimeStamp2SystemTime( String => $Param{PendingDate} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
             );
             return;
         }
         if (
-            $Self->{TimeObject}->TimeStamp2SystemTime( String => $Param{PendingDate} )
-            < $Self->{TimeObject}->SystemTime()
+            $TimeObject->TimeStamp2SystemTime( String => $Param{PendingDate} )
+            < $TimeObject->SystemTime()
             )
         {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
             );
@@ -4144,7 +4128,7 @@ sub _TicketCommonActions {
 
         # check subject
         if ( !$Param{Subject} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Subject Invalid: the Subject is empty!',
             );
@@ -4153,7 +4137,7 @@ sub _TicketCommonActions {
 
         # check body
         if ( !$Param{Body} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Body Invalid: the Body is empty!',
             );
@@ -4163,7 +4147,7 @@ sub _TicketCommonActions {
 
     #check if Title
     if ( !$Param{Title} ) {
-        my %TicketData = $Self->{TicketObject}->TicketGet(
+        my %TicketData = $TicketObject->TicketGet(
             TicketID => $Param{TicketID},
             UserID   => $Param{UserID},
         );
@@ -4174,7 +4158,7 @@ sub _TicketCommonActions {
     # set new title
     if ( $Self->{Config}->{Title} ) {
         if ( defined $Param{Title} ) {
-            $Self->{TicketObject}->TicketTitleUpdate(
+            $TicketObject->TicketTitleUpdate(
                 Title    => $Param{Title},
                 TicketID => $Param{TicketID},
                 UserID   => $Param{UserID},
@@ -4183,9 +4167,9 @@ sub _TicketCommonActions {
     }
 
     # set new type
-    if ( $Self->{ConfigObject}->Get('Ticket::Type') && $Self->{Config}->{TicketType} ) {
+    if ( $ConfigObject->Get('Ticket::Type') && $Self->{Config}->{TicketType} ) {
         if ( $Param{TypeID} ) {
-            $Self->{TicketObject}->TicketTypeSet(
+            $TicketObject->TicketTypeSet(
                 TypeID   => $Param{TypeID},
                 TicketID => $Param{TicketID},
                 UserID   => $Param{UserID},
@@ -4194,9 +4178,9 @@ sub _TicketCommonActions {
     }
 
     # set new service
-    if ( $Self->{ConfigObject}->Get('Ticket::Service') && $Self->{Config}->{Service} ) {
+    if ( $ConfigObject->Get('Ticket::Service') && $Self->{Config}->{Service} ) {
         if ( defined $Param{ServiceID} ) {
-            $Self->{TicketObject}->TicketServiceSet(
+            $TicketObject->TicketServiceSet(
                 ServiceID      => $Param{ServiceID},
                 TicketID       => $Param{TicketID},
                 CustomerUserID => $Ticket{CustomerUserID},
@@ -4204,7 +4188,7 @@ sub _TicketCommonActions {
             );
         }
         if ( defined $Param{SLAID} ) {
-            $Self->{TicketObject}->TicketSLASet(
+            $TicketObject->TicketSLASet(
                 SLAID    => $Param{SLAID},
                 TicketID => $Param{TicketID},
                 UserID   => $Param{UserID},
@@ -4217,12 +4201,12 @@ sub _TicketCommonActions {
     if ( $Self->{Config}->{Owner} ) {
         my $BodyText = $Param{Body} || '';
         if ( $Param{OwnerID} ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'lock',
                 UserID   => $Param{UserID},
             );
-            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+            my $Success = $TicketObject->TicketOwnerSet(
                 TicketID  => $Param{TicketID},
                 UserID    => $Param{UserID},
                 NewUserID => $Param{OwnerID},
@@ -4240,7 +4224,7 @@ sub _TicketCommonActions {
     if ( $Self->{Config}->{Responsible} ) {
         if ( $Param{ResponsibleID} ) {
             my $BodyText = $Param{Body} || '';
-            my $Success = $Self->{TicketObject}->TicketResponsibleSet(
+            my $Success = $TicketObject->TicketResponsibleSet(
                 TicketID  => $Param{TicketID},
                 UserID    => $Param{UserID},
                 NewUserID => $Param{ResponsibleID},
@@ -4259,20 +4243,20 @@ sub _TicketCommonActions {
     if ( $Self->{Config}->{Note} || $Param{Defaults} ) {
         my $MimeType = 'text/plain';
 
-        my %User = $Self->{UserObject}->GetUserData(
+        my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
             UserID => $Param{UserID},
         );
 
         my $From = "$User{UserFirstname} $User{UserLastname} <$User{UserEmail}>";
 
-        $ArticleID = $Self->{TicketObject}->ArticleCreate(
+        $ArticleID = $TicketObject->ArticleCreate(
             TicketID   => $Param{TicketID},
             SenderType => 'agent',
             From       => $From,
             MimeType   => $MimeType,
 
-            # iphone must send info in current charset
-            Charset        => $Self->{ConfigObject}->Get('DefaultCharset'),
+            # iPhone must send info in current charset
+            Charset        => $ConfigObject->Get('DefaultCharset'),
             UserID         => $Param{UserID},
             HistoryType    => $Self->{Config}->{HistoryType},
             HistoryComment => $Self->{Config}->{HistoryComment},
@@ -4283,7 +4267,7 @@ sub _TicketCommonActions {
         );
 
         if ( !$ArticleID ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Error: no article was created! Please contact the admin.',
             );
@@ -4292,7 +4276,7 @@ sub _TicketCommonActions {
 
         # time accounting
         if ( $Param{TimeUnits} ) {
-            $Self->{TicketObject}->TicketAccountTime(
+            $TicketObject->TicketAccountTime(
                 TicketID  => $Param{TicketID},
                 ArticleID => $ArticleID,
                 TimeUnit  => $Param{TimeUnits},
@@ -4306,12 +4290,12 @@ sub _TicketCommonActions {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-            # set the object ID (TicketID or ArticleID) depending on the field configration
+            # set the object ID (TicketID or ArticleID) depending on the field configuration
             my $ObjectID
                 = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
             # set the value
-            my $Success = $Self->{BackendObject}->ValueSet(
+            my $Success = $DynamicFieldBackendObject->ValueSet(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ObjectID           => $ObjectID,
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
@@ -4321,7 +4305,7 @@ sub _TicketCommonActions {
 
         # set priority
         if ( $Self->{Config}->{Priority} && $Param{PriorityID} ) {
-            $Self->{TicketObject}->TicketPrioritySet(
+            $TicketObject->TicketPrioritySet(
                 TicketID   => $Param{TicketID},
                 PriorityID => $Param{PriorityID},
                 UserID     => $Param{UserID},
@@ -4330,31 +4314,31 @@ sub _TicketCommonActions {
 
         # set state
         if ( $Self->{Config}->{State} && $Param{StateID} ) {
-            $Self->{TicketObject}->TicketStateSet(
+            $TicketObject->TicketStateSet(
                 TicketID => $Param{TicketID},
                 StateID  => $Param{StateID},
                 UserID   => $Param{UserID},
             );
 
             # unlock the ticket after close
-            my %StateData = $Self->{TicketObject}->{StateObject}->StateGet(
+            my %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
                 ID => $Param{StateID},
             );
 
             # set unlock on close state
             if ( $StateData{TypeName} =~ /^close/i ) {
-                $Self->{TicketObject}->TicketLockSet(
+                $TicketObject->TicketLockSet(
                     TicketID => $Param{TicketID},
                     Lock     => 'unlock',
                     UserID   => $Param{UserID},
                 );
             }
 
-            # set pending time on pendig state
+            # set pending time on pending state
             elsif ( $StateData{TypeName} =~ /^pending/i ) {
 
                 # set pending time
-                $Self->{TicketObject}->TicketPendingTimeSet(
+                $TicketObject->TicketPendingTimeSet(
                     UserID   => $Param{UserID},
                     TicketID => $Param{TicketID},
                     String   => $Param{PendingDate},
@@ -4365,7 +4349,7 @@ sub _TicketCommonActions {
 
     else {
 
-        # fillup configured default vars
+        # fill-up configured default vars
         if ( !defined $Param{Body} && $Self->{Config}->{Body} ) {
             $Param{Body} = $Self->{Config}->{Body};
         }
@@ -4385,20 +4369,26 @@ sub _TicketCommonActions {
 sub _TicketCompose {
     my ( $Self, %Param ) = @_;
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     $Self->{Config}
-        = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketCompose');
+        = $ConfigObject->Get('iPhone::Frontend::AgentTicketCompose');
 
     # check needed stuff
     if ( !$Param{TicketID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'No TicketID is given! Please contact the admin.',
         );
         return;
     }
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # check permissions
-    my $Access = $Self->{TicketObject}->TicketPermission(
+    my $Access = $TicketObject->TicketPermission(
         Type     => $Self->{Config}->{Permission},
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID},
@@ -4406,37 +4396,37 @@ sub _TicketCompose {
 
     # error screen, don't show ticket
     if ( !$Access ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "You need $Self->{Config}->{Permission} permissions!",
         );
         return;
     }
-    my %Ticket = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
+    my %Ticket = $TicketObject->TicketGet( TicketID => $Param{TicketID} );
 
     # get lock state
     if ( $Self->{Config}->{RequiredLock} ) {
-        my $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
+        my $Locked = $TicketObject->TicketLockGet( TicketID => $Param{TicketID} );
         if ( !$Locked ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'lock',
                 UserID   => $Param{UserID},
             );
 
-            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+            my $Success = $TicketObject->TicketOwnerSet(
                 TicketID  => $Param{TicketID},
                 UserID    => $Param{UserID},
                 NewUserID => $Param{UserID},
             );
         }
         else {
-            my $AccessOk = $Self->{TicketObject}->OwnerCheck(
+            my $AccessOk = $TicketObject->OwnerCheck(
                 TicketID => $Param{TicketID},
                 OwnerID  => $Param{UserID},
             );
             if ( !$AccessOk ) {
-                $Self->{LogObject}->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Sorry, you need to be the owner to do this action! "
                         . "Please change the owner first.",
@@ -4446,26 +4436,31 @@ sub _TicketCompose {
         }
     }
 
+    my $UserTimeZone = $Param{UserTimeZone} || '';
+
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{PendingDate},
+            TimeStamp      => $Param{PendingDate},
+            UserTimeZone   => $UserTimeZone,
+            UserTimeObject => $Param{UserTimeObject},
         );
     }
-
-    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
 
     # get the dynamic fields for ticket object
-    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
     my %DynamicFieldValues;
+
+    # get dynamic field backend object
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -4474,13 +4469,13 @@ sub _TicketCompose {
         next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-        next DYNAMICFIELD if !$Self->{BackendObject}->IsIPhoneCapable(
+        next DYNAMICFIELD if !$DynamicFieldBackendObject->IsIPhoneCapable(
             DynamicFieldConfig => $DynamicFieldConfig,
         );
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneFieldValueGet(
+            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4488,14 +4483,14 @@ sub _TicketCompose {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
+        my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
             );
@@ -4508,7 +4503,7 @@ sub _TicketCompose {
             my $ErrorMessage = $ValidationResult->{ErrorMessage}
                 || "Dynamic field $DynamicFieldConfig->{Label} invalid";
 
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $ErrorMessage,
             );
@@ -4517,23 +4512,26 @@ sub _TicketCompose {
     }
 
     # send email
-    my %StateData = $Self->{TicketObject}->{StateObject}->StateGet( ID => $Param{StateID}, );
+    my %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet( ID => $Param{StateID}, );
+
+    # get time object
+    my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
 
     # check pending date
     if ( $StateData{TypeName} && $StateData{TypeName} =~ /^pending/i ) {
-        if ( !$Self->{TimeObject}->TimeStamp2SystemTime( String => $Param{PendingDate} ) ) {
-            $Self->{LogObject}->Log(
+        if ( !$TimeObject->TimeStamp2SystemTime( String => $Param{PendingDate} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
             );
             return;
         }
         if (
-            $Self->{TimeObject}->TimeStamp2SystemTime( String => $Param{PendingDate} )
-            < $Self->{TimeObject}->SystemTime()
+            $TimeObject->TimeStamp2SystemTime( String => $Param{PendingDate} )
+            < $TimeObject->SystemTime()
             )
         {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Date invalid',
             );
@@ -4541,13 +4539,17 @@ sub _TicketCompose {
         }
     }
 
+    # get check item object
+    my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
+
     # check some values
+    RECIPIENT:
     for my $Line (qw(From To Cc Bcc)) {
-        next if !$Param{$Line};
+        next RECIPIENT if !$Param{$Line};
         for my $Email ( Mail::Address->parse( $Param{$Line} ) ) {
-            if ( !$Self->{CheckItemObject}->CheckEmail( Address => $Email->address() ) ) {
-                my $ServerError = $Self->{CheckItemObject}->CheckError();
-                $Self->{LogObject}->Log(
+            if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
+                my $ServerError = $CheckItemObject->CheckError();
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Error on field \"$Line\" \n $ServerError",
                 );
@@ -4576,7 +4578,7 @@ sub _TicketCompose {
     my $MimeType = 'text/plain';
 
     # send email
-    my $ArticleID = $Self->{TicketObject}->ArticleSend(
+    my $ArticleID = $TicketObject->ArticleSend(
         ArticleType    => 'email-external',
         SenderType     => 'agent',
         TicketID       => $Param{TicketID},
@@ -4591,13 +4593,13 @@ sub _TicketCompose {
         Body           => $Param{Body},
         InReplyTo      => $Param{InReplyTo},
         References     => $Param{References},
-        Charset        => $Self->{ConfigObject}->Get('DefaultCharset'),
+        Charset        => $ConfigObject->Get('DefaultCharset'),
         MimeType       => $MimeType,
     );
 
     # error page
     if ( !$ArticleID ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Error no Article created! Please contact the admin',
         );
@@ -4606,7 +4608,7 @@ sub _TicketCompose {
 
     # time accounting
     if ( $Param{TimeUnits} ) {
-        $Self->{TicketObject}->TicketAccountTime(
+        $TicketObject->TicketAccountTime(
             TicketID  => $Param{TicketID},
             ArticleID => $ArticleID,
             TimeUnit  => $Param{TimeUnits},
@@ -4620,12 +4622,12 @@ sub _TicketCompose {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        # set the object ID (TicketID or ArticleID) depending on the field configration
+        # set the object ID (TicketID or ArticleID) depending on the field configuration
         my $ObjectID
             = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
         # set the value
-        my $Success = $Self->{BackendObject}->ValueSet(
+        my $Success = $DynamicFieldBackendObject->ValueSet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $ObjectID,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
@@ -4635,7 +4637,7 @@ sub _TicketCompose {
 
     # set state
     if ( $Self->{Config}->{State} && $Param{StateID} ) {
-        $Self->{TicketObject}->TicketStateSet(
+        $TicketObject->TicketStateSet(
             TicketID => $Param{TicketID},
             StateID  => $Param{StateID},
             UserID   => $Param{UserID},
@@ -4644,7 +4646,7 @@ sub _TicketCompose {
 
     # should I set an unlock?
     if ( $StateData{TypeName} =~ /^close/i ) {
-        $Self->{TicketObject}->TicketLockSet(
+        $TicketObject->TicketLockSet(
             TicketID => $Param{TicketID},
             Lock     => 'unlock',
             UserID   => $Param{UserID},
@@ -4653,7 +4655,7 @@ sub _TicketCompose {
 
     # set pending time
     elsif ( $StateData{TypeName} =~ /^pending/i ) {
-        $Self->{TicketObject}->TicketPendingTimeSet(
+        $TicketObject->TicketPendingTimeSet(
             UserID   => $Param{UserID},
             TicketID => $Param{TicketID},
             String   => $Param{PendingDate},
@@ -4668,7 +4670,7 @@ sub _TicketCompose {
     else {
         $HistoryName = "Response from iPhone /$ArticleID)"
     }
-    $Self->{TicketObject}->HistoryAdd(
+    $TicketObject->HistoryAdd(
         Name         => $HistoryName,
         HistoryType  => 'Misc',
         TicketID     => $Param{TicketID},
@@ -4683,7 +4685,7 @@ sub _TicketMove {
     # check needed stuff
     for (qw(TicketID)) {
         if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "No $_ is given! Please contact the admin.",
             );
@@ -4691,11 +4693,16 @@ sub _TicketMove {
         }
     }
 
-    $Self->{Config}
-        = $Self->{ConfigObject}->Get('iPhone::Frontend::AgentTicketMove');
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketMove');
+
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # check permissions
-    my $Access = $Self->{TicketObject}->TicketPermission(
+    my $Access = $TicketObject->TicketPermission(
         Type     => 'move',
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID}
@@ -4703,7 +4710,7 @@ sub _TicketMove {
 
     # error screen, don't show ticket
     if ( !$Access ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "You need $Self->{Config}->{Permission} permissions!",
         );
@@ -4712,27 +4719,27 @@ sub _TicketMove {
 
     # get lock state
     if ( $Self->{Config}->{RequiredLock} ) {
-        my $Locked = $Self->{TicketObject}->TicketLockGet( TicketID => $Param{TicketID} );
+        my $Locked = $TicketObject->TicketLockGet( TicketID => $Param{TicketID} );
         if ( !$Locked ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'lock',
                 UserID   => $Param{UserID},
             );
 
-            my $Success = $Self->{TicketObject}->TicketOwnerSet(
+            my $Success = $TicketObject->TicketOwnerSet(
                 TicketID  => $Param{TicketID},
                 UserID    => $Param{UserID},
                 NewUserID => $Param{UserID},
             );
         }
         else {
-            my $AccessOk = $Self->{TicketObject}->OwnerCheck(
+            my $AccessOk = $TicketObject->OwnerCheck(
                 TicketID => $Param{TicketID},
                 OwnerID  => $Param{UserID},
             );
             if ( !$AccessOk ) {
-                $Self->{LogObject}->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Sorry, you need to be the owner to do this action! "
                         . "Please change the owner first.",
@@ -4743,28 +4750,33 @@ sub _TicketMove {
     }
 
     # ticket attributes
-    my %Ticket = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
+    my %Ticket = $TicketObject->TicketGet( TicketID => $Param{TicketID} );
+
+    my $UserTimeZone = $Param{UserTimeZone} || '';
 
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp => $Param{PendingDate},
+            TimeStamp      => $Param{PendingDate},
+            UserTimeZone   => $UserTimeZone,
+            UserTimeObject => $Param{UserTimeObject},
         );
     }
-
-    my $UserTimeZone = $Self->{UserTimeZone};
 
     # get dynamic field config for the screen
     $Self->{DynamicFieldFilter} = $Self->{Config}->{DynamicField};
 
     # get the dynamic fields for ticket object
-    $Self->{DynamicField} = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
     my %DynamicFieldValues;
+
+    # get dynamic field backend object
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
@@ -4774,7 +4786,7 @@ sub _TicketMove {
         next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
         # skip all dynamic fields that are not designed render in iPhone App
-        my $IsIPhoneCapable = $Self->{BackendObject}->HasBehavior(
+        my $IsIPhoneCapable = $DynamicFieldBackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsIPhoneCapable',
         );
@@ -4782,7 +4794,7 @@ sub _TicketMove {
 
         # extract the dynamic field value form parameters
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $Self->{BackendObject}->IPhoneFieldValueGet(
+            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             UserTimeZone       => $UserTimeZone || 0,
@@ -4790,14 +4802,14 @@ sub _TicketMove {
             );
 
         # perform validation of the data
-        my $ValidationResult = $Self->{BackendObject}->IPhoneFieldValueValidate(
+        my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Could not perform validation on field $DynamicFieldConfig->{Label}!",
             );
@@ -4810,7 +4822,7 @@ sub _TicketMove {
             my $ErrorMessage = $ValidationResult->{ErrorMessage}
                 || "Dynamic field $DynamicFieldConfig->{Label} invalid";
 
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $ErrorMessage,
             );
@@ -4820,7 +4832,7 @@ sub _TicketMove {
 
     # DestQueueID lookup
     if ( !$Param{QueueID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "No QueueID is given! Please contact the admin.",
         );
@@ -4833,7 +4845,7 @@ sub _TicketMove {
 
     # move ticket (send notification of no new owner is selected)
     my $BodyAsText = $Param{Body} || '';
-    my $Move = $Self->{TicketObject}->TicketQueueSet(
+    my $Move = $TicketObject->TicketQueueSet(
         QueueID            => $Param{QueueID},
         UserID             => $Param{UserID},
         TicketID           => $Param{TicketID},
@@ -4841,7 +4853,7 @@ sub _TicketMove {
         Comment            => $BodyAsText,
     );
     if ( !$Move ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Error: ticket not moved! Please contact the admin.",
         );
@@ -4850,7 +4862,7 @@ sub _TicketMove {
 
     # set priority
     if ( $Self->{Config}->{Priority} && $Param{PriorityID} ) {
-        $Self->{TicketObject}->TicketPrioritySet(
+        $TicketObject->TicketPrioritySet(
             TicketID   => $Param{TicketID},
             PriorityID => $Param{PriorityID},
             UserID     => $Param{UserID},
@@ -4860,20 +4872,20 @@ sub _TicketMove {
     # set state
     if ( $Self->{Config}->{State} && $Param{StateID} ) {
 
-        $Self->{TicketObject}->TicketStateSet(
+        $TicketObject->TicketStateSet(
             TicketID => $Param{TicketID},
             StateID  => $Param{StateID},
             UserID   => $Param{UserID},
         );
 
         # unlock the ticket after close
-        my %StateData = $Self->{TicketObject}->{StateObject}->StateGet(
+        my %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             ID => $Param{StateID},
         );
 
         # set unlock on close state
         if ( $StateData{TypeName} =~ /^close/i ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'unlock',
                 UserID   => $Param{UserID},
@@ -4885,14 +4897,14 @@ sub _TicketMove {
     if ( $Param{NewUserID} ) {
 
         # lock
-        $Self->{TicketObject}->TicketLockSet(
+        $TicketObject->TicketLockSet(
             TicketID => $Param{TicketID},
             Lock     => 'lock',
             UserID   => $Param{UserID},
         );
 
         # set owner
-        $Self->{TicketObject}->TicketOwnerSet(
+        $TicketObject->TicketOwnerSet(
             TicketID  => $Param{TicketID},
             UserID    => $Param{UserID},
             NewUserID => $Param{NewUserID},
@@ -4903,7 +4915,7 @@ sub _TicketMove {
     # force unlock if no new owner is set and ticket was unlocked
     else {
         if ( $Self->{TicketUnlock} ) {
-            $Self->{TicketObject}->TicketLockSet(
+            $TicketObject->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'unlock',
                 UserID   => $Param{UserID},
@@ -4914,9 +4926,11 @@ sub _TicketMove {
     # add note (send no notification)
     my $MimeType = 'text/plain';
 
-    my %UserData = $Self->{UserObject}->GetUserData( UserID => $Param{UserID} );
+    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
+        UserID => $Param{UserID},
+    );
 
-    my $ArticleID = $Self->{TicketObject}->ArticleCreate(
+    my $ArticleID = $TicketObject->ArticleCreate(
         TicketID       => $Param{TicketID},
         ArticleType    => 'note-internal',
         SenderType     => 'agent',
@@ -4924,7 +4938,7 @@ sub _TicketMove {
         Subject        => $Param{Subject},
         Body           => $Param{Body},
         MimeType       => $MimeType,
-        Charset        => $Self->{ConfigObject}->Get('DefaultCharset'),
+        Charset        => $ConfigObject->Get('DefaultCharset'),
         UserID         => $Param{UserID},
         HistoryType    => 'AddNote',
         HistoryComment => '%%Move',
@@ -4932,7 +4946,7 @@ sub _TicketMove {
     );
 
     if ( !$ArticleID ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Error: Can't create an article for the moved ticket",
         );
@@ -4945,12 +4959,12 @@ sub _TicketMove {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        # set the object ID (TicketID or ArticleID) depending on the field configration
+        # set the object ID (TicketID or ArticleID) depending on the field configuration
         my $ObjectID
             = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
         # set the value
-        my $Success = $Self->{BackendObject}->ValueSet(
+        my $Success = $DynamicFieldBackendObject->ValueSet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $ObjectID,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
@@ -4960,7 +4974,7 @@ sub _TicketMove {
 
     # time accounting
     if ( $Param{TimeUnits} ) {
-        $Self->{TicketObject}->TicketAccountTime(
+        $TicketObject->TicketAccountTime(
             TicketID  => $Param{TicketID},
             ArticleID => $ArticleID,
             TimeUnit  => $Param{TimeUnits},
@@ -4984,7 +4998,7 @@ sub _GetComposeDefaults {
     my ( $Self, %Param ) = @_;
 
     if ( !$Param{TicketID} ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'No TicketID given! Please contact the admin.',
         );
@@ -4993,13 +5007,16 @@ sub _GetComposeDefaults {
 
     my %ComposeData;
 
+    # get ticket object
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # get last customer article or selected article ...
     my %Data;
     if ( $Param{ArticleID} ) {
-        %Data = $Self->{TicketObject}->ArticleGet( ArticleID => $Param{ArticleID} );
+        %Data = $TicketObject->ArticleGet( ArticleID => $Param{ArticleID} );
     }
     else {
-        %Data = $Self->{TicketObject}->ArticleLastCustomerArticle(
+        %Data = $TicketObject->ArticleLastCustomerArticle(
             TicketID => $Param{TicketID},
         );
     }
@@ -5009,7 +5026,7 @@ sub _GetComposeDefaults {
         my $To   = $Data{To};
         my $From = $Data{From};
 
-        # set OrigFrom for correct email quoteing (xxxx wrote)
+        # set OrigFrom for correct email quoting (xxxx wrote)
         $Data{OrigFrom} = $Data{From};
 
         # replace From/To, To/From because sender is agent
@@ -5019,7 +5036,7 @@ sub _GetComposeDefaults {
     }
     else {
 
-        # set OrigFrom for correct email quoteing (xxxx wrote)
+        # set OrigFrom for correct email quoting (xxxx wrote)
         $Data{OrigFrom} = $Data{From};
     }
 
@@ -5028,7 +5045,7 @@ sub _GetComposeDefaults {
     $Data{OrigFromName} =~ s/<.*>|\(.*\)|\"|;|,//g;
     $Data{OrigFromName} =~ s/( $)|(  $)//g;
 
-    my %Ticket = $Self->{TicketObject}->TicketGet(
+    my %Ticket = $TicketObject->TicketGet(
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID},
     );
@@ -5036,16 +5053,19 @@ sub _GetComposeDefaults {
     # get customer data
     my %Customer;
     if ( $Ticket{CustomerUserID} ) {
-        %Customer = $Self->{CustomerUserObject}->CustomerUserDataGet(
+        %Customer = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $Ticket{CustomerUserID}
         );
     }
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # prepare body, subject, ReplyTo ...
-    # rewrap body if exists
+    # re-wrap body if exists
     if ( $Data{Body} ) {
         $Data{Body} =~ s/\t/ /g;
-        my $Quote = $Self->{ConfigObject}->Get('Ticket::Frontend::Quote');
+        my $Quote = $ConfigObject->Get('Ticket::Frontend::Quote');
         if ($Quote) {
             $Data{Body} =~ s/\n/\n$Quote /g;
             $Data{Body} = "\n$Quote " . $Data{Body};
@@ -5066,13 +5086,16 @@ sub _GetComposeDefaults {
     }
 
     # check if Cc recipients should be used
-    if ( $Self->{ConfigObject}->Get('Ticket::Frontend::ComposeExcludeCcRecipients') ) {
+    if ( $ConfigObject->Get('Ticket::Frontend::ComposeExcludeCcRecipients') ) {
         $Data{Cc} = '';
     }
 
+    # get system address object
+    my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
+
     # add not local To addresses to Cc
     for my $Email ( Mail::Address->parse( $Data{To} ) ) {
-        my $IsLocal = $Self->{SystemAddress}->SystemAddressIsLocalAddress(
+        my $IsLocal = $SystemAddressObject->SystemAddressIsLocalAddress(
             Address => $Email->address(),
         );
         if ( !$IsLocal ) {
@@ -5101,13 +5124,13 @@ sub _GetComposeDefaults {
     }
 
     # use customer database email
-    if ( $Self->{ConfigObject}->Get('Ticket::Frontend::ComposeAddCustomerAddress') ) {
+    if ( $ConfigObject->Get('Ticket::Frontend::ComposeAddCustomerAddress') ) {
 
         # check if customer is in recipient list
         if ( $Customer{UserEmail} && $Data{ToEmail} !~ /^\Q$Customer{UserEmail}\E$/i ) {
 
             # replace To with customers database address
-            if ( $Self->{ConfigObject}->Get('Ticket::Frontend::ComposeReplaceSenderAddress') ) {
+            if ( $ConfigObject->Get('Ticket::Frontend::ComposeReplaceSenderAddress') ) {
                 $Data{To} = $Customer{UserEmail};
             }
 
@@ -5134,7 +5157,7 @@ sub _GetComposeDefaults {
                 # only use email addresses with @ inside
                 if ( $Address && $Address =~ /@/ && !$Recipient{$Address} ) {
                     $Recipient{$Address} = 1;
-                    my $IsLocal = $Self->{SystemAddress}->SystemAddressIsLocalAddress(
+                    my $IsLocal = $SystemAddressObject->SystemAddressIsLocalAddress(
                         Address => $Address,
                     );
                     if ( !$IsLocal ) {
@@ -5151,23 +5174,24 @@ sub _GetComposeDefaults {
 
     $Param{ResponseID} = 1;
 
-    # set no RichText in order to get text/plain template for the iphone
-    $Self->{ConfigObject}->Set( Key => 'Frontend::RichText', Value => 0 );
+    # set no RichText in order to get text/plain template for the iPhone
+    $ConfigObject->Set( Key => 'Frontend::RichText', Value => 0 );
 
     # get template
-    my $TemplateGenerator = Kernel::System::TemplateGenerator->new( %{$Self} );
-    my %Response          = $TemplateGenerator->Response(
-        TicketID   => $Param{TicketID},
-        ArticleID  => $Param{ArticleID},
-        ResponseID => $Param{ResponseID},
-        Data       => \%Data,
-        UserID     => $Param{UserID}
-    );
-    $Data{Salutation}       = $Response{Salutation};
-    $Data{Signature}        = $Response{Signature};
-    $Data{StandardResponse} = $Response{StandardResponse};
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
-    %Data = $TemplateGenerator->Attributes(
+    $Data{Salutation} = $TemplateGeneratorObject->Salutation(
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+        Data     => \%Data,
+    );
+    $Data{Signature} = $TemplateGeneratorObject->Signature(
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+        Data     => \%Data,
+    );
+
+    %Data = $TemplateGeneratorObject->Attributes(
         TicketID   => $Param{TicketID},
         ArticleID  => $Param{ArticleID},
         ResponseID => $Param{ResponseID},
@@ -5177,7 +5201,7 @@ sub _GetComposeDefaults {
 
     my $Salutation = $Data{Salutation};
     my $OrigFrom   = $Data{OrigFrom};
-    my $Wrote      = $Self->{LanguageObject}->Get('wrote');
+    my $Wrote      = $Param{LanguageObject}->Get('wrote');
     my $Body       = $Data{Body};
     my $Signature  = $Data{Signature};
 
@@ -5188,19 +5212,23 @@ sub _GetComposeDefaults {
     $ResponseFormat =~ s/&quot;/"/gi;
 
     # prepare subject
-    my $Tn = $Self->{TicketObject}->TicketNumberLookup( TicketID => $Param{TicketID} );
-    $Param{Subject} = $Self->{TicketObject}->TicketSubjectBuild(
+    my $Tn = $TicketObject->TicketNumberLookup( TicketID => $Param{TicketID} );
+    $Param{Subject} = $TicketObject->TicketSubjectBuild(
         TicketNumber => $Tn,
         Subject => $Param{Subject} || '',
     );
 
+    # get check item object
+    my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
+
     # check some values
+    RECIPIENT:
     for my $Line (qw(To Cc Bcc)) {
-        next if !$Data{$Line};
+        next RECIPIENT if !$Data{$Line};
         for my $Email ( Mail::Address->parse( $Data{$Line} ) ) {
-            if ( !$Self->{CheckItemObject}->CheckEmail( Address => $Email->address() ) ) {
-                my $ServerError = $Self->{CheckItemObject}->CheckError();
-                $Self->{LogObject}->Log(
+            if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
+                my $ServerError = $CheckItemObject->CheckError();
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Error on field \"$Line\" \n $ServerError",
                 );
@@ -5210,9 +5238,9 @@ sub _GetComposeDefaults {
     }
     if ( $Data{From} ) {
         for my $Email ( Mail::Address->parse( $Data{From} ) ) {
-            if ( !$Self->{CheckItemObject}->CheckEmail( Address => $Email->address() ) ) {
-                my $ServerError = $Self->{CheckItemObject}->CheckError();
-                $Self->{LogObject}->Log(
+            if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
+                my $ServerError = $CheckItemObject->CheckError();
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Error on field \"From\"  \n $ServerError",
                 );
@@ -5237,13 +5265,13 @@ sub _TransformDateSelection {
     my ( $Self, %Param ) = @_;
 
     # time zone translation if needed
-    if ( $Self->{ConfigObject}->Get('TimeZoneUser') && $Self->{UserTimeZone} ) {
-        my $SystemTime = $Self->{TimeObject}->TimeStamp2SystemTime(
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
+        my $SystemTime = $Kernel::OM->Get('Kernel::System::Time')->TimeStamp2SystemTime(
             String => $Param{TimeStamp},
         );
-        $SystemTime = $SystemTime - ( $Self->{UserTimeZone} * 3600 );
+        $SystemTime = $SystemTime - ( $Param{UserTimeZone} * 3600 );
         $Param{TimeStamp}
-            = $Self->{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
+            = $Param{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
     }
     return $Param{TimeStamp};
 }

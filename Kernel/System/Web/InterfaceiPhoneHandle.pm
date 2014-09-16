@@ -233,8 +233,8 @@ sub Run {
         CustomerUserObject => 'Kernel::System::CustomerUser',
         TicketObject       => 'Kernel::System::Ticket',
         LinkObject         => 'Kernel::System::LinkObject',
-        CustomObject       => 'Kernel::System::iPhone',
-        iPhoneObject       => 'Kernel::System::iPhone',
+        CustomObject       => 'Kernel::System::iPhoneHandle',
+        iPhoneObject       => 'Kernel::System::iPhoneHandle',
     );
 
     my $LocalObject;
@@ -405,9 +405,8 @@ sub _Result {
 
             # otherwise is an error
             elsif ( defined $Result->{Success} && !$Result->{Success} ) {
-                $ResultProtocol{Result} = 'failed';
-                $ResultProtocol{Message}
-                    = $Result->{ErrorMessage}
+                $ResultProtocol{Result}  = 'failed';
+                $ResultProtocol{Message} = $Result->{ErrorMessage}
                     || 'Unknown Error, please contact system administrator to check OTRS Logs!';
             }
         }

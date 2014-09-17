@@ -12,6 +12,8 @@ package Kernel::System::iPhoneHandle::Overview;
 use strict;
 use warnings;
 
+use Kernel::System::VariableCheck qw(:all);
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Lock',

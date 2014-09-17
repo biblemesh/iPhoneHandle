@@ -20,6 +20,7 @@ our @ObjectDependencies = (
     'Kernel::System::DynamicField',
     'Kernel::System::DynamicField::Backend',
     'Kernel::System::Group',
+    'Kernel::Language',
     'Kernel::System::Log',
     'Kernel::System::Priority',
     'Kernel::System::Queue',
@@ -297,8 +298,13 @@ as well as on general settings.
 sub ScreenConfig {
     my ( $Self, %Param ) = @_;
 
-    my $LanguageObject = Kernel::Language->new( UserLanguage => $Param{Language} );
-    $Param{LanguageObject} = $LanguageObject;
+    # define a new language object
+    $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Language'] );
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::System::Language' => {
+            UserLanguage => $Param{Language},
+        },
+    );
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -312,7 +318,7 @@ sub ScreenConfig {
         # get screen configuration options for iPhone from SysConfig
         $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketPhone');
         my %Config = (
-            Title    => $LanguageObject->Get('New Phone Ticket'),
+            Title    => $$Kernel::OM->Get('Kernel::Language')->Get('New Phone Ticket'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -334,7 +340,7 @@ sub ScreenConfig {
         $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketNote');
 
         my %Config = (
-            Title    => $LanguageObject->Get('Add Note'),
+            Title    => $Kernel::OM->Get('Kernel::Language')->Get('Add Note'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -359,7 +365,7 @@ sub ScreenConfig {
         $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketClose');
 
         my %Config = (
-            Title    => $LanguageObject->Get('Close'),
+            Title    => $Kernel::OM->Get('Kernel::Language')->Get('Close'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -383,7 +389,7 @@ sub ScreenConfig {
         $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketCompose');
 
         my %Config = (
-            Title    => $LanguageObject->Get('Compose'),
+            Title    => $Kernel::OM->Get('Kernel::Language')->Get('Compose'),
             Elements => $Self->_GetScreenElements(%Param) || '',
             Actions  => {
                 Object     => 'CustomObject',
@@ -410,7 +416,7 @@ sub ScreenConfig {
         $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketMove');
 
         my %Config = (
-            Title    => $LanguageObject->Get('Move'),
+            Title    => $Kernel::OM->Get('Kernel::Language')->Get('Move'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',
@@ -432,11 +438,9 @@ sub _GetScreenElements {
 
     my @ScreenElements;
 
-    # use language object from the param
-    my $LanguageObject = $Param{LanguageObject};
-
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    # get needed objects
+    my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
+    my $TicketObject   = $Kernel::OM->Get('Kernel::System::Ticket');
 
     if ( $Self->{Config}->{Title} ) {
         my %TicketData = $TicketObject->TicketGet(
@@ -1279,7 +1283,7 @@ sub _GetComposeDefaults {
 
     my $Salutation = $Data{Salutation};
     my $OrigFrom   = $Data{OrigFrom};
-    my $Wrote      = $Param{LanguageObject}->Get('wrote');
+    my $Wrote      = $Kernel::OM->Get('Kernel::Language')->Get('wrote');
     my $Body       = $Data{Body};
     my $Signature  = $Data{Signature};
 

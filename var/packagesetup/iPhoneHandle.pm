@@ -1,5 +1,5 @@
 # --
-# iPhoneHandle.pm - code to excecute during package installation
+# iPhoneHandle.pm - code to execute during package installation
 # Copyright (C) 2001-2014 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -12,14 +12,19 @@ package var::packagesetup::iPhoneHandle;
 use strict;
 use warnings;
 
-use Kernel::Config;
-use Kernel::System::SysConfig;
-use Kernel::System::Package;
 use Kernel::System::VariableCheck qw(:all);
+
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::Log',
+    'Kernel::System::Main',
+    'Kernel::System::Package',
+    'Kernel::System::SysConfig',
+);
 
 =head1 NAME
 
-iPhoneHandle.pm - code to excecute during package installation
+iPhoneHandle.pm - code to execute during package installation
 
 =head1 SYNOPSIS
 
@@ -35,45 +40,12 @@ All functions
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::Time;
-    use Kernel::System::DB;
-    use Kernel::System::XML;
-    use var::packagesetup::iPhone;
 
-    my $ConfigObject = Kernel::Config->new();
-    my $LogObject    = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-    );
-    my $TimeObject = Kernel::System::Time->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-    );
-    my $DBObject = Kernel::System::DB->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-    );
-    my $XMLObject = Kernel::System::XML->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-    );
-    my $CodeObject = var::packagesetup::iPhone->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-        TimeObject   => $TimeObject,
-        DBObject     => $DBObject,
-        XMLObject    => $XMLObject,
-    );
+create an object
+
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM = Kernel::System::ObjectManager->new();
+    my $CodeObject = $Kernel::OM->Get('var::packagesetup::iPhoneHandle');
 
 =cut
 
@@ -84,19 +56,8 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # check needed objects
-    for my $Object (
-        qw(ConfigObject LogObject MainObject TimeObject DBObject XMLObject EncodeObject)
-        )
-    {
-        $Self->{$Object} = $Param{$Object} || die "Got no $Object!";
-    }
-
-    # create needed sysconfig object
-    $Self->{SysConfigObject} = Kernel::System::SysConfig->new( %{$Self} );
-
     # rebuild ZZZ* files
-    $Self->{SysConfigObject}->WriteDefault();
+    $Kernel::OM->Get('Kernel::System::SysConfig')->WriteDefault();
 
     # define the ZZZ files
     my @ZZZFiles = (
@@ -116,9 +77,12 @@ sub new {
         }
     }
 
-    # create needed objects
-    $Self->{ConfigObject}  = Kernel::Config->new();
-    $Self->{PackageObject} = Kernel::System::Package->new(%Param);
+    # always discard the config object before package code is executed,
+    # to make sure that the config object will be created newly, so that it
+    # will use the recently written new config from the package
+    $Kernel::OM->ObjectsDiscard(
+        Objects => ['Kernel::Config'],
+    );
 
     return $Self;
 }
@@ -202,12 +166,15 @@ sub _UpdateReleaseFile {
 
     my $PackageVersion;
 
+    # get package object
+    my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
+
     # get the installed version of iPhoneHandle package
     PACKAGE:
-    for my $Package ( $Self->{PackageObject}->RepositoryList() ) {
+    for my $Package ( $PackageObject->RepositoryList() ) {
         if ( $Package->{Name}->{Content} eq 'iPhoneHandle' ) {
-            $PackageVersion = $Package->{Version}->{Content},
-                last PACKAGE;
+            $PackageVersion = $Package->{Version}->{Content};
+            last PACKAGE;
         }
     }
 
@@ -218,26 +185,27 @@ sub _UpdateReleaseFile {
     }
 
     # get home path
-    my $Home = $Self->{ConfigObject}->Get('Home');
+    my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
     # create or overwrite RELEASE.iPhoneHandle file
     my $Content      = "PRODUCT = iPhoneHandle\nVERSION = $PackageVersion";
-    my $FileLocation = $Self->{MainObject}->FileWrite(
+    my $FileLocation = $Kernel::OM->Get('Kernel::System::Main')->FileWrite(
         Location => "$Home/var/RELEASE.iPhoneHandle",
         Content  => \$Content,
     );
 
     if ( !$FileLocation ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "ERROR: Can't write $Home/var/RELEASE.iPhoneHandle!.\n",
         );
+
         return -1;
     }
 
     # check RELEASE file
     if ( !-e "$Home/var/RELEASE.iPhoneHandle" ) {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "File $Home/var/RELEASE.iPhoneHandle was not created!.\n",
         );
@@ -258,24 +226,26 @@ sub _RemoveReleaseFile {
     my ( $Self, %Param ) = @_;
 
     # get home path
-    my $Home = $Self->{ConfigObject}->Get('Home');
+    my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
     # delete RELEASE file
     if ( -e "$Home/var/RELEASE.iPhoneHandle" ) {
         if ( !unlink "$Home/var/RELEASE.iPhoneHandle" ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "File $Home/var/RELEASE.iPhoneHandle could not be deleted!.\n",
             );
         }
+
         return -1;
     }
     else {
-        $Self->{LogObject}->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
             Message  => "File $Home/var/RELEASE.iPhoneHandle was already deleted!.\n",
         );
     }
+
     return 1;
 }
 
@@ -308,7 +278,7 @@ sub _MigrateConfigurations {
     SCREEN:
     for my $Screen (@Screens) {
 
-        my $ScreenConfig = $Self->{ConfigObject}->Get($Screen);
+        my $ScreenConfig = $Kernel::OM->Get('Kernel::Config')->Get($Screen);
 
         # skip screen if Dynamic Fields are already defined
         next SCREEN if IsHashRefWithData( $ScreenConfig->{DynamicField} );
@@ -336,21 +306,23 @@ sub _MigrateConfigurations {
 
         # update DynamicField configuration for the screen and add the configured FreeFields
         if ( IsHashRefWithData( \%FieldsToAdd ) ) {
-            my $Success = $Self->{SysConfigObject}->ConfigItemUpdate(
+            my $Success = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
                 Valid => 1,
                 Key   => $Screen . '###DynamicField',
                 Value => \%FieldsToAdd,
             );
 
             if ( !$Success ) {
-                $Self->{LogObject}->Log(
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Can't update DynamicField configuration for $Screen!.\n",
                 );
+
                 return -1;
             }
         }
     }
+
     return 1
 }
 

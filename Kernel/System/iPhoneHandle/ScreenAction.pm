@@ -82,21 +82,17 @@ sub ScreenActions {
     my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
         UserID => $Param{UserID},
     );
-    my $UserTimeZone = $UserPreferences{UserTimeZone};
 
-    my $UserTimeObject;
-
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser') && $UserTimeZone ) {
-        $UserTimeObject = Kernel::System::Time->new( UserTimeZone => $UserTimeZone );
-    }
-    else {
-        $UserTimeObject = $Kernel::OM->Get('Kernel::System::Time');
-        $UserTimeZone   = '';
+    if (
+        $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser')
+        && $UserPreferences{UserTimeZone}
+        )
+    {
+        $Param{UserTimeZone} = $UserPreferences{UserTimeZone} || 0;
     }
 
-    # set common parameters to be passes to helper functions
-    $Param{UserTimeZone}   = $UserTimeZone;
-    $Param{UserTimeObject} = $UserTimeObject;
+    # make sure UserTimeZone param is defined
+    $Param{UserTimeZone} //= 0;
 
     if ( $Param{Action} ) {
         my $Result;
@@ -163,14 +159,11 @@ sub _TicketPhoneNew {
         );
     }
 
-    my $UserTimeZone = $Param{UserTimeZone} || '';
-
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp      => $Param{PendingDate},
-            UserTimeZone   => $UserTimeZone,
-            UserTimeObject => $Param{UserTimeObject},
+            TimeStamp    => $Param{PendingDate},
+            UserTimeZone => $Param{UserTimeZone},
         );
     }
 
@@ -208,7 +201,6 @@ sub _TicketPhoneNew {
             = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
-            UserTimeZone       => $UserTimeZone || 0,
             %Param,
             );
 
@@ -614,14 +606,11 @@ sub _TicketCommonActions {
         }
     }
 
-    my $UserTimeZone = $Param{UserTimeZone} || '';
-
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp      => $Param{PendingDate},
-            UserTimeZone   => $UserTimeZone,
-            UserTimeObject => $Param{UserTimeObject},
+            TimeStamp    => $Param{PendingDate},
+            UserTimeZone => $Param{UserTimeZone},
         );
     }
 
@@ -659,7 +648,6 @@ sub _TicketCommonActions {
             = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
-            UserTimeZone       => $UserTimeZone || 0,
             %Param,
             );
 
@@ -1035,14 +1023,11 @@ sub _TicketCompose {
         }
     }
 
-    my $UserTimeZone = $Param{UserTimeZone} || '';
-
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp      => $Param{PendingDate},
-            UserTimeZone   => $UserTimeZone,
-            UserTimeObject => $Param{UserTimeObject},
+            TimeStamp    => $Param{PendingDate},
+            UserTimeZone => $Param{UserTimeZone},
         );
     }
 
@@ -1077,7 +1062,6 @@ sub _TicketCompose {
             = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
-            UserTimeZone       => $UserTimeZone || 0,
             %Param,
             );
 
@@ -1351,14 +1335,11 @@ sub _TicketMove {
     # ticket attributes
     my %Ticket = $TicketObject->TicketGet( TicketID => $Param{TicketID} );
 
-    my $UserTimeZone = $Param{UserTimeZone} || '';
-
     # transform pending time, time stamp based on user time zone
     if ( IsStringWithData( $Param{PendingDate} ) ) {
         $Param{PendingDate} = $Self->_TransformDateSelection(
-            TimeStamp      => $Param{PendingDate},
-            UserTimeZone   => $UserTimeZone,
-            UserTimeObject => $Param{UserTimeObject},
+            TimeStamp    => $Param{PendingDate},
+            UserTimeZone => $Param{UserTimeZone},
         );
     }
 
@@ -1396,7 +1377,6 @@ sub _TicketMove {
             = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
-            UserTimeZone       => $UserTimeZone || 0,
             %Param,
             );
 
@@ -1597,12 +1577,26 @@ sub _TransformDateSelection {
 
     # time zone translation if needed
     if ( $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser') && $Param{UserTimeZone} ) {
+
+        # make sure time object has no user time zone
+        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'] );
         my $SystemTime = $Kernel::OM->Get('Kernel::System::Time')->TimeStamp2SystemTime(
             String => $Param{TimeStamp},
         );
         $SystemTime = $SystemTime - ( $Param{UserTimeZone} * 3600 );
-        $Param{TimeStamp}
-            = $Param{UserTimeObject}->SystemTime2TimeStamp( SystemTime => $SystemTime, );
+
+        # make sure time object now has the user time zone
+        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'] );
+        $Kernel::OM->ObjectParamAdd(
+            'Kernel::System::Time' => {
+                UserTimeZone => $Param{UserTimeZone},
+            },
+        );
+
+        # get time object
+        my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+
+        $Param{TimeStamp} = $TimeObject->SystemTime2TimeStamp( SystemTime => $SystemTime );
     }
     return $Param{TimeStamp};
 }

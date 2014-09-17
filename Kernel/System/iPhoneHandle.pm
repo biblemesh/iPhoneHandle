@@ -12,8 +12,6 @@ package Kernel::System::iPhoneHandle;
 use strict;
 use warnings;
 
-use Kernel::Language;
-use Kernel::System::Time;
 use Kernel::System::VariableCheck qw(:all);
 
 use base qw(

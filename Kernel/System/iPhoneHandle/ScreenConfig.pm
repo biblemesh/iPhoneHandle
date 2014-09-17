@@ -318,7 +318,7 @@ sub ScreenConfig {
         # get screen configuration options for iPhone from SysConfig
         $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketPhone');
         my %Config = (
-            Title    => $$Kernel::OM->Get('Kernel::Language')->Get('New Phone Ticket'),
+            Title    => $Kernel::OM->Get('Kernel::Language')->Get('New Phone Ticket'),
             Elements => $Self->_GetScreenElements(%Param),
             Actions  => {
                 Object     => 'CustomObject',

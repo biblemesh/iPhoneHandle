@@ -303,7 +303,7 @@ sub ScreenConfig {
     # define a new language object
     $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Language'] );
     $Kernel::OM->ObjectParamAdd(
-        'Kernel::System::Language' => {
+        'Kernel::Language' => {
             UserLanguage => $Param{Language},
         },
     );

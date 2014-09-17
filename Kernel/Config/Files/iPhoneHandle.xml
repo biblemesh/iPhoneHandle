@@ -772,6 +772,14 @@
             <String Regex="">3 normal</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="iPhone::Frontend::AgentTicketMove###Body" Required="0" Valid="1">
+        <Description Translatable="1">Sets the default body text for notes added in the move ticket screen of the iPhone interface.</Description>
+        <Group>iPhoneHandle</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewMove</SubGroup>
+        <Setting>
+            <TextArea></TextArea>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="iPhone::Frontend::AgentTicketMove###TimeUnits" Required="0" Valid="1">
         <Description Translatable="1">Sets the time units in the move ticket screen of the iPhone interface.</Description>
         <Group>iPhoneHandle</Group>

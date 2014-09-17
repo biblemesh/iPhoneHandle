@@ -440,6 +440,11 @@ shell> bin/otrs.PackageManager.pl -a install -p /path/to/$Name-$Version.opm
         <para>Sets the time units in the ticket compose screen of the iPhone interface.</para>
     </section>
     <section>
+        <title>iPhone::Frontend::AgentTicketMove###Body.</title>
+        <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
+        <para>Sets the default body text for notes added in the move ticket screen of the iPhone interface.</para>
+    </section>
+    <section>
         <title>iPhone::Frontend::AgentTicketMove###DynamicField.</title>
         <para>Group: iPhoneHandle, Subgroup: Frontend::Agent::Ticket::ViewMove.</para>
         <para>Dynamic fields shown in the ticket move screen of the iPhone interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</para>

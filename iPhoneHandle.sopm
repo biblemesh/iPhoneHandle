@@ -41,7 +41,7 @@
 
         $Kernel::OM->Get($CodeModule)->CodeInstall();
     ]]></CodeInstall>
-    <CodeUpgrade Type="post" Version="1.0.0"><![CDATA[
+    <CodeUpgrade Type="post"><![CDATA[
 
         # create the package name
         my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};

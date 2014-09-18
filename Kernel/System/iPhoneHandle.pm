@@ -607,7 +607,7 @@ sub ArticleGet {
         my $ArticleAllSeen = 1;
         my @Index = $TicketObject->ArticleIndex( TicketID => $Article{TicketID} );
         if ( IsArrayRefWithData( \@Index ) ) {
-            ARTICEID:
+            ARTICLEID:
             for my $ArticleID (@Index) {
                 my %ArticleFlag = $TicketObject->ArticleFlagGet(
                     ArticleID => $ArticleID,

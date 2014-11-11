@@ -123,7 +123,10 @@ sub IPhoneFieldParameterBuild {
     # check needed stuff
     for my $Needed (qw(DynamicFieldConfig LanguageObject)) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
             return;
         }
     }
@@ -198,7 +201,10 @@ sub IPhoneFieldValueGet {
     # check needed stuff
     for my $Needed (qw(DynamicFieldConfig)) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $Needed!" );
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
             return;
         }
     }
@@ -270,7 +276,10 @@ sub IPhoneFieldValueValidate {
 
     # check needed stuff
     if ( !$Param{DynamicFieldConfig} ) {
-        $Self->{LogObject}->Log( Priority => 'error', Message => "Need DynamicFieldConfig!" );
+        $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "Need DynamicFieldConfig!"
+        );
         return;
     }
 

@@ -298,8 +298,7 @@ sub _MigrateConfigurations {
                     next FREEFIELD if !$ScreenConfig->{$FreeFieldType}->{$FreeField};
 
                     # add field setting (1 or 2) to the FieldsToAdd hash
-                    $FieldsToAdd{ $FreeFieldType . $FreeField }
-                        = $ScreenConfig->{$FreeFieldType}->{$FreeField};
+                    $FieldsToAdd{ $FreeFieldType . $FreeField } = $ScreenConfig->{$FreeFieldType}->{$FreeField};
                 }
             }
         }

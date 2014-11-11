@@ -199,18 +199,17 @@ sub _TicketPhoneNew {
         next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             %Param,
-            );
+        );
 
         # perform validation of the data
         my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
-            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            Mandatory          => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
@@ -397,8 +396,7 @@ sub _TicketPhoneNew {
     if ( $Param{OwnerID} ) {
         $NoAgentNotify = 1;
     }
-    my $QueueName
-        = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup( QueueID => $Param{QueueID} );
+    my $QueueName = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup( QueueID => $Param{QueueID} );
 
     my $ArticleID = $TicketObject->ArticleCreate(
         NoAgentNotify => $NoAgentNotify,
@@ -535,8 +533,7 @@ sub _TicketCommonActions {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    $Self->{Config}
-        = $ConfigObject->Get( 'iPhone::Frontend::AgentTicket' . $Param{Action} );
+    $Self->{Config} = $ConfigObject->Get( 'iPhone::Frontend::AgentTicket' . $Param{Action} );
 
     my %StateData = ();
 
@@ -646,18 +643,17 @@ sub _TicketCommonActions {
         next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             %Param,
-            );
+        );
 
         # perform validation of the data
         my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
-            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            Mandatory          => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
@@ -880,8 +876,7 @@ sub _TicketCommonActions {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             # set the object ID (TicketID or ArticleID) depending on the field configuration
-            my $ObjectID
-                = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
+            my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
             # set the value
             my $Success = $DynamicFieldBackendObject->ValueSet(
@@ -961,8 +956,7 @@ sub _TicketCompose {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    $Self->{Config}
-        = $ConfigObject->Get('iPhone::Frontend::AgentTicketCompose');
+    $Self->{Config} = $ConfigObject->Get('iPhone::Frontend::AgentTicketCompose');
 
     # check needed stuff
     if ( !$Param{TicketID} ) {
@@ -1060,18 +1054,17 @@ sub _TicketCompose {
         );
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             %Param,
-            );
+        );
 
         # perform validation of the data
         my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
-            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            Mandatory          => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
@@ -1097,7 +1090,9 @@ sub _TicketCompose {
     }
 
     # send email
-    my %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet( ID => $Param{StateID}, );
+    my %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
+        ID => $Param{StateID},
+    );
 
     # get time object
     my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
@@ -1208,8 +1203,7 @@ sub _TicketCompose {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # set the object ID (TicketID or ArticleID) depending on the field configuration
-        my $ObjectID
-            = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
+        my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
         # set the value
         my $Success = $DynamicFieldBackendObject->ValueSet(
@@ -1375,18 +1369,17 @@ sub _TicketMove {
         next DYNAMICFIELD if !$IsIPhoneCapable;
 
         # extract the dynamic field value form parameters
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
-            = $DynamicFieldBackendObject->IPhoneFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->IPhoneFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             TransformDates     => 1,
             %Param,
-            );
+        );
 
         # perform validation of the data
         my $ValidationResult = $DynamicFieldBackendObject->IPhoneFieldValueValidate(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
-            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            Mandatory          => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         if ( !IsHashRefWithData($ValidationResult) ) {
@@ -1541,8 +1534,7 @@ sub _TicketMove {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # set the object ID (TicketID or ArticleID) depending on the field configuration
-        my $ObjectID
-            = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
+        my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Param{TicketID};
 
         # set the value
         my $Success = $DynamicFieldBackendObject->ValueSet(

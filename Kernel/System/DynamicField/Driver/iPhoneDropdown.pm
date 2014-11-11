@@ -54,8 +54,7 @@ sub IPhoneFieldParameterBuild {
         if ( IsHashRefWithData($PossibleValues) ) {
             for my $PossibleKey ( sort keys %{$PossibleValues} ) {
                 my $OriginalValue = $PossibleValues->{$PossibleKey};
-                $PossibleValues->{$PossibleKey}
-                    = $Param{LanguageObject}->Get($OriginalValue) || $OriginalValue;
+                $PossibleValues->{$PossibleKey} = $Param{LanguageObject}->Get($OriginalValue) || $OriginalValue;
             }
         }
     }

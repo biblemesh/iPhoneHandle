@@ -959,7 +959,7 @@ sub _GetScreenElements {
             Value              => $Value,
             UseDefaultValue    => 1,
             LanguageObject     => $LanguageObject,
-            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            Mandatory          => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         # check if the FieldDefinition is defined and contain data, otherwise an undef variable in
@@ -1062,10 +1062,9 @@ sub _GetTos {
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
             if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
             {
-                my %SystemAddressData
-                    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
+                my %SystemAddressData = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
-                    );
+                );
                 $String =~ s/<Realname>/$SystemAddressData{Realname}/g;
                 $String =~ s/<Email>/$SystemAddressData{Name}/g;
             }
@@ -1259,7 +1258,10 @@ sub _GetComposeDefaults {
     $Param{ResponseID} = 1;
 
     # set no RichText in order to get text/plain template for the iPhone
-    $ConfigObject->Set( Key => 'Frontend::RichText', Value => 0 );
+    $ConfigObject->Set(
+        Key   => 'Frontend::RichText',
+        Value => 0
+    );
 
     # get template
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
@@ -1289,8 +1291,7 @@ sub _GetComposeDefaults {
     my $Body       = $Data{Body};
     my $Signature  = $Data{Signature};
 
-    my $ResponseFormat
-        = "$Salutation \n $OrigFrom $Wrote: \n $Body \n $Signature \n";
+    my $ResponseFormat = "$Salutation \n $OrigFrom $Wrote: \n $Body \n $Signature \n";
 
     # restore qdata formatting for Output replacement
     $ResponseFormat =~ s/&quot;/"/gi;
@@ -1299,7 +1300,7 @@ sub _GetComposeDefaults {
     my $Tn = $TicketObject->TicketNumberLookup( TicketID => $Param{TicketID} );
     $Param{Subject} = $TicketObject->TicketSubjectBuild(
         TicketNumber => $Tn,
-        Subject => $Param{Subject} || '',
+        Subject      => $Param{Subject} || '',
     );
 
     # get check item object

@@ -99,7 +99,9 @@ sub IPhoneFieldValueGet {
         );
 
         # create a time object for the user (because of the time zone)
-        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Time'], );
+        $Kernel::OM->ObjectsDiscard(
+            Objects => ['Kernel::System::Time'],
+        );
         $Kernel::OM->ObjectParamAdd(
             'Kernel::System::Time' => {
                 UserTimeZone => $Param{UserTimeZone},

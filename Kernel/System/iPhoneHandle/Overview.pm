@@ -213,7 +213,10 @@ sub EscalationView {
         TICKETID:
         for my $TicketID (@ViewableTickets) {
             next TICKETID if !$TicketID;
-            my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
+            my %Article = $Self->TicketList(
+                TicketID => $TicketID,
+                UserID   => $Param{UserID}
+            );
             next TICKETID if !%Article;
             push @List, \%Article;
         }
@@ -388,7 +391,10 @@ sub StatusView {
         for my $TicketID (@ViewableTickets) {
             TICKETID:
             next TICKETID if !$TicketID;
-            my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
+            my %Article = $Self->TicketList(
+                TicketID => $TicketID,
+                UserID   => $Param{UserID}
+            );
             next TICKETID if !%Article;
             push @List, \%Article;
         }
@@ -607,7 +613,10 @@ sub LockedView {
         for my $TicketID (@ViewableTickets) {
             TICKETID:
             next TICKETID if !$TicketID;
-            my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
+            my %Article = $Self->TicketList(
+                TicketID => $TicketID,
+                UserID   => $Param{UserID}
+            );
             next TICKETID if !%Article;
             push @List, \%Article;
         }
@@ -794,7 +803,7 @@ sub WatchedView {
             Name   => 'Pending',
             Prio   => 1002,
             Search => {
-                StateType => [ 'pending reminder', 'pending auto' ],
+                StateType    => [ 'pending reminder', 'pending auto' ],
                 WatchUserIDs => [ $Param{UserID} ],
                 OrderBy      => $Param{OrderBy},
                 SortBy       => $Param{SortBy},
@@ -834,7 +843,10 @@ sub WatchedView {
             for my $TicketID (@ViewableTickets) {
                 TICKETID:
                 next TICKETID if !$TicketID;
-                my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
+                my %Article = $Self->TicketList(
+                    TicketID => $TicketID,
+                    UserID   => $Param{UserID}
+                );
                 next TICKETID if !%Article;
                 push @List, \%Article;
             }
@@ -1028,7 +1040,7 @@ sub ResponsibleView {
             Name   => 'Pending',
             Prio   => 1002,
             Search => {
-                StateType => [ 'pending reminder', 'pending auto' ],
+                StateType      => [ 'pending reminder', 'pending auto' ],
                 ResponsibleIDs => [ $Param{UserID} ],
                 OrderBy        => $Param{OrderBy},
                 SortBy         => $Param{SortBy},
@@ -1068,7 +1080,10 @@ sub ResponsibleView {
             TICKETID:
             for my $TicketID (@ViewableTickets) {
                 next TICKETID if !$TicketID;
-                my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
+                my %Article = $Self->TicketList(
+                    TicketID => $TicketID,
+                    UserID   => $Param{UserID}
+                );
                 next TICKETID if !%Article;
                 push @List, \%Article;
             }
@@ -1221,8 +1236,7 @@ specified.
 sub QueueView {
     my ( $Self, %Param ) = @_;
 
-    my @ViewableLockIDs
-        = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
+    my @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
 
     my @ViewableStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
         Type   => 'Viewable',
@@ -1251,7 +1265,10 @@ sub QueueView {
         TICKETID:
         for my $TicketID (@ViewableTickets) {
             next TICKETID if !$TicketID;
-            my %Article = $Self->TicketList( TicketID => $TicketID, UserID => $Param{UserID} );
+            my %Article = $Self->TicketList(
+                TicketID => $TicketID,
+                UserID   => $Param{UserID}
+            );
             next TICKETID if !%Article;
             push @List, \%Article;
         }

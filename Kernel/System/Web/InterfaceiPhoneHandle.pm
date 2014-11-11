@@ -145,7 +145,10 @@ sub Run {
     # agent Auth
     my %ParamFixed;
     if (1) {
-        my $UserLogin = $Kernel::OM->Get('Kernel::System::Auth')->Auth( User => $User, Pw => $Pw );
+        my $UserLogin = $Kernel::OM->Get('Kernel::System::Auth')->Auth(
+            User => $User,
+            Pw   => $Pw
+        );
 
         if ( !$UserLogin ) {
             my $Message = "Auth for user $User failed!";

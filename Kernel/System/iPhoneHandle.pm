@@ -730,7 +730,7 @@ sub SLAsGet {
 
     # get SLA
     if ( $Param{ServiceID} ) {
-        %SLA = $$Kernel::OM->Get('Kernel::System::Ticket')->TicketSLAList(
+        %SLA = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSLAList(
             %Param,
             Action => $Param{Action},
             UserID => $Param{UserID},

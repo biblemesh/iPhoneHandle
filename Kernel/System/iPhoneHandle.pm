@@ -770,7 +770,8 @@ sub UsersGet {
 
     # just show only users with selected custom queue
     if ( $Param{QueueID} && !$Param{AllUsers} ) {
-        my @UserIDs = $Kernel::OM->Get('Kernel::System::Ticket')->GetSubscribedUserIDsByQueueID(%Param);
+        my @UserIDs
+            = $Kernel::OM->Get('Kernel::System::Ticket')->GetSubscribedUserIDsByQueueID(%Param);
         for ( sort keys %AllGroupsMembers ) {
             my $Hit = 0;
             for my $UID (@UserIDs) {
@@ -1101,8 +1102,8 @@ sub InitConfigGet {
     $InitConfig{TicketResponsible}          = $ConfigObject->Get('Ticket::Responsible');
     $InitConfig{DefaultCharset}             = $ConfigObject->Get('DefaultCharset');
     $InitConfig{CustomerSearchAutoComplete} = $ConfigObject->Get('AutoComplete::Agent')->{Default};
-    $InitConfig{CurrentTimestamp}           = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
-    $InitConfig{VersionGet}                 = $Self->VersionGet(%Param);
+    $InitConfig{CurrentTimestamp} = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
+    $InitConfig{VersionGet}       = $Self->VersionGet(%Param);
 
     return \%InitConfig;
 }

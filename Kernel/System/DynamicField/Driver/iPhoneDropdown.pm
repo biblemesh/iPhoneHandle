@@ -37,7 +37,7 @@ sub IPhoneFieldParameterBuild {
     # take config from field config
     my $FieldConfig = $Param{DynamicFieldConfig}->{Config};
     my $FieldName   = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
-    my $FieldLabel  = $Param{LanguageObject}->Get( $Param{DynamicFieldConfig}->{Label} );
+    my $FieldLabel  = $Param{LanguageObject}->Translate( $Param{DynamicFieldConfig}->{Label} );
 
     my $Value = '';
 
@@ -54,7 +54,8 @@ sub IPhoneFieldParameterBuild {
         if ( IsHashRefWithData($PossibleValues) ) {
             for my $PossibleKey ( sort keys %{$PossibleValues} ) {
                 my $OriginalValue = $PossibleValues->{$PossibleKey};
-                $PossibleValues->{$PossibleKey} = $Param{LanguageObject}->Get($OriginalValue) || $OriginalValue;
+                $PossibleValues->{$PossibleKey}
+                    = $Param{LanguageObject}->Translate($OriginalValue) || $OriginalValue;
             }
         }
     }

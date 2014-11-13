@@ -803,7 +803,7 @@ sub WatchedView {
             Name   => 'Pending',
             Prio   => 1002,
             Search => {
-                StateType    => [ 'pending reminder', 'pending auto' ],
+                StateType => [ 'pending reminder', 'pending auto' ],
                 WatchUserIDs => [ $Param{UserID} ],
                 OrderBy      => $Param{OrderBy},
                 SortBy       => $Param{SortBy},
@@ -1040,7 +1040,7 @@ sub ResponsibleView {
             Name   => 'Pending',
             Prio   => 1002,
             Search => {
-                StateType      => [ 'pending reminder', 'pending auto' ],
+                StateType => [ 'pending reminder', 'pending auto' ],
                 ResponsibleIDs => [ $Param{UserID} ],
                 OrderBy        => $Param{OrderBy},
                 SortBy         => $Param{SortBy},
@@ -1236,7 +1236,8 @@ specified.
 sub QueueView {
     my ( $Self, %Param ) = @_;
 
-    my @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
+    my @ViewableLockIDs
+        = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
 
     my @ViewableStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
         Type   => 'Viewable',

@@ -959,7 +959,7 @@ sub _GetScreenElements {
             Value              => $Value,
             UseDefaultValue    => 1,
             LanguageObject     => $LanguageObject,
-            Mandatory          => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
         );
 
         # check if the FieldDefinition is defined and contain data, otherwise an undef variable in
@@ -1062,9 +1062,10 @@ sub _GetTos {
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
             if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
             {
-                my %SystemAddressData = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
+                my %SystemAddressData
+                    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
-                );
+                    );
                 $String =~ s/<Realname>/$SystemAddressData{Realname}/g;
                 $String =~ s/<Email>/$SystemAddressData{Name}/g;
             }
@@ -1300,7 +1301,7 @@ sub _GetComposeDefaults {
     my $Tn = $TicketObject->TicketNumberLookup( TicketID => $Param{TicketID} );
     $Param{Subject} = $TicketObject->TicketSubjectBuild(
         TicketNumber => $Tn,
-        Subject      => $Param{Subject} || '',
+        Subject => $Param{Subject} || '',
     );
 
     # get check item object

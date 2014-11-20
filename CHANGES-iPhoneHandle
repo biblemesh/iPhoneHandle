@@ -6,6 +6,9 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+4.0.1 - 2014-11-25
+- 2014-11-20 Code cleanup.
+
 4.0.0.rc1 - 2014-11-18
  - 2014-11-12 Fixed bug#10867 - SLA list returns an error.
  - 2014-11-11 Code cleanup.
